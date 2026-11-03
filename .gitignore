@@ -1,0 +1,5 @@
+.pio/
+.tools/
+__pycache__/
+diagnostics/*ble-private*.log
+_bmad/config.user.toml

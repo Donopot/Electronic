@@ -1,5 +1,21 @@
 #include <Arduino.h>
 #include <Adafruit_TinyUSB.h>
+#ifndef SOIL_LORA_TX
+#define SOIL_LORA_TX 0
+#endif
+#if SOIL_LORA_TX
+#include <SPI.h>
+#include <RadioLib.h>
+#include <PlantSoilProtocol.h>
+#include "BoundedUsbLog.h"
+#endif
+
+#if SOIL_LORA_TX
+BoundedUsbLog diagnosticLog;
+#define SOIL_LOG diagnosticLog
+#else
+#define SOIL_LOG Serial
+#endif
 
 namespace {
 constexpr uint8_t kSda = 6, kScl = 7;
@@ -129,15 +145,93 @@ bool correctPinMap = false;
 bool usbWasConnected = false;
 uint32_t attempts = 0, readings = 0, errors = 0;
 uint8_t adsAddress = 0;
+#if SOIL_LORA_TX
+SX1262 radio(new Module(4, 1, 2, 3, SPI, SPISettings(2000000, MSBFIRST, SPI_MODE0)));
+bool radioReady = false, sessionReady = false, transmitted = false;
+uint32_t radioAttempt = 0, lastTransmit = 0;
+plantsoil::Packet current;
+
+bool makeSession(uint32_t& session) {
+  session = 0;
+  NRF_RNG->CONFIG = RNG_CONFIG_DERCEN_Enabled << RNG_CONFIG_DERCEN_Pos;
+  NRF_RNG->EVENTS_VALRDY = 0;
+  NRF_RNG->TASKS_START = 1;
+  const uint32_t started = millis();
+  uint8_t bytes = 0;
+  while (bytes < 4 && static_cast<uint32_t>(millis() - started) < 25) {
+    if (NRF_RNG->EVENTS_VALRDY) {
+      const uint8_t value = NRF_RNG->VALUE;
+      NRF_RNG->EVENTS_VALRDY = 0;
+      session |= static_cast<uint32_t>(value) << (8 * bytes++);
+    }
+    yield();
+  }
+  NRF_RNG->TASKS_STOP = 1;
+  return bytes == 4 && session != 0;
+}
+void initializeRadio() {
+  radioAttempt = millis();
+  radioReady = false;
+  if (!sessionReady) sessionReady = makeSession(current.session);
+  if (!sessionReady) {
+    SOIL_LOG.println(F("[SOIL_RADIO] error=session_rng_timeout authenticated=no"));
+    return;
+  }
+  // SPI explicite : le coeur ne touche pas SS/D7, deja occupee par SCL ADS.
+  SPI.begin();
+  radio.setRfSwitchPins(5, RADIOLIB_NC);
+  int16_t code = radio.begin(868.1f, 125.0f, 7, 5,
+      RADIOLIB_SX126X_SYNC_WORD_PRIVATE, 0, 8, 1.8f, false);
+  if (code == RADIOLIB_ERR_NONE) code = radio.setDio2AsRfSwitch(true);
+  if (code == RADIOLIB_ERR_NONE) code = radio.setCRC(2);
+  // RadioLib renvoie des microsecondes : refuser plus de 1 % sur 30 s.
+  if (code == RADIOLIB_ERR_NONE && radio.getTimeOnAir(plantsoil::kPacketSize) > 300000) {
+    SOIL_LOG.println(F("[SOIL_RADIO] error=airtime_exceeds_1_percent authenticated=no"));
+    return;
+  }
+  radioReady = code == RADIOLIB_ERR_NONE;
+  SOIL_LOG.print(F("[SOIL_RADIO] role=TX authenticated=no code=")); SOIL_LOG.println(code);
+}
+void serviceTransmit(bool valid, int16_t raw) {
+  const uint32_t now = millis();
+  if (!radioReady && static_cast<uint32_t>(now - radioAttempt) >= 10000) initializeRadio();
+  if (transmitted && static_cast<uint32_t>(now - lastTransmit) < plantsoil::kTransmitMs) return;
+  lastTransmit = now; transmitted = true; // aucun rattrapage ni renvoi immediat apres erreur
+  ++current.sequence;
+  current.uptimeMs = now;
+  current.address = adsAddress;
+  current.status = !adsAddress ? plantsoil::AdcStatus::Unavailable :
+      !valid ? plantsoil::AdcStatus::ReadError :
+      raw < -8 || raw > 26400 ? plantsoil::AdcStatus::RangeError : plantsoil::AdcStatus::Ok;
+  current.raw = current.status == plantsoil::AdcStatus::Ok ? raw : 0;
+  if (!radioReady) {
+    SOIL_LOG.println(F("[SOIL_TX_ERROR] radio_unavailable authenticated=no"));
+    return;
+  }
+  uint8_t bytes[plantsoil::kPacketSize];
+  if (plantsoil::encode(current, bytes, sizeof(bytes)) != plantsoil::Result::Accepted) {
+    SOIL_LOG.println(F("[SOIL_TX_ERROR] invalid_packet authenticated=no"));
+    return;
+  }
+  const int16_t code = radio.transmit(bytes, sizeof(bytes));
+  char line[240];
+  if (code == RADIOLIB_ERR_NONE) {
+    if (plantsoil::formatPacket(line, sizeof(line), "TX", current)) SOIL_LOG.println(line);
+  } else {
+    SOIL_LOG.print(F("[SOIL_TX_ERROR] code=")); SOIL_LOG.println(code);
+    radioReady = false; radioAttempt = millis();
+  }
+}
+#endif
 
 void scanBus() {
   adsAddress = 0;
   bus.release();
   delay(1);
-  Serial.print(F("[BUS] SDA=")); Serial.print(digitalRead(kSda));
-  Serial.print(F(" SCL=")); Serial.println(digitalRead(kScl));
+  SOIL_LOG.print(F("[BUS] SDA=")); SOIL_LOG.print(digitalRead(kSda));
+  SOIL_LOG.print(F(" SCL=")); SOIL_LOG.println(digitalRead(kScl));
   if (digitalRead(kSda) == LOW || digitalRead(kScl) == LOW) {
-    Serial.println(F("[ERREUR] Ligne I2C maintenue basse : verifier cablage et alimentation."));
+    SOIL_LOG.println(F("[ERREUR] Ligne I2C maintenue basse : verifier cablage et alimentation."));
     return;
   }
   uint8_t found = 0;
@@ -145,30 +239,30 @@ void scanBus() {
   for (uint8_t address = 0x08; address <= 0x77; ++address) {
     if (bus.probe(address)) {
       ++found;
-      Serial.print(F("[I2C] ACK adresse=0x")); Serial.println(address, HEX);
+      SOIL_LOG.print(F("[I2C] ACK adresse=0x")); SOIL_LOG.println(address, HEX);
       if (address >= 0x48 && address <= 0x4B) {
         ++candidates;
         candidate = address;
       }
     }
   }
-  Serial.print(F("[SCAN] peripheriques=")); Serial.println(found);
-  Serial.println(F("[INFO] Un ACK seul ne permet pas d'identifier la puce."));
+  SOIL_LOG.print(F("[SCAN] peripheriques=")); SOIL_LOG.println(found);
+  SOIL_LOG.println(F("[INFO] Un ACK seul ne permet pas d'identifier la puce."));
   if (candidates == 1) {
     adsAddress = candidate;
-    Serial.print(F("[ADC] adresse_selectionnee=0x")); Serial.println(adsAddress, HEX);
+    SOIL_LOG.print(F("[ADC] adresse_selectionnee=0x")); SOIL_LOG.println(adsAddress, HEX);
     if (adsAddress != 0x48) {
-      Serial.println(F("[INFO] Adresse differente de 0x48 : verifier le strap ADDR hors tension."));
+      SOIL_LOG.println(F("[INFO] Adresse differente de 0x48 : verifier le strap ADDR hors tension."));
     }
   } else {
-    Serial.println(F("[ERREUR] Aucun candidat ADS unique entre 0x48 et 0x4B ; aucune configuration envoyee."));
+    SOIL_LOG.println(F("[ERREUR] Aucun candidat ADS unique entre 0x48 et 0x4B ; aucune configuration envoyee."));
   }
 }
 
 bool readA0(int16_t& raw) {
   if (!adsAddress) return false;
   if (!bus.writeRegister(adsAddress, 1, kConfig)) {
-    Serial.println(F("[ERREUR] Ecriture configuration ADC : NACK ou bus bloque."));
+    SOIL_LOG.println(F("[ERREUR] Ecriture configuration ADC : NACK ou bus bloque."));
     return false;
   }
   const uint32_t started = millis();
@@ -176,32 +270,36 @@ bool readA0(int16_t& raw) {
     delay(2);
     uint16_t config = 0;
     if (!bus.readRegister(adsAddress, 1, config)) {
-      Serial.println(F("[ERREUR] Lecture configuration interrompue."));
+      SOIL_LOG.println(F("[ERREUR] Lecture configuration interrompue."));
       return false;
     }
     if ((config & 0x7FFF) != (kConfig & 0x7FFF)) {
-      Serial.println(F("[ERREUR] Configuration relue incompatible avec le diagnostic ADS1115."));
+      SOIL_LOG.println(F("[ERREUR] Configuration relue incompatible avec le diagnostic ADS1115."));
       return false;
     }
     if (config & 0x8000) {
       uint16_t conversion = 0;
       if (!bus.readRegister(adsAddress, 0, conversion)) {
-        Serial.println(F("[ERREUR] Lecture conversion A0 interrompue."));
+        SOIL_LOG.println(F("[ERREUR] Lecture conversion A0 interrompue."));
         return false;
       }
       raw = static_cast<int16_t>(conversion);
       return true;
     }
   }
-  Serial.println(F("[ERREUR] Conversion non terminee apres 40 ms."));
+  SOIL_LOG.println(F("[ERREUR] Conversion non terminee apres 40 ms."));
   return false;
 }
 void announce() {
-  Serial.println(F("\n[XIAO-SOIL-DIAG] v1 / USB / D6=P1.11 SDA / D7=P1.12 SCL"));
-  Serial.println(F("[CONFIG] ADS1115 attendu 0x48, selection unique 0x48..0x4B, A0/GND, +/-4.096 V, 128 SPS."));
-  Serial.println(F("[INFO] D0 relachee ; radio non initialisee ; aucun pourcentage sans etalonnage."));
+  SOIL_LOG.println(F("\n[XIAO-SOIL-DIAG] v1 / USB / D6=P1.11 SDA / D7=P1.12 SCL"));
+  SOIL_LOG.println(F("[CONFIG] ADS1115 attendu 0x48, selection unique 0x48..0x4B, A0/GND, +/-4.096 V, 128 SPS."));
+#if SOIL_LORA_TX
+  SOIL_LOG.println(F("[INFO] D0 relachee ; SOIL-01 LoRa 868.1 MHz / 0 dBm / 30 s ; diagnostic non authentifie ; aucun pourcentage."));
+#else
+  SOIL_LOG.println(F("[INFO] D0 relachee ; radio non initialisee ; aucun pourcentage sans etalonnage."));
+#endif
   if (!correctPinMap) {
-    Serial.println(F("[ERREUR] Variante Arduino incompatible : test GPIO interdit."));
+    SOIL_LOG.println(F("[ERREUR] Variante Arduino incompatible : test GPIO interdit."));
   }
 }
 }  // namespace
@@ -212,39 +310,53 @@ void setup() {
   correctPinMap = g_ADigitalPinMap[kSda] == 43 && g_ADigitalPinMap[kScl] == 44;
   if (correctPinMap) bus.release();
   Serial.begin(115200);
+#if SOIL_LORA_TX
+  initializeRadio();
+#endif
 }
 
 void loop() {
   delay(1000);
   if (!Serial) {
     usbWasConnected = false;
+#if !SOIL_LORA_TX
     return;
+#endif
   }
-  if (!usbWasConnected) {
+  if (Serial && !usbWasConnected) {
     announce();
     usbWasConnected = true;
     if (correctPinMap) scanBus();
   }
-  if (!correctPinMap) return;
+  if (!correctPinMap) {
+#if SOIL_LORA_TX
+    serviceTransmit(false, 0);
+#endif
+    return;
+  }
   ++attempts;
   if (attempts == 1 || attempts % 10 == 0) scanBus();
   int16_t raw = 0;
-  if (readA0(raw)) {
+  const bool valid = readA0(raw);
+  if (valid) {
     ++readings;
     const float volts = raw * 0.000125f;
-    Serial.print(F("[MESURE] t_ms=")); Serial.print(millis());
-    Serial.print(F(" adresse=0x")); Serial.print(adsAddress, HEX);
-    Serial.print(F(" A0_brut=")); Serial.print(raw);
-    Serial.print(F(" A0_V=")); Serial.print(volts, 6);
-    Serial.print(F(" etat="));
+    SOIL_LOG.print(F("[MESURE] t_ms=")); SOIL_LOG.print(millis());
+    SOIL_LOG.print(F(" adresse=0x")); SOIL_LOG.print(adsAddress, HEX);
+    SOIL_LOG.print(F(" A0_brut=")); SOIL_LOG.print(raw);
+    SOIL_LOG.print(F(" A0_V=")); SOIL_LOG.print(volts, 6);
+    SOIL_LOG.print(F(" etat="));
     // Quelques codes negatifs peuvent venir de l'offset, meme avec A0 a GND.
-    if (raw < -8 || volts > 3.3f) Serial.println(F("HORS_PLAGE_NOMINALE"));
-    else if (raw < 0) Serial.println(F("PROCHE_ZERO_OFFSET_POSSIBLE"));
-    else Serial.println(F("DANS_PLAGE_NOMINALE"));
+    if (raw < -8 || volts > 3.3f) SOIL_LOG.println(F("HORS_PLAGE_NOMINALE"));
+    else if (raw < 0) SOIL_LOG.println(F("PROCHE_ZERO_OFFSET_POSSIBLE"));
+    else SOIL_LOG.println(F("DANS_PLAGE_NOMINALE"));
   } else {
     ++errors;
   }
-  Serial.print(F("[BILAN] essais=")); Serial.print(attempts);
-  Serial.print(F(" mesures=")); Serial.print(readings);
-  Serial.print(F(" erreurs=")); Serial.println(errors);
+  SOIL_LOG.print(F("[BILAN] essais=")); SOIL_LOG.print(attempts);
+  SOIL_LOG.print(F(" mesures=")); SOIL_LOG.print(readings);
+  SOIL_LOG.print(F(" erreurs=")); SOIL_LOG.println(errors);
+#if SOIL_LORA_TX
+  serviceTransmit(valid, raw);
+#endif
 }

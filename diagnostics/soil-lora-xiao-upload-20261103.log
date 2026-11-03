@@ -1,0 +1,15 @@
+Upgrading target on COM7 with DFU package C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\XiaoSoilDiagnostic\.pio\build\xiao_soil_lora_tx\firmware.zip. Flow control is disabled, Single bank, Touch disabled
+Opened serial port COM7
+Starting DFU upgrade of type 4, SoftDevice size: 0, bootloader size: 0, application size: 89744
+Sending DFU start packet
+Sending DFU init packet
+Sending firmware file
+########################################
+########################################
+########################################
+########################################
+################
+Activating new firmware
+
+DFU upgrade took 5.584705114364624s
+Device programmed.

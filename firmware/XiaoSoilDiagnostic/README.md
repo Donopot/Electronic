@@ -1,5 +1,10 @@
 # Diagnostic USB XIAO et ADS1115
 
+Le profil optionnel `xiao_soil_lora_tx` ajoute maintenant le transport SOIL-01
+vers le Heltec, sans changer les lignes `[MESURE]` du diagnostic ci-dessous.
+Voir [profils, protocole, branchements et capture LoRa](../../docs/soil-lora.md).
+Le profil par defaut `xiao_soil_diagnostic` conserve le fonctionnement USB seul.
+
 Projet autonome pour XIAO nRF52840 et sonde capacitive analogique. Le kit
 Wio-SX1262 peut rester assemble, mais ce diagnostic n'initialise pas la radio.
 Il remplace l'application installee sur le XIAO pendant le test.
@@ -53,6 +58,12 @@ substrat humide, sans mouiller l'electronique situee au-dessus de la sonde.
 Au premier scan materiel du 3 novembre 2026, l'unique reponse est 0x49.
 Ce n'est pas l'adresse attendue avec ADDR a GND ; controler ce raccordement
 hors tension. Il n'est pas necessaire de deplacer les fils pour lire 0x49.
+
+Apres l'echange sur les masses communes, le nouveau test du meme jour trouve
+0x48 et mesure une mediane de 2,695625 V dans l'air contre 1,060375 V dans
+la terre humide : 59 conversions sans erreur. La reponse physique est observee ;
+l'etalonnage du pot reste a faire. Voir
+[le rapport](../../diagnostics/humidite-controle-gnd-20261103-160424.md).
 
 ## References
 

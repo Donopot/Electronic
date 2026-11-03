@@ -1,0 +1,72 @@
+{
+  "authenticated": false,
+  "tx_count": 4,
+  "rx_count": 4,
+  "matched": [
+    {
+      "session": 1244589601,
+      "seq": 2,
+      "uptime_ms": 31780,
+      "status": "ok",
+      "address": 72,
+      "raw": 21485,
+      "uv": 2685625,
+      "tx_host_s": 3.625,
+      "rx_host_s": 3.64
+    },
+    {
+      "session": 1244589601,
+      "seq": 3,
+      "uptime_ms": 62419,
+      "status": "ok",
+      "address": 72,
+      "raw": 21481,
+      "uv": 2685125,
+      "tx_host_s": 34.265,
+      "rx_host_s": 34.281
+    },
+    {
+      "session": 1244589601,
+      "seq": 4,
+      "uptime_ms": 93062,
+      "status": "ok",
+      "address": 72,
+      "raw": 9489,
+      "uv": 1186125,
+      "tx_host_s": 64.906,
+      "rx_host_s": 64.922
+    },
+    {
+      "session": 1244589601,
+      "seq": 5,
+      "uptime_ms": 123703,
+      "status": "ok",
+      "address": 72,
+      "raw": 21528,
+      "uv": 2691000,
+      "tx_host_s": 95.547,
+      "rx_host_s": 95.562
+    }
+  ],
+  "comparison_window_s": [
+    1.0,
+    104.0309999999954
+  ],
+  "boundary_margin_s": 1.0,
+  "boundary_pairs": [],
+  "valid_matched_count": 4,
+  "losses": [],
+  "unmatched_rx": [],
+  "mismatches": [],
+  "tx_duplicates": [],
+  "rx_duplicates": [],
+  "errors": [],
+  "accepted": true,
+  "tx_port": "COM8",
+  "rx_port": "COM5",
+  "duration_requested_s": 105.0,
+  "duration_s": 105.0309999999954,
+  "capture_errors": [],
+  "interrupted": false,
+  "completed": true
+}

@@ -1,0 +1,101 @@
+********************************************************************************
+Obsolete PIO Core v6.1.18 is used (previous was 6.2.0)
+Please remove multiple PIO Cores from a system:
+https://docs.platformio.org/en/latest/core/installation/troubleshooting.html
+********************************************************************************
+Processing heltec_v3_soil_lora (platform: espressif32@6.12.0; board: heltec_wifi_lora_32_V3; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/heltec_wifi_lora_32_V3.html
+PLATFORM: Espressif 32 (6.12.0) > Heltec WiFi LoRa 32 (V3)
+HARDWARE: ESP32S3 240MHz, 320KB RAM, 8MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-builtin, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 2.40900.250804 (4.9.0) 
+ - tool-mkfatfs @ 2.0.1 
+ - tool-mklittlefs @ 1.203.210628 (2.3) 
+ - tool-mkspiffs @ 2.230.0 (2.30) 
+ - toolchain-riscv32-esp @ 8.4.0+2021r2-patch5 
+ - toolchain-xtensa-esp32s3 @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 41 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- SparkFun VEML7700 Arduino Library @ 2.0.1
+|-- SparkFun Toolkit @ 1.2.1
+|-- Adafruit SSD1306 @ 2.5.13
+|-- Adafruit GFX Library @ 1.13.0
+|-- Adafruit BusIO @ 1.17.4
+|-- RadioLib @ 7.8.1
+|-- Wire @ 2.0.0
+|-- PlantSoilProtocol @ 1.0.0
+|-- SPI @ 2.0.0
+Building in release mode
+Retrieving maximum program size .pio\build\heltec_v3_soil_lora\firmware.elf
+Checking size .pio\build\heltec_v3_soil_lora\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]   6.5% (used 21212 bytes from 327680 bytes)
+Flash: [=         ]  10.5% (used 351189 bytes from 3342336 bytes)
+Configuring upload protocol...
+AVAILABLE: cmsis-dap, esp-bridge, esp-builtin, esp-prog, espota, esptool, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa
+CURRENT: upload_protocol = esptool
+Looking for upload port...
+Using manually specified: COM5
+Uploading .pio\build\heltec_v3_soil_lora\firmware.bin
+esptool.py v4.9.0
+Serial port COM5
+Connecting....
+Chip is ESP32-S3 (QFN56) (revision v0.2)
+Features: WiFi, BLE, Embedded Flash 8MB (GD)
+Crystal is 40MHz
+MAC: 3c:0f:02:eb:f5:28
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00000000 to 0x00003fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Flash will be erased from 0x0000e000 to 0x0000ffff...
+Flash will be erased from 0x00010000 to 0x00065fff...
+SHA digest in image updated
+Compressed 15104 bytes to 10430...
+Writing at 0x00000000... (100 %)
+Wrote 15104 bytes (10430 compressed) at 0x00000000 in 0.4 seconds (effective 280.1 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 146...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (146 compressed) at 0x00008000 in 0.0 seconds (effective 513.1 kbit/s)...
+Hash of data verified.
+Compressed 8192 bytes to 47...
+Writing at 0x0000e000... (100 %)
+Wrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 889.9 kbit/s)...
+Hash of data verified.
+Compressed 351600 bytes to 201037...
+Writing at 0x00010000... (7 %)
+Writing at 0x0001a69e... (15 %)
+Writing at 0x000274f2... (23 %)
+Writing at 0x0002cef3... (30 %)
+Writing at 0x00032540... (38 %)
+Writing at 0x00037817... (46 %)
+Writing at 0x0003d54e... (53 %)
+Writing at 0x00042d64... (61 %)
+Writing at 0x0004831a... (69 %)
+Writing at 0x0004da57... (76 %)
+Writing at 0x00053e66... (84 %)
+Writing at 0x0005e36f... (92 %)
+Writing at 0x000642a6... (100 %)
+Wrote 351600 bytes (201037 compressed) at 0x00010000 in 4.7 seconds (effective 602.7 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
+========================= [SUCCESS] Took 16.50 seconds =========================
+
+Environment          Status    Duration
+-------------------  --------  ------------
+heltec_v3_soil_lora  SUCCESS   00:00:16.497
+========================= 1 succeeded in 00:00:16.497 =========================

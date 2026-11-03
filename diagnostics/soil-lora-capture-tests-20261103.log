@@ -1,0 +1,18 @@
+test_boundary_pairs_and_real_loss (__main__.CaptureTests.test_boundary_pairs_and_real_loss) ... ok
+test_capture_window_requires_timestamps (__main__.CaptureTests.test_capture_window_requires_timestamps) ... ok
+test_exact_pairing (__main__.CaptureTests.test_exact_pairing) ... ok
+test_exclusive_summary_reservation_wins_the_race (__main__.CaptureTests.test_exclusive_summary_reservation_wins_the_race) ... ok
+test_fault_and_malformed (__main__.CaptureTests.test_fault_and_malformed) ... ok
+test_giant_numeric_field_is_an_explicit_error (__main__.CaptureTests.test_giant_numeric_field_is_an_explicit_error) ... ok
+test_interrupt_joins_readers_before_closing_ports (__main__.CaptureTests.test_interrupt_joins_readers_before_closing_ports) ... ok
+test_losses_mismatch_duplicates (__main__.CaptureTests.test_losses_mismatch_duplicates) ... ok
+test_main_capture_error_overrides_matching_pairs (__main__.CaptureTests.test_main_capture_error_overrides_matching_pairs) ... ok
+test_main_interrupt_preserves_report (__main__.CaptureTests.test_main_interrupt_preserves_report) ... ok
+test_only_a_recent_partial_tail_is_a_capture_boundary (__main__.CaptureTests.test_only_a_recent_partial_tail_is_a_capture_boundary) ... ok
+test_oversized_completed_line_and_invalid_utf8 (__main__.CaptureTests.test_oversized_completed_line_and_invalid_utf8) ... ok
+test_reader_checks_completed_long_lines_and_utf8 (__main__.CaptureTests.test_reader_checks_completed_long_lines_and_utf8) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 2.111s
+
+OK
