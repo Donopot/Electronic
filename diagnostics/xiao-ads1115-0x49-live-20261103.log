@@ -1,0 +1,79 @@
+Capture COM8, UTC=2026-11-03T14:40:21.987876+00:00, duree=25.0s
+
+[XIAO-SOIL-DIAG] v1 / USB / D6=P1.11 SDA / D7=P1.12 SCL
+[CONFIG] ADS1115 attendu 0x48, selection unique 0x48..0x4B, A0/GND, +/-4.096 V, 128 SPS.
+[INFO] D0 relachee ; radio non initialisee ; aucun pourcentage sans etalonnage.
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x49
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ADC] adresse_selectionnee=0x49
+[INFO] Adresse differente de 0x48 : verifier le strap ADDR hors tension.
+[MESURE] t_ms=411033 adresse=0x49 A0_brut=15259 A0_V=1.907375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=97 mesures=97 erreurs=0
+[MESURE] t_ms=412048 adresse=0x49 A0_brut=15253 A0_V=1.906625 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=98 mesures=98 erreurs=0
+[MESURE] t_ms=413064 adresse=0x49 A0_brut=15254 A0_V=1.906750 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=99 mesures=99 erreurs=0
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x49
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ADC] adresse_selectionnee=0x49
+[INFO] Adresse differente de 0x48 : verifier le strap ADDR hors tension.
+[MESURE] t_ms=414125 adresse=0x49 A0_brut=15263 A0_V=1.907875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=100 mesures=100 erreurs=0
+[MESURE] t_ms=415140 adresse=0x49 A0_brut=15255 A0_V=1.906875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=101 mesures=101 erreurs=0
+[MESURE] t_ms=416156 adresse=0x49 A0_brut=15251 A0_V=1.906375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=102 mesures=102 erreurs=0
+[MESURE] t_ms=417171 adresse=0x49 A0_brut=15254 A0_V=1.906750 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=103 mesures=103 erreurs=0
+[MESURE] t_ms=418186 adresse=0x49 A0_brut=15255 A0_V=1.906875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=104 mesures=104 erreurs=0
+[MESURE] t_ms=419202 adresse=0x49 A0_brut=15253 A0_V=1.906625 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=105 mesures=105 erreurs=0
+[MESURE] t_ms=420216 adresse=0x49 A0_brut=15251 A0_V=1.906375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=106 mesures=106 erreurs=0
+[MESURE] t_ms=421231 adresse=0x49 A0_brut=15254 A0_V=1.906750 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=107 mesures=107 erreurs=0
+[MESURE] t_ms=422246 adresse=0x49 A0_brut=15256 A0_V=1.907000 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=108 mesures=108 erreurs=0
+[MESURE] t_ms=423261 adresse=0x49 A0_brut=15252 A0_V=1.906500 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=109 mesures=109 erreurs=0
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x49
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ADC] adresse_selectionnee=0x49
+[INFO] Adresse differente de 0x48 : verifier le strap ADDR hors tension.
+[MESURE] t_ms=424322 adresse=0x49 A0_brut=15259 A0_V=1.907375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=110 mesures=110 erreurs=0
+[MESURE] t_ms=425337 adresse=0x49 A0_brut=15252 A0_V=1.906500 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=111 mesures=111 erreurs=0
+[MESURE] t_ms=426353 adresse=0x49 A0_brut=15255 A0_V=1.906875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=112 mesures=112 erreurs=0
+[MESURE] t_ms=427369 adresse=0x49 A0_brut=15256 A0_V=1.907000 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=113 mesures=113 erreurs=0
+[MESURE] t_ms=428383 adresse=0x49 A0_brut=15252 A0_V=1.906500 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=114 mesures=114 erreurs=0
+[MESURE] t_ms=429399 adresse=0x49 A0_brut=15254 A0_V=1.906750 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=115 mesures=115 erreurs=0
+[MESURE] t_ms=430415 adresse=0x49 A0_brut=15255 A0_V=1.906875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=116 mesures=116 erreurs=0
+[MESURE] t_ms=431430 adresse=0x49 A0_brut=15256 A0_V=1.907000 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=117 mesures=117 erreurs=0
+[MESURE] t_ms=432446 adresse=0x49 A0_brut=15253 A0_V=1.906625 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=118 mesures=118 erreurs=0
+[MESURE] t_ms=433460 adresse=0x49 A0_brut=15250 A0_V=1.906250 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=119 mesures=119 erreurs=0
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x49
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ADC] adresse_selectionnee=0x49
+[INFO] Adresse differente de 0x48 : verifier le strap ADDR hors tension.
+[MESURE] t_ms=434521 adresse=0x49 A0_brut=15258 A0_V=1.907250 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=120 mesures=120 erreurs=0
+[MESURE] t_ms=435537 adresse=0x49 A0_brut=15254 A0_V=1.906750 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=121 mesures=121 erreurs=0

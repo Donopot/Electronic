@@ -1,0 +1,63 @@
+Capture COM8, UTC=2026-11-03T14:29:15.347194+00:00, duree=25.0s
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x49
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=1 mesures=0 erreurs=1
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=2 mesures=0 erreurs=2
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=3 mesures=0 erreurs=3
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=4 mesures=0 erreurs=4
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=5 mesures=0 erreurs=5
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=6 mesures=0 erreurs=6
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=7 mesures=0 erreurs=7
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=8 mesures=0 erreurs=8
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=9 mesures=0 erreurs=9
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x49
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=10 mesures=0 erreurs=10
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=11 mesures=0 erreurs=11
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=12 mesures=0 erreurs=12
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=13 mesures=0 erreurs=13
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=14 mesures=0 erreurs=14
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=15 mesures=0 erreurs=15
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=16 mesures=0 erreurs=16
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=17 mesures=0 erreurs=17
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=18 mesures=0 erreurs=18
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=19 mesures=0 erreurs=19
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x49
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=20 mesures=0 erreurs=20
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=21 mesures=0 erreurs=21
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=22 mesures=0 erreurs=22
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=23 mesures=0 erreurs=23
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=24 mesures=0 erreurs=24
+[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.
+[BILAN] essais=25 mesures=0 erreurs=25

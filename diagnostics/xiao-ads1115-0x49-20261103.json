@@ -1,0 +1,18 @@
+{
+  "port": "COM8",
+  "completed": false,
+  "duration_requested_s": 25.0,
+  "duration_s": 0.0,
+  "max_gap_s": 0.0,
+  "coverage_ok": false,
+  "sample_count": 0,
+  "errors": [
+    "[ERREUR] Capture interrompue : could not open port 'COM8': PermissionError(13, 'Acc\u00e8s refus\u00e9.', None, 5)"
+  ],
+  "addresses": [],
+  "samples": [],
+  "volts_min": null,
+  "volts_max": null,
+  "physical_sensor_validated": false,
+  "note": "Les conversions ne prouvent pas la presence de la sonde ni sa sensibilite a l'humidite."
+}

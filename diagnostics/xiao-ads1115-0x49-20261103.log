@@ -1,0 +1,2 @@
+Capture COM8, UTC=2026-11-03T14:33:41.148937+00:00, duree=25.0s
+[ERREUR] Capture interrompue : could not open port 'COM8': PermissionError(13, 'Accès refusé.', None, 5)

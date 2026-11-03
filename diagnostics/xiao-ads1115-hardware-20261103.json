@@ -1,0 +1,39 @@
+{
+  "port": "COM8",
+  "sample_count": 0,
+  "errors": [
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque.",
+    "[ERREUR] Ecriture configuration 0x48 : NACK ou bus bloque."
+  ],
+  "addresses": [
+    "0x49"
+  ],
+  "samples": [],
+  "volts_min": null,
+  "volts_max": null,
+  "physical_sensor_validated": false,
+  "note": "Les conversions ne prouvent pas la presence de la sonde ni sa sensibilite a l'humidite."
+}
