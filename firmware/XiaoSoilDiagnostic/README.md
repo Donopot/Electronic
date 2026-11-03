@@ -5,6 +5,13 @@ vers le Heltec, sans changer les lignes `[MESURE]` du diagnostic ci-dessous.
 Voir [profils, protocole, branchements et capture LoRa](../../docs/soil-lora.md).
 Le profil par defaut `xiao_soil_diagnostic` conserve le fonctionnement USB seul.
 
+Les deux profils utilisent une [variante locale](variants/README.md) pour
+maintenir P0.14 / READ_BAT_ENABLE à LOW dès `initVariant()`, tout en conservant
+le réglage de recharge faible courant annoncé à environ 50 mA. Le bootloader
+et la recharge matérielle ne sont pas validés par cette correction. Pour le
+premier essai batterie, débrancher l'USB avant de raccorder la cellule protégée
+aux pastilles BAT+/BAT−, après contrôle de sa polarité. Le P-MOS reste débranché.
+
 Projet autonome pour XIAO nRF52840 et sonde capacitive analogique. Le kit
 Wio-SX1262 peut rester assemble, mais ce diagnostic n'initialise pas la radio.
 Il remplace l'application installee sur le XIAO pendant le test.
