@@ -93,16 +93,16 @@ void OledDisplay::showSoil(const Measurement& lux, const plantsoil::ReceiverBank
     display_.setTextSize(1);
     char line[32];
     display_.setCursor(0, 0); display_.print("PLANT STATION  PRG3s");
-    display_.setCursor(0, 9);
+    display_.setCursor(0, 8);
     if (lux.status == Status::Ok && isfinite(lux.lux) && lux.lux >= 0 && lux.lux <= kMaxLux)
         snprintf(line, sizeof(line), "Lux %.1f", lux.lux);
     else snprintf(line, sizeof(line), "Lux %s", lux.status == Status::WarmingUp ? "EN COURS" : "ERREUR CAPTEUR");
     display_.print(line);
-    static_assert(plantsoil::kNodeCount == 3, "Disposition OLED prevue pour trois sondes");
-    display_.setCursor(0, 18); display_.print("SONDES NON AUTH");
+    static_assert(plantsoil::kNodeCount == 4, "Disposition OLED prevue pour quatre sondes");
+    display_.setCursor(0, 16); display_.print("SONDES NON AUTH");
     for (uint8_t id = 1; id <= plantsoil::kNodeCount; ++id) {
         const auto& node = soil.node(id);
-        display_.setCursor(0, 18 + id * 9);
+        display_.setCursor(0, 16 + id * 8);
         const auto state = node.state(now);
         if (state == plantsoil::Freshness::Current) {
             snprintf(line, sizeof(line), "SOIL-%02u %.3f V %lum", static_cast<unsigned>(id),
@@ -113,7 +113,7 @@ void OledDisplay::showSoil(const Measurement& lux, const plantsoil::ReceiverBank
                         state == plantsoil::Freshness::Stale ? "PERIMEE" : "DEFAUT ADS");
         display_.print(line);
     }
-    display_.setCursor(0, 54); display_.print(radioReady ? "RADIO ECOUTE" : "ERREUR RADIO");
+    display_.setCursor(0, 56); display_.print(radioReady ? "RADIO ECOUTE" : "ERREUR RADIO");
     display_.display();
 }
 #endif

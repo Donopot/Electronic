@@ -37,7 +37,17 @@ int main(int argc, char** argv) {
   setup();
   assert(current.node == SOIL_NODE_ID);
   assert(!probePower.powered() && host::modes()[0] == INPUT);
-  if (scenario == "acquire") {
+  if (scenario == "banner") {
+    constexpr uint32_t firstSeconds[] = {30, 35, 40, 45};
+    loop();
+    char identity[48], initial[48], state[96];
+    snprintf(identity,sizeof(identity),"[CONFIG] node=SOIL-%02u",static_cast<unsigned>(SOIL_NODE_ID));
+    snprintf(initial,sizeof(initial),"premier apres %lu s",static_cast<unsigned long>(firstSeconds[SOIL_NODE_ID-1]));
+    snprintf(state,sizeof(state),"[SOIL_POWER] mode=AUTO gate=1 node=SOIL-%02u",static_cast<unsigned>(SOIL_NODE_ID));
+    assert(host::usb().find(identity)!=std::string::npos && host::usb().find(initial)!=std::string::npos);
+    assert(host::usb().find(state)!=std::string::npos && attempts==0 && !probePower.powered());
+    assert(host::radio().transmissions.empty());
+  } else if (scenario == "acquire") {
     int16_t raw = -1;
     assert(probePower.acquire(sample, raw) && raw == 20800 && sampleIndex == 5);
     assert(!probePower.powered() && host::modes()[0] == INPUT);
@@ -147,7 +157,7 @@ int main(int argc, char** argv) {
     assert(delta >= 1800000UL && delta < 1802000UL && readings == 4);
   } else if (scenario == "cadence") {
     static_assert(plantsoil::kTransmitMs == 1800000UL, "Releves toutes les trente minutes");
-    constexpr uint32_t expectedInitial[] = {30000UL, 35000UL, 40000UL};
+    constexpr uint32_t expectedInitial[] = {30000UL, 35000UL, 40000UL, 45000UL};
     static_assert(kInitialSampleDelayMs == expectedInitial[SOIL_NODE_ID - 1], "Delai initial selon le noeud");
     host::connected() = false;
     adsAddress = 0x48;

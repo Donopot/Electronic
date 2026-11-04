@@ -16,9 +16,10 @@ Les paragraphes ci-dessous décrivent les profils historiques sans commutation.
 Pour une deuxième sonde, utiliser **`xiao_soil_lora_pmos_node2`** : identifiant
 SOIL-02 et premier cycle après 35 s, puis 30 min. Pour la troisième, utiliser
 `xiao_soil_lora_pmos_node3` : SOIL-03, premier cycle à 40 s puis 30 min.
-Voir [trois sondes](../../docs/soil-three-nodes.md).
+Pour la quatrième, utiliser `xiao_soil_lora_pmos_node4`, premier cycle à 45 s.
+Voir [quatre sondes](../../docs/soil-four-nodes.md).
 
-Les cinq profils utilisent une [variante locale](variants/README.md) pour
+Les six profils utilisent une [variante locale](variants/README.md) pour
 maintenir P0.14 / READ_BAT_ENABLE à LOW dès `initVariant()`, tout en conservant
 le réglage de recharge faible courant annoncé à environ 50 mA. Le bootloader
 et la recharge matérielle ne sont pas validés par cette correction. Pour le

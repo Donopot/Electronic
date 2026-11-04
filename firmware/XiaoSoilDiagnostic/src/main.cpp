@@ -467,7 +467,7 @@ void setup() {
 #if SOIL_PMOS_CONTROL
   correctPinMap = correctPinMap && g_ADigitalPinMap[0] == 2;
   probePower.off();
-  // Premier relevé à 30/35/40 s suivant le nœud, puis période normale de 30 min.
+  // Premier relevé à 30/35/40/45 s suivant le nœud, puis période normale de 30 min.
   lastPowerCycle = millis() - plantsoil::kTransmitMs + kInitialSampleDelayMs;
 #endif
   if (correctPinMap) bus.release();

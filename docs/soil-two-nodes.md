@@ -1,7 +1,7 @@
 # Guide des sondes de terre
 
-Le guide actuel couvre [les trois sondes SOIL-01, SOIL-02 et SOIL-03](soil-three-nodes.md).
-Il inclut le nouvel écran compact, les commandes de compilation des cinq profils
+Le guide actuel couvre [les quatre sondes SOIL-01 à SOIL-04](soil-four-nodes.md).
+Il inclut le nouvel écran compact, les commandes de compilation des six profils
 XIAO et les contrôles d'identité. Les deux premières sondes restent compatibles
 sans reflash, avec un relevé toutes les trente minutes.
 

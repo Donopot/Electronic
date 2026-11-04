@@ -1,0 +1,37 @@
+{
+  "authenticated": false,
+  "compared_nodes": [],
+  "background_rx": [],
+  "tx_count": 0,
+  "rx_count": 0,
+  "matched": [],
+  "comparison_window_s": [
+    1.0,
+    1.0
+  ],
+  "boundary_margin_s": 1.0,
+  "boundary_pairs": [],
+  "valid_matched_count": 0,
+  "losses": [],
+  "unmatched_rx": [],
+  "valid_matched_by_node": {},
+  "minimum_per_node": 1,
+  "mismatches": [],
+  "tx_duplicates": [],
+  "rx_duplicates": [],
+  "errors": [],
+  "accepted": false,
+  "purpose": "startup_only",
+  "expected_node": 4,
+  "usb_serial": "0690EC20846A82A8",
+  "tx_port": "COM17",
+  "rx_port": "COM5",
+  "duration_s": 0.0,
+  "capture_errors": [
+    "could not open port 'COM17': FileNotFoundError(2, 'Le fichier sp\u00e9cifi\u00e9 est introuvable.', None, 2)"
+  ],
+  "interrupted": false,
+  "completed": false,
+  "gate_off_count": 0,
+  "lux_line_count": 0
+}

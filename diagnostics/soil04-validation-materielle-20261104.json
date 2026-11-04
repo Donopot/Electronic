@@ -1,0 +1,9 @@
+{
+  "capture": "diagnostics\\soil04-demarrage-20261104-131348Z.json",
+  "banner_checks": {
+    "identity": true,
+    "initial_delay": true,
+    "automatic": true
+  },
+  "accepted": true
+}

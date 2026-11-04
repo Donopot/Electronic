@@ -35,8 +35,8 @@ static void frameNode(unsigned id, const char* expected, const char* absent = "u
     assert(row.find(expected) != std::string::npos && row.find(absent) == std::string::npos);
     assert(row.size() <= 21); // police 6 pixels, ecran de 128 pixels
     const auto& draws = host::oledLayouts().back();
-    assert(draws.size() == 7);
-    const int rows[] = {0, 9, 18, 27, 36, 45, 54};
+    assert(draws.size() == 8);
+    const int rows[] = {0, 8, 16, 24, 32, 40, 48, 56};
     for (size_t i = 0; i < draws.size(); ++i) {
         assert(draws[i].x == 0 && draws[i].y == rows[i] && draws[i].size == 1);
         assert(draws[i].x + draws[i].text.size() * 6 <= 128 && draws[i].y + 8 <= 64);
@@ -93,23 +93,23 @@ int main(int argc, char** argv) {
     if (scenario == "layout") {
         plant::OledDisplay screen; assert(screen.begin());
         plantsoil::ReceiverBank bank;
-        const int16_t raw[] = {-8, 26400, 20000};
-        for (uint8_t id=1; id<=3; ++id) {
+        const int16_t raw[] = {-8, 26400, 20000, 21696};
+        for (uint8_t id=1; id<=4; ++id) {
             packet.node=id; packet.raw=raw[id-1];
             assert(plantsoil::encode(packet, bytes, sizeof(bytes)) == plantsoil::Result::Accepted);
             assert(bank.accept(bytes, sizeof(bytes), 100) == plantsoil::Result::Accepted);
         }
         plant::Measurement lux; lux.status=plant::Status::WarmingUp;
         screen.showSoil(lux, bank, true, 100 + plantsoil::kStaleMs - 1);
-        frameNode(1, "-0.001 V 89m"); frameNode(2, "3.300 V 89m"); frameNode(3, "2.500 V 89m");
+        frameNode(1, "-0.001 V 89m"); frameNode(2, "3.300 V 89m"); frameNode(3, "2.500 V 89m"); frameNode(4, "2.712 V 89m");
         frame("Lux EN COURS");
         lux.status=plant::Status::BusError;
         screen.showSoil(lux, bank, false, 100 + plantsoil::kStaleMs - 1);
         frame("Lux ERREUR CAPTEUR"); frame("ERREUR RADIO"); frameNode(1, "-0.001 V 89m");
-        puts("PASS disposition trois sondes : valeurs extremes, age 89m, lux en cours/erreur et limites ecran");
+        puts("PASS disposition quatre sondes : valeurs extremes, age 89m, lux en cours/erreur et limites ecran");
         return 0;
     }
-    if (scenario == "multi" || scenario == "three") {
+    if (scenario == "multi" || scenario == "three" || scenario == "four") {
         const auto injectNode = [&](uint8_t id, uint32_t session, uint32_t seq,
                                     plantsoil::AdcStatus status, int16_t raw, uint32_t now) {
             packet.node = id; packet.session = session; packet.sequence = seq;
@@ -119,9 +119,59 @@ int main(int argc, char** argv) {
         };
         injectNode(2, 1234, 1, plantsoil::AdcStatus::Ok, 8000, 13000);
         assert(hasLine("node=SOIL-02 session=1234 seq=1"));
-        if (scenario == "three") {
+        if (scenario == "three" || scenario == "four") {
             injectNode(3, 1234, 1, plantsoil::AdcStatus::Ok, 24000, 14000);
             frameNode(1, "2.696 V 0m"); frameNode(2, "1.000 V 0m"); frameNode(3, "3.000 V 0m");
+        }
+        if (scenario == "four") {
+            injectNode(4, 1234, 1, plantsoil::AdcStatus::Ok, 20000, 15000);
+            frameNode(1,"2.696 V 0m"); frameNode(2,"1.000 V 0m"); frameNode(3,"3.000 V 0m"); frameNode(4,"2.500 V 0m");
+            injectNode(4,1234,1,plantsoil::AdcStatus::Ok,8000,16000);
+            assert(hasLine("[SOIL_REJECT] node=SOIL-04 reason=duplicate")); frameNode(4,"2.500 V 0m");
+            injectNode(4,1234,0,plantsoil::AdcStatus::Ok,8000,17000);
+            assert(hasLine("[SOIL_REJECT] node=SOIL-04 reason=old_sequence"));
+            injectNode(4,1234,2,plantsoil::AdcStatus::ReadError,0,18000);
+            frameNode(1,"2.696 V"); frameNode(2,"1.000 V"); frameNode(3,"3.000 V"); frameNode(4,"DEFAUT ADS","2.500");
+            injectNode(4,1234,3,plantsoil::AdcStatus::Ok,26400,19000);
+            host::radio().receiveCode=-3;
+            injectNode(4,1234,3,plantsoil::AdcStatus::Ok,8000,20000);
+            frame("ERREUR RADIO"); frameNode(4,"3.300 V 0m");
+            host::radio().receiveCode=0;
+            host::now=30000; loop(); host::finishInitialization(); loop();
+            frame("RADIO ECOUTE"); frameNode(1,"2.696 V 0m"); frameNode(2,"1.000 V 0m"); frameNode(3,"3.000 V 0m"); frameNode(4,"3.300 V 0m");
+            injectNode(4,1234,2,plantsoil::AdcStatus::Ok,8000,79000);
+            frameNode(1,"2.696 V 1m"); frameNode(2,"1.000 V 1m"); frameNode(3,"3.000 V 1m"); frameNode(4,"3.300 V 1m");
+            const uint32_t expires4=19000+plantsoil::kStaleMs;
+            injectNode(1,5678,1,plantsoil::AdcStatus::Ok,16000,expires4-100);
+            injectNode(2,5678,1,plantsoil::AdcStatus::Ok,8000,expires4-90);
+            injectNode(3,5678,1,plantsoil::AdcStatus::Ok,20000,expires4-80);
+            host::now=expires4-1; loop();
+            frameNode(1,"2.000 V 0m"); frameNode(2,"1.000 V 0m"); frameNode(3,"2.500 V 0m"); frameNode(4,"3.300 V 89m");
+            host::now=expires4; loop(); frameNode(4,"PERIMEE","3.300");
+            frameNode(1,"2.000 V 0m"); frameNode(2,"1.000 V 0m"); frameNode(3,"2.500 V 0m");
+            injectNode(4,5678,1,plantsoil::AdcStatus::Ok,20000,expires4+10);
+            frameNode(4,"2.500 V 0m");
+            bytes[3]=5; host::now=expires4+20; host::inject(bytes,sizeof(bytes)); loop();
+            assert(hasLine("reason=node")); frameNode(4,"2.500 V 0m"); frameNode(1,"2.000 V 0m");
+            injectNode(4,9000,0xFFFFFFFF,plantsoil::AdcStatus::Ok,16000,expires4+30);
+            frameNode(4,"2.000 V 0m");
+            injectNode(4,9000,0,plantsoil::AdcStatus::Ok,24000,expires4+40);
+            assert(hasLine("node=SOIL-04 session=9000 seq=0")); frameNode(4,"3.000 V 0m");
+            injectNode(4,9000,0xFFFFFFFF,plantsoil::AdcStatus::Ok,8000,expires4+60040);
+            frameNode(4,"3.000 V 1m"); frameNode(1,"2.000 V 1m"); frameNode(2,"1.000 V 1m"); frameNode(3,"2.500 V 1m");
+            injectNode(4,9000,1,plantsoil::AdcStatus::ReadError,0,host::now+10);
+            const uint32_t faultExpires=host::now+plantsoil::kStaleMs;
+            injectNode(1,9001,1,plantsoil::AdcStatus::Ok,16000,faultExpires-100);
+            injectNode(2,9001,1,plantsoil::AdcStatus::Ok,8000,faultExpires-90);
+            injectNode(3,9001,1,plantsoil::AdcStatus::Ok,20000,faultExpires-80);
+            host::now=faultExpires-1;loop();
+            frameNode(4,"DEFAUT ADS"); frameNode(1,"2.000 V 0m"); frameNode(2,"1.000 V 0m"); frameNode(3,"2.500 V 0m");
+            host::now=faultExpires;loop();
+            frameNode(4,"PERIMEE"); frameNode(1,"2.000 V 0m"); frameNode(2,"1.000 V 0m"); frameNode(3,"2.500 V 0m");
+            injectNode(4,9000,2,plantsoil::AdcStatus::Ok,20000,faultExpires+10);
+            frameNode(4,"2.500 V 0m");
+            puts("PASS quatre sondes : etats, compteurs, reprise radio, expiration exacte et huit lignes OLED");
+            return 0;
         }
         frameNode(1, "2.696 V 0m"); frameNode(2, "1.000 V 0m");
         injectNode(2, 1234, 1, plantsoil::AdcStatus::Ok, 8000, 72000);
@@ -129,7 +179,7 @@ int main(int argc, char** argv) {
         frameNode(1, "2.696 V 1m"); frameNode(2, "1.000 V 0m");
         injectNode(1, 1234, 2, plantsoil::AdcStatus::ReadError, 0, 73000);
         frameNode(1, "DEFAUT ADS", "2.696"); frameNode(2, "1.000 V 1m");
-        bytes[3] = 4;
+        bytes[3] = 5;
         host::now = 74000; host::inject(bytes, sizeof(bytes)); loop();
         assert(hasLine("reason=node")); frameNode(2, "1.000 V 1m");
         host::now = 13000 + plantsoil::kStaleMs - 1; loop();

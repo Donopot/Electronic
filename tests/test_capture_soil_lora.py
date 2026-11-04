@@ -76,7 +76,7 @@ class CaptureTests(unittest.TestCase):
         self.assertEqual(result["compared_nodes"], [3])
         self.assertEqual(result["valid_matched_by_node"], {3: 3})
         self.assertEqual(len(result["background_rx"]), 6)
-        self.assertFalse(capture.compare(tx, rx + [line("RX", 0, node=4)])["accepted"])
+        self.assertFalse(capture.compare(tx, rx + [line("RX", 0, node=5)])["accepted"])
 
     def test_third_node_must_reach_its_own_minimum(self):
         tx=[line("TX", i, node=node) for node in (1,2,3) for i in range(3 if node<3 else 2)]
@@ -94,6 +94,35 @@ class CaptureTests(unittest.TestCase):
         self.assertTrue(capture.compare(tx,rx+[reject])["accepted"])
         tx=[line("TX",i,node=3) for i in range(3)]
         rx=[line("RX",i,node=3) for i in range(3)]
+        self.assertFalse(capture.compare(tx,rx+[reject])["accepted"])
+
+    def test_node4_with_three_background_nodes(self):
+        tx=[line("TX",i,node=4) for i in range(3)]
+        rx=[line("RX",i,node=node) for node in (1,2,3,4) for i in range(3)]
+        rx += [line("RX",4,raw=0,status="adc_error",node=node) for node in (1,2,3)]
+        rx += [f"[SOIL_REJECT] node=SOIL-{node:02d} reason={reason} authenticated=no"
+               for node in (1,2,3) for reason in ("duplicate","old_sequence")]
+        result=capture.compare(tx,rx)
+        self.assertTrue(result["accepted"])
+        self.assertEqual(result["compared_nodes"],[4])
+        self.assertEqual(result["valid_matched_by_node"],{4:3})
+        self.assertEqual(len(result["background_rx"]),12)
+        self.assertFalse(capture.compare(tx,rx+[line("RX",0,node=5)])["accepted"])
+
+    def test_fourth_node_minimum_is_individual(self):
+        tx=[line("TX",i,node=node) for node in (1,2,3,4) for i in range(3 if node<4 else 2)]
+        rx=[value.replace("SOIL_TX","SOIL_RX") for value in tx]
+        result=capture.compare(tx,rx)
+        self.assertFalse(result["accepted"])
+        self.assertEqual(result["valid_matched_by_node"],{1:3,2:3,3:3,4:2})
+        tx.append(line("TX",2,node=4)); rx.append(line("RX",2,node=4))
+        self.assertTrue(capture.compare(tx,rx)["accepted"])
+
+    def test_fourth_node_attributed_reject_scope(self):
+        reject="[SOIL_REJECT] node=SOIL-04 reason=old_sequence authenticated=no"
+        tx=[line("TX",i,node=3) for i in range(3)];rx=[line("RX",i,node=3) for i in range(3)]
+        self.assertTrue(capture.compare(tx,rx+[reject])["accepted"])
+        tx=[line("TX",i,node=4) for i in range(3)];rx=[line("RX",i,node=4) for i in range(3)]
         self.assertFalse(capture.compare(tx,rx+[reject])["accepted"])
 
     def test_identical_counters_cannot_cross_pair_nodes(self):
@@ -129,7 +158,7 @@ class CaptureTests(unittest.TestCase):
         tx = [line("TX", i, node=2) for i in range(3)]
         rx = [line("RX", i, node=2) for i in range(3)]
         self.assertFalse(capture.compare(tx, rx + [rx[0]])["accepted"])
-        self.assertFalse(capture.compare(tx, rx + [line("RX", 0, node=4)])["accepted"])
+        self.assertFalse(capture.compare(tx, rx + [line("RX", 0, node=5)])["accepted"])
         changed_session = rx[0].replace("session=1234", "session=4321")
         self.assertFalse(capture.compare(tx, rx + [changed_session])["accepted"])
         self.assertFalse(capture.compare(tx, rx[1:])["accepted"])

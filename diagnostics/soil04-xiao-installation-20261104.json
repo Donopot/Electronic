@@ -1,0 +1,12 @@
+{
+  "expected_node": 4,
+  "usb_serial": "0690EC20846A82A8",
+  "boot_port": "COM16",
+  "package": "firmware\\XiaoSoilDiagnostic\\.pio\\build\\xiao_soil_lora_pmos_node4\\firmware.zip",
+  "sha256": "4e01073236df441752d96e4c23c41032b75d8a88aa5270c6299a48b0a249da80",
+  "application_bytes": 92596,
+  "application_only": true,
+  "battery_isolated_confirmed": true,
+  "antenna_confirmed": true,
+  "utc": "2026-11-04T13:12:58.727226+00:00"
+}

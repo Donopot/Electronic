@@ -1,8 +1,8 @@
 # Plant Station — diagnostic VEML7700 / Heltec V3
 
 Le profil optionnel **`heltec_v3_soil_lora`** recoit maintenant **SOIL-01 et
-SOIL-02 et SOIL-03** et affiche simultanement leurs tensions et ages avec les lux.
-Leurs etats et peremptions de 90 minutes sont independants. Voir [trois sondes](../../docs/soil-three-nodes.md).
+SOIL-02, SOIL-03 et SOIL-04** et affiche simultanement leurs tensions et ages avec les lux.
+Leurs etats et peremptions de 90 minutes sont independants. Voir [quatre sondes](../../docs/soil-four-nodes.md).
 Les paragraphes historiques ci-dessous decrivent les profils lux texte/JSON.
 
 Les bruts de chaque sonde restent disponibles sur l'UART ; l'écran montre

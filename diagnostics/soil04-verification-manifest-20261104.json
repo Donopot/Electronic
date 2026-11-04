@@ -1,0 +1,105 @@
+{
+  "generated_utc": "2026-11-04T13:11:07.814044+00:00",
+  "base_revision": "685da119ee398927717c6428f8dbb50ed6bc2c54",
+  "source_state": "modifications locales avant commit",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "environment": {
+    "PYTHONPATH": ".tools/xiao-diagnostic-python",
+    "PLATFORMIO_CORE_DIR": ".tools/platformio"
+  },
+  "source_sha256": {
+    "firmware/PlantStationVeml7700/README.md": "85a79169b24fb49c4793f9275daba9b2570fdb132e96ba8b178c538afabc9373",
+    "firmware/PlantStationVeml7700/src/display/OledDisplay.cpp": "8f5a4d1046519672c27e84387c3b586edfc6a198ca51e5088084d1b2f028e013",
+    "firmware/PlantStationVeml7700/src/radio/SoilRadio.cpp": "486519ee951c10d402a9fb068ede661a2628589828e0bba96817d025f1c0585d",
+    "firmware/PlantStationVeml7700/test/test_soil_radio.cpp": "05f35199bb10e364f7ef4c46a70769777f2541d86f08dd5b1032774867351312",
+    "firmware/XiaoSoilDiagnostic/README.md": "a14d740d73278d2c0a95ee7cab65c5711ecfc4b9a55f1d8af2514b2670ea6145",
+    "firmware/XiaoSoilDiagnostic/platformio.ini": "cdbd2534b34b06abecf656d2c0dac43e40be28fb0ba1bcbe01d2b3ad4fed4a89",
+    "firmware/XiaoSoilDiagnostic/src/main.cpp": "270a4aedabe58003c0f0965399aab514923bec4c79f67b81a344b024fec92f7a",
+    "firmware/XiaoSoilDiagnostic/test/test_pmos.cpp": "a16ec473c67897d7a9881c8b57de0a9b644a254ba42cfb5ae1986f73c9291304",
+    "firmware/XiaoSoilDiagnostic/variants/README.md": "f4c161dac5ea483aec256e9f35904ac30bf4f30bdcc04eca5e02632e95ac4f85",
+    "lib/PlantSoilProtocol/src/PlantSoilProtocol.h": "b70543f2376a8a201059023b4ca49d67eb00356d7bbc820983518d2f14698a1f",
+    "lib/PlantSoilProtocol/test/test_protocol.cpp": "362d220d2f196f0899ec00bcf192dbf4b28e4cfc60a5cbe07d010eabf9b00eab",
+    "tests/test_capture_soil_lora.py": "56f8a72201d0cf4a896da6ada2b3b690b85fcda7ae1badf31269ad1cc0d0cf77",
+    "tests/test_xiao_battery_variant.py": "62270378c22c5092e03abe709c2eb743964aaaddd8297a61923db526f74f0e4f",
+    "tools/capture_soil_lora.py": "27e6979f64ccaa908308493f79602a44603e28ffe7f169b47c069c043f2b1cf5",
+    "tools/run_soil_lora_host_tests.py": "af6797db4a8743bc3b7841e3e46d5695d1920d3622adb17f92d0537d2318a58e"
+  },
+  "checks": {
+    "host": {
+      "command": "python tools/run_soil_lora_host_tests.py",
+      "log": "diagnostics/soil04-host-tests-20261104.log",
+      "result": "PASS",
+      "coverage": "66 scenarios",
+      "sha256": "d5f623cc82e743f0423e184aaf330a1e973abe55670ec5e0247d016d20ba088e"
+    },
+    "capture": {
+      "command": "python tests/test_capture_soil_lora.py",
+      "log": "diagnostics/soil04-capture-tests-20261104.log",
+      "result": "PASS",
+      "coverage": "26 tests",
+      "sha256": "9f74e0542fccf403a4f6fc0cd23ad2e190a96c0a77a6b14c182402279a309e3a"
+    },
+    "battery": {
+      "command": "python tests/test_xiao_battery_variant.py",
+      "log": "diagnostics/soil04-battery-tests-20261104.log",
+      "result": "PASS",
+      "coverage": "3 tests, 6 ELF",
+      "sha256": "67a31d525e51295e2df29e17dc48cd150a962132cfde768e4773b985be6dd9d9"
+    },
+    "xiao_builds": {
+      "command": "python -m platformio run --project-dir firmware/XiaoSoilDiagnostic -e xiao_soil_diagnostic -e xiao_soil_lora_tx -e xiao_soil_lora_pmos -e xiao_soil_lora_pmos_node2 -e xiao_soil_lora_pmos_node3 -e xiao_soil_lora_pmos_node4",
+      "log": "diagnostics/soil04-xiao-builds-20261104.log",
+      "result": "PASS",
+      "coverage": "6 profils",
+      "sha256": "39499f18959dc259772f1101709ffcd8dd7aeb5af8e5ff58b74a54fa6e8b3203"
+    },
+    "heltec_builds": {
+      "command": "python -m platformio run --project-dir firmware/PlantStationVeml7700 -e heltec_v3_text -e heltec_v3_json -e heltec_v3_soil_lora",
+      "log": "diagnostics/soil04-heltec-builds-20261104.log",
+      "result": "PASS",
+      "coverage": "3 profils",
+      "sha256": "3d0331b4fca479b0940fef2e4b99527af62509c5401e97f2b11adcbc6a691f34"
+    }
+  },
+  "artifacts": {
+    "firmware/XiaoSoilDiagnostic/.pio/build/xiao_soil_lora_pmos_node4/firmware.zip": {
+      "bytes": 93415,
+      "sha256": "4e01073236df441752d96e4c23c41032b75d8a88aa5270c6299a48b0a249da80"
+    },
+    "firmware/PlantStationVeml7700/.pio/build/heltec_v3_soil_lora/firmware.bin": {
+      "bytes": 352112,
+      "sha256": "0f76c9e35a78ec6ee2706bbd09afe316387146c1bcc5070b0028004ad34974fe"
+    }
+  },
+  "hardware": {
+    "accepted": true,
+    "expected_node": 4,
+    "usb_serial": "0690EC20846A82A8",
+    "tx_port": "COM17",
+    "rx_port": "COM5",
+    "capture": "diagnostics\\soil04-demarrage-20261104-131348Z.json",
+    "validation": "diagnostics/soil04-validation-materielle-20261104.json",
+    "purpose": "startup_only",
+    "first_three_reflashed": false,
+    "valid_lux_count": 105,
+    "finalized_utc": "2026-11-04T13:16:34.676387+00:00"
+  },
+  "hardware_evidence_sha256": {
+    "diagnostics\\soil04-banniere-20261104.log": "e179f00f897d7d35459b88065178ada5d792993f05a39a53678753811bb125ba",
+    "diagnostics\\soil04-battery-tests-20261104.log": "67a31d525e51295e2df29e17dc48cd150a962132cfde768e4773b985be6dd9d9",
+    "diagnostics\\soil04-capture-tests-20261104.log": "9f74e0542fccf403a4f6fc0cd23ad2e190a96c0a77a6b14c182402279a309e3a",
+    "diagnostics\\soil04-demarrage-20261104-131305Z-rx.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "diagnostics\\soil04-demarrage-20261104-131305Z-tx.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "diagnostics\\soil04-demarrage-20261104-131305Z.json": "e9243db76731612d8123909a41ab355d7ea8ec3e1c49924f62935a241aa7109c",
+    "diagnostics\\soil04-demarrage-20261104-131348Z-rx.log": "bc7e53f00c296a9ae4a727e0fc4042a6d061ee5e9c5d321c93465ca44c0b9be7",
+    "diagnostics\\soil04-demarrage-20261104-131348Z-tx.log": "ee693796bcf0f8b6431ebdcabc606286f18a463fdf52b0de7410bba54d4566ba",
+    "diagnostics\\soil04-demarrage-20261104-131348Z.json": "6d50a8086a82e30eb53b4042c44a6547e2b44400d9861e6ab6a47eb59aca18ff",
+    "diagnostics\\soil04-heltec-builds-20261104.log": "3d0331b4fca479b0940fef2e4b99527af62509c5401e97f2b11adcbc6a691f34",
+    "diagnostics\\soil04-heltec-installation-20261104.log": "8951f69f9824f20a29cd73fa1b4675de8eb879ccd444d0a737c88389e1b90635",
+    "diagnostics\\soil04-host-tests-20261104.log": "d5f623cc82e743f0423e184aaf330a1e973abe55670ec5e0247d016d20ba088e",
+    "diagnostics\\soil04-validation-materielle-20261104.json": "4912e7cea2cb629e36b6ed2ddcc85f5b0f073769adb13ee5ef04bede84921e3e",
+    "diagnostics\\soil04-xiao-builds-20261104.log": "39499f18959dc259772f1101709ffcd8dd7aeb5af8e5ff58b74a54fa6e8b3203",
+    "diagnostics\\soil04-xiao-installation-20261104.json": "4f3fde00d1a5f7047b60b768f8a1baeda5716397e3b7356ab178ec2c622e1dbf",
+    "diagnostics\\soil04-xiao-installation-20261104.log": "2a4be663d8413cfeae82d1bca7aae2f9a9daed8d37a618f3381c8173f156ca16"
+  }
+}

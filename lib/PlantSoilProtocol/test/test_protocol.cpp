@@ -99,11 +99,11 @@ int main() {
     assert(bank.accept(first, sizeof(first), base + kStaleMs + 20) == Result::Accepted);
     assert(bank.node(1).state(base + kStaleMs + 20) == Freshness::Current);
     assert(bank.node(2).state(base + kStaleMs + 20) == Freshness::AdcFault);
-    second[3] = 4;
+    second[3] = 5;
     assert(bank.accept(second, sizeof(second), base + kStaleMs + 30) == Result::Node);
     assert(bank.node(2).age(base + kStaleMs + 30) == 20);
-    assert(bank.node(0).state(0) == Freshness::Waiting && bank.node(4).state(0) == Freshness::Waiting);
-    two.node = 4; assert(encode(two, second, sizeof(second)) == Result::Node);
+    assert(bank.node(0).state(0) == Freshness::Waiting && bank.node(5).state(0) == Freshness::Waiting);
+    two.node = 5; assert(encode(two, second, sizeof(second)) == Result::Node);
     ReceiverBank wrapped;
     one.session = 999; one.sequence = 0xFFFFFFFF;
     two = one; two.node = 2; two.sequence = 0xFFFFFFFE; two.raw = 16000;
@@ -156,5 +156,26 @@ int main() {
     wrapPackets[2].session=778; wrapPackets[2].sequence=1; encode(wrapPackets[2], wrapBytes[2], kPacketSize);
     assert(tripleWrap.accept(wrapBytes[2], kPacketSize, base+80) == Result::Accepted);
     assert(tripleWrap.node(1).packet().session == 777 && tripleWrap.node(2).packet().session == 777 && tripleWrap.node(3).packet().session == 778);
-    puts("PASS protocole SOIL : codec compatible v1, noeuds 1/2/3 isoles, inconnu rejete, defauts, sessions, temps circulaires et frontiere 90min");
+    ReceiverBank quad;
+    Packet qp[4]; uint8_t qb[4][kPacketSize];
+    for (uint8_t id=1; id<=4; ++id) {
+        qp[id-1].node=id; qp[id-1].session=900; qp[id-1].sequence=0xFFFFFFFF;
+        qp[id-1].status=AdcStatus::Ok; qp[id-1].address=0x48; qp[id-1].raw=4000*id;
+        assert(encode(qp[id-1],qb[id-1],kPacketSize)==Result::Accepted);
+        assert(quad.accept(qb[id-1],kPacketSize,base+id*10)==Result::Accepted);
+        qp[id-1].sequence=0; encode(qp[id-1],qb[id-1],kPacketSize);
+    }
+    assert(quad.accept(qb[3],kPacketSize,base+50)==Result::Accepted);
+    assert(quad.accept(qb[0],kPacketSize,base+60)==Result::Accepted);
+    assert(quad.accept(qb[2],kPacketSize,base+70)==Result::Accepted);
+    assert(quad.accept(qb[1],kPacketSize,base+80)==Result::Accepted);
+    qp[3].sequence=0xFFFFFFFF; encode(qp[3],qb[3],kPacketSize);
+    assert(quad.accept(qb[3],kPacketSize,base+90)==Result::OldSequence);
+    assert(quad.node(4).packet().sequence==0 && quad.node(4).packet().raw==16000 && quad.node(4).age(base+100)==50);
+    assert(quad.node(1).age(base+100)==40 && quad.node(2).age(base+100)==20 && quad.node(3).age(base+100)==30);
+    qp[3].session=901; qp[3].sequence=1; qp[3].status=AdcStatus::ReadError; qp[3].raw=0;
+    encode(qp[3],qb[3],kPacketSize); assert(quad.accept(qb[3],kPacketSize,base+110)==Result::Accepted);
+    assert(quad.node(4).state(base+110)==Freshness::AdcFault);
+    for (uint8_t id=1;id<=3;++id) assert(quad.node(id).packet().session==900 && quad.node(id).state(base+110)==Freshness::Current);
+    puts("PASS protocole SOIL : codec compatible v1, noeuds 1/2/3/4 isoles, inconnu rejete, defauts, sessions, temps circulaires et frontiere 90min");
 }

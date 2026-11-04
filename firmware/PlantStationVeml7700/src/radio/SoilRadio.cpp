@@ -54,7 +54,7 @@ void SoilRadio::service(uint32_t now) {
         initialization_.store(Initialization::Idle, std::memory_order_release);
         if (initializationCode_ != RADIOLIB_ERR_NONE) { fail("begin", initializationCode_); return; }
         ready_ = true;
-        Serial.println("[SOIL_RADIO] state=listening nodes=SOIL-01,SOIL-02,SOIL-03 authenticated=no frequency=868100000");
+        Serial.println("[SOIL_RADIO] state=listening nodes=SOIL-01,SOIL-02,SOIL-03,SOIL-04 authenticated=no frequency=868100000");
     }
     if (!ready_) {
         if (elapsed(now, lastAttempt_, 10000)) initialize();

@@ -19,20 +19,24 @@ for name, includes, sources, flags, scenarios in [
     ("protocol", [protocol], [root / "lib/PlantSoilProtocol/test/test_protocol.cpp"], [], ["normal"]),
     ("heltec", [plant / "test/support", plant / "include", plant / "src", protocol, sensor, toolkit],
      [plant / item for item in plant_files] + [sensor / "sfTk/sfDevVEML7700.cpp", toolkit / "sfTk/sfToolkit.cpp"],
-     ["-DPLANT_SOIL_LORA=1"], ["normal", "radio_failed", "sleep_failed", "pending_init", "multi", "three", "layout"]),
+     ["-DPLANT_SOIL_LORA=1"], ["normal", "radio_failed", "sleep_failed", "pending_init", "multi", "three", "four", "layout"]),
     ("xiao", [xiao / "test/support", protocol], [xiao / "test/test_tx.cpp"], ["-DSOIL_LORA_TX=1"],
      ["cadence", "wrap", "rng", "usb", "disconnected"]),
     ("xiao_pmos", [xiao / "test/support", protocol], [xiao / "test/test_pmos.cpp"],
      ["-DSOIL_LORA_TX=1", "-DSOIL_PMOS_CONTROL=1"],
-     ["acquire", "commands", "gate", "parser", "auto", "blocked", "wrap", "integration", "radio_fault", "deferred_error", "cadence", "auto_guard"]),
+     ["banner", "acquire", "commands", "gate", "parser", "auto", "blocked", "wrap", "integration", "radio_fault", "deferred_error", "cadence", "auto_guard"]),
     ("xiao_pmos_node2", [xiao / "test/support", protocol], [xiao / "test/test_pmos.cpp"],
      ["-DSOIL_LORA_TX=1", "-DSOIL_PMOS_CONTROL=1", "-DSOIL_NODE_ID=2"],
-     ["acquire", "commands", "gate", "parser", "auto", "blocked", "wrap", "integration", "radio_fault", "deferred_error", "cadence", "auto_guard"]),
+     ["banner", "acquire", "commands", "gate", "parser", "auto", "blocked", "wrap", "integration", "radio_fault", "deferred_error", "cadence", "auto_guard"]),
     ("xiao_pmos_node3", [xiao / "test/support", protocol], [xiao / "test/test_pmos.cpp"],
      ["-DSOIL_LORA_TX=1", "-DSOIL_PMOS_CONTROL=1", "-DSOIL_NODE_ID=3"],
-     ["acquire", "commands", "gate", "parser", "auto", "blocked", "wrap", "integration", "radio_fault", "deferred_error", "cadence", "auto_guard"]),
+     ["banner", "acquire", "commands", "gate", "parser", "auto", "blocked", "wrap", "integration", "radio_fault", "deferred_error", "cadence", "auto_guard"]),
+    ("xiao_pmos_node4", [xiao / "test/support", protocol], [xiao / "test/test_pmos.cpp"],
+     ["-DSOIL_LORA_TX=1", "-DSOIL_PMOS_CONTROL=1", "-DSOIL_NODE_ID=4"],
+     ["banner", "acquire", "commands", "gate", "parser", "auto", "blocked", "wrap", "integration", "radio_fault", "deferred_error", "cadence", "auto_guard"]),
 ]:
     executable = build / (name + (".exe" if os.name == "nt" else ""))
     subprocess.run(compiler + ["-I" + str(path) for path in includes] + [str(path) for path in sources] + flags + ["-o", str(executable)], check=True)
     for scenario in scenarios:
+        print(f"[SCENARIO] profile={name} scenario={scenario}", flush=True)
         subprocess.run([str(executable), scenario], check=True)
