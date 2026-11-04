@@ -1,0 +1,61 @@
+{
+  "authenticated": false,
+  "tx_count": 3,
+  "rx_count": 3,
+  "matched": [
+    {
+      "session": 3105728615,
+      "seq": 54,
+      "uptime_ms": 1808804,
+      "status": "ok",
+      "address": 72,
+      "raw": 21438,
+      "uv": 2679750,
+      "tx_host_s": 20.234,
+      "rx_host_s": 20.25
+    },
+    {
+      "session": 3105728615,
+      "seq": 55,
+      "uptime_ms": 1839942,
+      "status": "ok",
+      "address": 72,
+      "raw": 21436,
+      "uv": 2679500,
+      "tx_host_s": 51.375,
+      "rx_host_s": 51.39
+    },
+    {
+      "session": 3105728615,
+      "seq": 56,
+      "uptime_ms": 1871080,
+      "status": "ok",
+      "address": 72,
+      "raw": 21435,
+      "uv": 2679375,
+      "tx_host_s": 82.515,
+      "rx_host_s": 82.593
+    }
+  ],
+  "comparison_window_s": [
+    1.0,
+    104.09299999999985
+  ],
+  "boundary_margin_s": 1.0,
+  "boundary_pairs": [],
+  "valid_matched_count": 3,
+  "losses": [],
+  "unmatched_rx": [],
+  "mismatches": [],
+  "tx_duplicates": [],
+  "rx_duplicates": [],
+  "errors": [],
+  "accepted": true,
+  "tx_port": "COM8",
+  "rx_port": "COM5",
+  "duration_requested_s": 105.0,
+  "duration_s": 105.09299999999985,
+  "capture_errors": [],
+  "interrupted": false,
+  "completed": true
+}

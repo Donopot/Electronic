@@ -1,0 +1,123 @@
+Processing xiao_soil_diagnostic (platform: https://github.com/Seeed-Studio/platform-seeedboards.git#a6fd41debbbcda13b5340fff50c9092ed3289194; board: seeed-xiao-afruitnrf52-nrf52840; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+board id is nrf,will call board_build/nrf/nrf_build.py
+CONFIGURATION: https://docs.platformio.org/page/boards/SeeedStudio/seeed-xiao-afruitnrf52-nrf52840.html
+PLATFORM: Seeed Studio Xiao Series (1.1.1+sha.a6fd41d) > Seeed Studio XIAO nRF52840
+HARDWARE: NRF52840 64MHz, 232KB RAM, 792KB Flash
+DEBUG: Current (blackmagic) External (blackmagic, cmsis-dap, jlink)
+PACKAGES: 
+ - framework-arduinoadafruitnrf52 @ 1.10101.0 (1.1.1) 
+ - framework-cmsis @ 2.50700.210515 (5.7.0) 
+ - tool-adafruit-nrfutil @ 1.503.0 (5.3) 
+ - tool-esp_install @ 5.3.4 
+ - tool-sreccat @ 1.164.0 (1.64) 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+board id is 52840,will call ../board_build/nrf/nrf_arduino.py
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 13 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- Adafruit TinyUSB Library
+|-- SPI @ 1.0
+Building in release mode
+Compiling .pio\build\xiao_soil_diagnostic\src\main.cpp.o
+Linking .pio\build\xiao_soil_diagnostic\firmware.elf
+Checking size .pio\build\xiao_soil_diagnostic\firmware.elf
+Building .pio\build\xiao_soil_diagnostic\firmware.hex
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [          ]   3.0% (used 7148 bytes from 237568 bytes)
+Flash: [=         ]   6.9% (used 55732 bytes from 811008 bytes)
+Building .pio\build\xiao_soil_diagnostic\firmware.zip
+Zip created at .pio\build\xiao_soil_diagnostic\firmware.zip
+========================= [SUCCESS] Took 2.42 seconds =========================
+
+Processing xiao_soil_lora_tx (platform: https://github.com/Seeed-Studio/platform-seeedboards.git#a6fd41debbbcda13b5340fff50c9092ed3289194; board: seeed-xiao-afruitnrf52-nrf52840; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+board id is nrf,will call board_build/nrf/nrf_build.py
+CONFIGURATION: https://docs.platformio.org/page/boards/SeeedStudio/seeed-xiao-afruitnrf52-nrf52840.html
+PLATFORM: Seeed Studio Xiao Series (1.1.1+sha.a6fd41d) > Seeed Studio XIAO nRF52840
+HARDWARE: NRF52840 64MHz, 232KB RAM, 792KB Flash
+DEBUG: Current (blackmagic) External (blackmagic, cmsis-dap, jlink)
+PACKAGES: 
+ - framework-arduinoadafruitnrf52 @ 1.10101.0 (1.1.1) 
+ - framework-cmsis @ 2.50700.210515 (5.7.0) 
+ - tool-adafruit-nrfutil @ 1.503.0 (5.3) 
+ - tool-esp_install @ 5.3.4 
+ - tool-sreccat @ 1.164.0 (1.64) 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+board id is 52840,will call ../board_build/nrf/nrf_arduino.py
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 16 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- RadioLib @ 7.8.1
+|-- Adafruit TinyUSB Library
+|-- PlantSoilProtocol @ 1.0.0
+|-- SPI @ 1.0
+Building in release mode
+Compiling .pio\build\xiao_soil_lora_tx\src\main.cpp.o
+In file included from src\main.cpp:17:0:
+.pio\libdeps\xiao_soil_lora_tx\RadioLib\src/RadioLib.h:69:4: warning: #warning "Use of USB CDC for debug output is not recommended (might stop on first sleep). Use hardware UART instead." [-Wcpp]
+   #warning "Use of USB CDC for debug output is not recommended (might stop on first sleep). Use hardware UART instead."
+    ^~~~~~~
+Linking .pio\build\xiao_soil_lora_tx\firmware.elf
+Building .pio\build\xiao_soil_lora_tx\firmware.hex
+Checking size .pio\build\xiao_soil_lora_tx\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [          ]   3.6% (used 8448 bytes from 237568 bytes)
+Flash: [=         ]  11.1% (used 89744 bytes from 811008 bytes)
+Building .pio\build\xiao_soil_lora_tx\firmware.zip
+Zip created at .pio\build\xiao_soil_lora_tx\firmware.zip
+========================= [SUCCESS] Took 4.27 seconds =========================
+
+Processing xiao_soil_lora_pmos (platform: https://github.com/Seeed-Studio/platform-seeedboards.git#a6fd41debbbcda13b5340fff50c9092ed3289194; board: seeed-xiao-afruitnrf52-nrf52840; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+board id is nrf,will call board_build/nrf/nrf_build.py
+CONFIGURATION: https://docs.platformio.org/page/boards/SeeedStudio/seeed-xiao-afruitnrf52-nrf52840.html
+PLATFORM: Seeed Studio Xiao Series (1.1.1+sha.a6fd41d) > Seeed Studio XIAO nRF52840
+HARDWARE: NRF52840 64MHz, 232KB RAM, 792KB Flash
+DEBUG: Current (blackmagic) External (blackmagic, cmsis-dap, jlink)
+PACKAGES: 
+ - framework-arduinoadafruitnrf52 @ 1.10101.0 (1.1.1) 
+ - framework-cmsis @ 2.50700.210515 (5.7.0) 
+ - tool-adafruit-nrfutil @ 1.503.0 (5.3) 
+ - tool-esp_install @ 5.3.4 
+ - tool-sreccat @ 1.164.0 (1.64) 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+board id is 52840,will call ../board_build/nrf/nrf_arduino.py
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 16 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- RadioLib @ 7.8.1
+|-- Adafruit TinyUSB Library
+|-- PlantSoilProtocol @ 1.0.0
+|-- SPI @ 1.0
+Building in release mode
+Compiling .pio\build\xiao_soil_lora_pmos\src\main.cpp.o
+In file included from src\main.cpp:17:0:
+.pio\libdeps\xiao_soil_lora_pmos\RadioLib\src/RadioLib.h:69:4: warning: #warning "Use of USB CDC for debug output is not recommended (might stop on first sleep). Use hardware UART instead." [-Wcpp]
+   #warning "Use of USB CDC for debug output is not recommended (might stop on first sleep). Use hardware UART instead."
+    ^~~~~~~
+Linking .pio\build\xiao_soil_lora_pmos\firmware.elf
+Building .pio\build\xiao_soil_lora_pmos\firmware.hex
+Checking size .pio\build\xiao_soil_lora_pmos\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [          ]   3.6% (used 8496 bytes from 237568 bytes)
+Flash: [=         ]  11.4% (used 92400 bytes from 811008 bytes)
+Building .pio\build\xiao_soil_lora_pmos\firmware.zip
+Zip created at .pio\build\xiao_soil_lora_pmos\firmware.zip
+========================= [SUCCESS] Took 4.41 seconds =========================
+
+Environment           Status    Duration
+--------------------  --------  ------------
+xiao_soil_diagnostic  SUCCESS   00:00:02.424
+xiao_soil_lora_tx     SUCCESS   00:00:04.273
+xiao_soil_lora_pmos   SUCCESS   00:00:04.411
+========================= 3 succeeded in 00:00:11.107 =========================

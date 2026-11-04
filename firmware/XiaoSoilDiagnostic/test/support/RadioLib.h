@@ -16,11 +16,19 @@ class SX1262 {
 public:
   explicit SX1262(Module*) {}
   void setRfSwitchPins(int rx, int tx) { assert(rx == 5 && tx == RADIOLIB_NC); }
-  int16_t begin(float, float, int, int, int, int power, int, float, bool) { assert(power == 0); ++host::radio().begins; return host::radio().beginCode; }
+  int16_t begin(float, float, int, int, int, int power, int, float, bool) {
+#if defined(SOIL_PMOS_CONTROL) && SOIL_PMOS_CONTROL
+    assert(host::modes()[0] == INPUT);
+#endif
+    assert(power == 0); ++host::radio().begins; return host::radio().beginCode;
+  }
   int16_t setDio2AsRfSwitch(bool value) { assert(value); return 0; }
   int16_t setCRC(int value) { assert(value == 2); return 0; }
   uint32_t getTimeOnAir(size_t size) { assert(size == 20); return 56576; }
   int16_t transmit(const uint8_t* data, size_t size) {
+#if defined(SOIL_PMOS_CONTROL) && SOIL_PMOS_CONTROL
+    assert(host::modes()[0] == INPUT);
+#endif
     plantsoil::Packet packet;
     assert(plantsoil::decode(data, size, packet) == plantsoil::Result::Accepted);
     host::radio().transmissions.push_back({millis(), packet, host::radio().transmitCode});

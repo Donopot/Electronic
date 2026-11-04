@@ -21,6 +21,9 @@ for name, includes, sources, flags, scenarios in [
      ["-DPLANT_SOIL_LORA=1"], ["normal", "radio_failed", "sleep_failed", "pending_init"]),
     ("xiao", [xiao / "test/support", protocol], [xiao / "test/test_tx.cpp"], ["-DSOIL_LORA_TX=1"],
      ["cadence", "wrap", "rng", "usb", "disconnected"]),
+    ("xiao_pmos", [xiao / "test/support", protocol], [xiao / "test/test_pmos.cpp"],
+     ["-DSOIL_LORA_TX=1", "-DSOIL_PMOS_CONTROL=1"],
+     ["acquire", "commands", "gate", "parser", "auto", "blocked", "wrap", "integration", "radio_fault", "deferred_error"]),
 ]:
     executable = build / (name + (".exe" if os.name == "nt" else ""))
     subprocess.run(compiler + ["-I" + str(path) for path in includes] + [str(path) for path in sources] + flags + ["-o", str(executable)], check=True)

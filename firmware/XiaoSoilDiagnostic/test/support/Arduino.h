@@ -16,6 +16,13 @@ inline bool& rngReady() { static bool value = true; return value; }
 inline std::string& usb() { static std::string value; return value; }
 inline void setNow(uint32_t now) { clockUs() = static_cast<uint64_t>(now) * 1000; }
 inline std::vector<std::string>& pins() { static std::vector<std::string> value; return value; }
+struct GpioEvent { uint32_t time; int pin; char operation; int value; };
+inline std::vector<GpioEvent>& gpio() { static std::vector<GpioEvent> value; return value; }
+inline int* modes() { static int value[64] = {}; return value; }
+inline int* levels() { static int value[64] = {}; return value; }
+inline bool& gateHeldLow() { static bool value = false; return value; }
+inline bool& usbMounted() { static bool value = true; return value; }
+inline std::string& serialInput() { static std::string value; return value; }
 }
 struct FakeRng { uint32_t CONFIG = 0, EVENTS_VALRDY = 0, TASKS_START = 0, TASKS_STOP = 0, VALUE = 17; };
 inline FakeRng& fakeRng() { static FakeRng value; return value; }
@@ -29,10 +36,20 @@ inline void yield() {
 }
 inline void delay(unsigned long value) { host::clockUs() += value * 1000ULL; }
 inline void delayMicroseconds(unsigned value) { host::clockUs() += value; }
-inline void pinMode(int pin, int mode) { host::pins().push_back(std::to_string(pin) + ":" + std::to_string(mode)); }
-inline void digitalWrite(int, int) {}
-inline int digitalRead(int) { return HIGH; } // bus libre sans peripherique : NACK borne
-static const uint32_t g_ADigitalPinMap[] = {0, 0, 0, 0, 0, 0, 43, 44};
+inline void pinMode(int pin, int mode) {
+  host::pins().push_back(std::to_string(pin) + ":" + std::to_string(mode));
+  host::modes()[pin] = mode;
+  host::gpio().push_back({millis(), pin, 'm', mode});
+}
+inline void digitalWrite(int pin, int value) {
+  host::levels()[pin] = value;
+  host::gpio().push_back({millis(), pin, 'w', value});
+}
+inline int digitalRead(int pin) {
+  if (pin == 0 && (host::gateHeldLow() || host::modes()[0] == OUTPUT)) return LOW;
+  return HIGH; // bus libre sans peripherique : NACK borne
+}
+static const uint32_t g_ADigitalPinMap[] = {2, 0, 0, 0, 0, 0, 43, 44};
 class Print {
 public:
   virtual ~Print() {}
@@ -51,6 +68,13 @@ public:
 struct FakeSerial : Print {
   void begin(unsigned long value) { assert(value == 115200); }
   explicit operator bool() const { return host::connected(); }
+  int available() { return static_cast<int>(host::serialInput().size()); }
+  int read() {
+    if (host::serialInput().empty()) return -1;
+    const unsigned char value = host::serialInput()[0];
+    host::serialInput().erase(0, 1);
+    return value;
+  }
   size_t write(uint8_t) override { assert(false && "Serial.write interdit pour le profil TX"); return 0; }
 };
 extern FakeSerial Serial;

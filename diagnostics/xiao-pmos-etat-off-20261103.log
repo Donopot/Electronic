@@ -1,0 +1,6 @@
+
+[XIAO-SOIL-DIAG] v1 / USB / D6=P1.11 SDA / D7=P1.12 SCL
+[CONFIG] ADS1115 attendu 0x48, selection unique 0x48..0x4B, A0/GND, +/-4.096 V, 128 SPS.
+[INFO] P-MOS D0 : commandes OFF / ON (120 s maximum) / AUTO ; radio 30 s ; pas de veille longue.
+[SOIL_POWER] mode=AUTO gate=1
+[SOIL_POWER] mode=OFF gate=1

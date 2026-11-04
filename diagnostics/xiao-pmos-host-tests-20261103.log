@@ -1,0 +1,19 @@
+PASS vrais radio/main/OLED : RX, age inchange au rejet, peremption, defaut sans valeur, lux concurrents, reprise, PRG et sommeil/reset de secours
+PASS vrais radio/main/OLED : RX, age inchange au rejet, peremption, defaut sans valeur, lux concurrents, reprise, PRG et sommeil/reset de secours
+PASS vrais radio/main/OLED : RX, age inchange au rejet, peremption, defaut sans valeur, lux concurrents, reprise, PRG et sommeil/reset de secours
+PASS initialisation differee : lux/PRG apres 14s, boucle sans attente, sommeil attend le proprietaire SPI
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence

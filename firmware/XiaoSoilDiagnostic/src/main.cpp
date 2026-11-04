@@ -3,6 +3,15 @@
 #ifndef SOIL_LORA_TX
 #define SOIL_LORA_TX 0
 #endif
+#ifndef SOIL_PMOS_CONTROL
+#define SOIL_PMOS_CONTROL 0
+#endif
+#if SOIL_PMOS_CONTROL
+#if !SOIL_LORA_TX
+#error Le profil P-MOS requiert le transport LoRa diagnostic.
+#endif
+#include "ProbePower.h"
+#endif
 #if SOIL_LORA_TX
 #include <SPI.h>
 #include <RadioLib.h>
@@ -259,10 +268,23 @@ void scanBus() {
   }
 }
 
+#if SOIL_PMOS_CONTROL
+const char* deferredAdcError = nullptr;
+#endif
+void reportAdcError(const char* message) {
+#if SOIL_PMOS_CONTROL
+  deferredAdcError = message; // afficher seulement apres la coupure du cycle
+#else
+  SOIL_LOG.println(message);
+#endif
+}
 bool readA0(int16_t& raw) {
+#if SOIL_PMOS_CONTROL
+  deferredAdcError = nullptr;
+#endif
   if (!adsAddress) return false;
   if (!bus.writeRegister(adsAddress, 1, kConfig)) {
-    SOIL_LOG.println(F("[ERREUR] Ecriture configuration ADC : NACK ou bus bloque."));
+    reportAdcError("[ERREUR] Ecriture configuration ADC : NACK ou bus bloque.");
     return false;
   }
   const uint32_t started = millis();
@@ -270,30 +292,32 @@ bool readA0(int16_t& raw) {
     delay(2);
     uint16_t config = 0;
     if (!bus.readRegister(adsAddress, 1, config)) {
-      SOIL_LOG.println(F("[ERREUR] Lecture configuration interrompue."));
+      reportAdcError("[ERREUR] Lecture configuration interrompue.");
       return false;
     }
     if ((config & 0x7FFF) != (kConfig & 0x7FFF)) {
-      SOIL_LOG.println(F("[ERREUR] Configuration relue incompatible avec le diagnostic ADS1115."));
+      reportAdcError("[ERREUR] Configuration relue incompatible avec le diagnostic ADS1115.");
       return false;
     }
     if (config & 0x8000) {
       uint16_t conversion = 0;
       if (!bus.readRegister(adsAddress, 0, conversion)) {
-        SOIL_LOG.println(F("[ERREUR] Lecture conversion A0 interrompue."));
+        reportAdcError("[ERREUR] Lecture conversion A0 interrompue.");
         return false;
       }
       raw = static_cast<int16_t>(conversion);
       return true;
     }
   }
-  SOIL_LOG.println(F("[ERREUR] Conversion non terminee apres 40 ms."));
+  reportAdcError("[ERREUR] Conversion non terminee apres 40 ms.");
   return false;
 }
 void announce() {
   SOIL_LOG.println(F("\n[XIAO-SOIL-DIAG] v1 / USB / D6=P1.11 SDA / D7=P1.12 SCL"));
   SOIL_LOG.println(F("[CONFIG] ADS1115 attendu 0x48, selection unique 0x48..0x4B, A0/GND, +/-4.096 V, 128 SPS."));
-#if SOIL_LORA_TX
+#if SOIL_PMOS_CONTROL
+  SOIL_LOG.println(F("[INFO] P-MOS D0 : commandes OFF / ON (120 s maximum) / AUTO ; radio 30 s ; pas de veille longue."));
+#elif SOIL_LORA_TX
   SOIL_LOG.println(F("[INFO] D0 relachee ; SOIL-01 LoRa 868.1 MHz / 0 dBm / 30 s ; diagnostic non authentifie ; aucun pourcentage."));
 #else
   SOIL_LOG.println(F("[INFO] D0 relachee ; radio non initialisee ; aucun pourcentage sans etalonnage."));
@@ -302,12 +326,122 @@ void announce() {
     SOIL_LOG.println(F("[ERREUR] Variante Arduino incompatible : test GPIO interdit."));
   }
 }
+
+void reportMeasurement(bool valid, int16_t raw) {
+#if SOIL_PMOS_CONTROL
+  if (deferredAdcError) { SOIL_LOG.println(deferredAdcError); deferredAdcError = nullptr; }
+#endif
+  if (valid) {
+    ++readings;
+    const float volts = raw * 0.000125f;
+    SOIL_LOG.print(F("[MESURE] t_ms=")); SOIL_LOG.print(millis());
+    SOIL_LOG.print(F(" adresse=0x")); SOIL_LOG.print(adsAddress, HEX);
+    SOIL_LOG.print(F(" A0_brut=")); SOIL_LOG.print(raw);
+    SOIL_LOG.print(F(" A0_V=")); SOIL_LOG.print(volts, 6);
+    SOIL_LOG.print(F(" etat="));
+    if (raw < -8 || volts > 3.3f) SOIL_LOG.println(F("HORS_PLAGE_NOMINALE"));
+    else if (raw < 0) SOIL_LOG.println(F("PROCHE_ZERO_OFFSET_POSSIBLE"));
+    else SOIL_LOG.println(F("DANS_PLAGE_NOMINALE"));
+  } else ++errors;
+  SOIL_LOG.print(F("[BILAN] essais=")); SOIL_LOG.print(attempts);
+  SOIL_LOG.print(F(" mesures=")); SOIL_LOG.print(readings);
+  SOIL_LOG.print(F(" erreurs=")); SOIL_LOG.println(errors);
+}
+
+#if SOIL_PMOS_CONTROL
+ProbePower probePower;
+enum class ProbeMode { Auto, Off, ManualOn };
+ProbeMode probeMode = ProbeMode::Auto;
+uint32_t lastPowerCycle = 0, manualStarted = 0;
+char powerCommand[16];
+uint8_t powerCommandLength = 0;
+bool powerCommandOverflow = false;
+
+void reportPower(const char* mode) {
+  SOIL_LOG.print(F("[SOIL_POWER] mode=")); SOIL_LOG.print(mode);
+  SOIL_LOG.print(F(" gate=")); SOIL_LOG.println(probePower.gate());
+}
+
+void applyPowerCommand() {
+  powerCommand[powerCommandLength] = '\0';
+  if (strcmp(powerCommand, "OFF") == 0) {
+    probePower.off(); probeMode = ProbeMode::Off; reportPower("OFF");
+  } else if (strcmp(powerCommand, "AUTO") == 0) {
+    probePower.off(); probeMode = ProbeMode::Auto;
+    lastPowerCycle = millis() - plantsoil::kTransmitMs;
+    reportPower("AUTO");
+  } else if (strcmp(powerCommand, "ON") == 0) {
+    probePower.off();
+    if (correctPinMap && probePower.on()) {
+      probeMode = ProbeMode::ManualOn;
+      manualStarted = millis();
+      reportPower("ON_120S");
+    } else {
+      probeMode = ProbeMode::Off;
+      SOIL_LOG.println(F("[ERREUR] P-MOS : grille maintenue basse ou brochage incompatible ; commande ON refusee."));
+    }
+  } else SOIL_LOG.println(F("[SOIL_CONTROL] commande ignoree ; utiliser OFF, ON ou AUTO."));
+}
+
+void pollPowerCommands() {
+  const bool connected = static_cast<bool>(Serial);
+  if (!connected) { powerCommandLength = 0; powerCommandOverflow = false; }
+  for (unsigned budget = 0; budget < 64 && Serial.available() > 0; ++budget) {
+    const int next = Serial.read();
+    if (next < 0 || !connected) continue;
+    if (next == '\r' || next == '\n') {
+      if (!powerCommandOverflow && powerCommandLength) applyPowerCommand();
+      else if (powerCommandOverflow) SOIL_LOG.println(F("[SOIL_CONTROL] ligne invalide ou trop longue ignoree."));
+      powerCommandLength = 0; powerCommandOverflow = false;
+    } else if (!powerCommandOverflow) {
+      if (next < 'A' || next > 'Z') powerCommandOverflow = true;
+      else if (powerCommandLength < sizeof(powerCommand) - 1) powerCommand[powerCommandLength++] = static_cast<char>(next);
+      else powerCommandOverflow = true;
+    }
+  }
+}
+
+void runPowerLoop(ProbePower::Reader reader = readA0) {
+  delay(10);
+  if (!Serial) usbWasConnected = false;
+  else if (!usbWasConnected) {
+    announce(); usbWasConnected = true;
+    reportPower(probeMode == ProbeMode::Auto ? "AUTO" : probeMode == ProbeMode::Off ? "OFF" : "ON_120S");
+  }
+  pollPowerCommands();
+  const uint32_t now = millis();
+  if (probeMode == ProbeMode::ManualOn &&
+      (!TinyUSBDevice.mounted() || static_cast<uint32_t>(now - manualStarted) >= 120000)) {
+    probePower.off(); probeMode = ProbeMode::Off; reportPower("OFF_TIMEOUT_OR_USB");
+  }
+  if (probeMode == ProbeMode::Off) return;
+  if (!correctPinMap) { probePower.off(); return; }
+  // Controle manuel de VCC uniquement : pas de scan/conversion qui retarderait
+  // l'echeance. Elle est verifiee a chaque tour (pause de 10 ms).
+  if (probeMode == ProbeMode::ManualOn) return;
+  if (static_cast<uint32_t>(now - lastPowerCycle) < plantsoil::kTransmitMs) return;
+  ++attempts;
+  if (!adsAddress || attempts % 10 == 0) scanBus();
+  int16_t raw = 0;
+  const bool valid = probePower.acquire(reader, raw);
+  reportPower("AUTO_OFF_AFTER_SAMPLE");
+  reportMeasurement(valid, raw);
+  serviceTransmit(valid, raw);
+  // Delai mesure depuis la fin : aucune emission trop proche si le delai ADC varie.
+  lastPowerCycle = millis();
+}
+#endif
 }  // namespace
 
 void setup() {
-  // D0 reste une entree sans tirage : aucune commande du bouton/P-MOS.
+  // D0 relachee sans tirage au demarrage, avant toute initialisation radio.
   pinMode(0, INPUT);
   correctPinMap = g_ADigitalPinMap[kSda] == 43 && g_ADigitalPinMap[kScl] == 44;
+#if SOIL_PMOS_CONTROL
+  correctPinMap = correctPinMap && g_ADigitalPinMap[0] == 2;
+  probePower.off();
+  lastPowerCycle = millis();
+#endif
   if (correctPinMap) bus.release();
   Serial.begin(115200);
 #if SOIL_LORA_TX
@@ -316,6 +450,9 @@ void setup() {
 }
 
 void loop() {
+#if SOIL_PMOS_CONTROL
+  runPowerLoop();
+#else
   delay(1000);
   if (!Serial) {
     usbWasConnected = false;
@@ -338,25 +475,9 @@ void loop() {
   if (attempts == 1 || attempts % 10 == 0) scanBus();
   int16_t raw = 0;
   const bool valid = readA0(raw);
-  if (valid) {
-    ++readings;
-    const float volts = raw * 0.000125f;
-    SOIL_LOG.print(F("[MESURE] t_ms=")); SOIL_LOG.print(millis());
-    SOIL_LOG.print(F(" adresse=0x")); SOIL_LOG.print(adsAddress, HEX);
-    SOIL_LOG.print(F(" A0_brut=")); SOIL_LOG.print(raw);
-    SOIL_LOG.print(F(" A0_V=")); SOIL_LOG.print(volts, 6);
-    SOIL_LOG.print(F(" etat="));
-    // Quelques codes negatifs peuvent venir de l'offset, meme avec A0 a GND.
-    if (raw < -8 || volts > 3.3f) SOIL_LOG.println(F("HORS_PLAGE_NOMINALE"));
-    else if (raw < 0) SOIL_LOG.println(F("PROCHE_ZERO_OFFSET_POSSIBLE"));
-    else SOIL_LOG.println(F("DANS_PLAGE_NOMINALE"));
-  } else {
-    ++errors;
-  }
-  SOIL_LOG.print(F("[BILAN] essais=")); SOIL_LOG.print(attempts);
-  SOIL_LOG.print(F(" mesures=")); SOIL_LOG.print(readings);
-  SOIL_LOG.print(F(" erreurs=")); SOIL_LOG.println(errors);
+  reportMeasurement(valid, raw);
 #if SOIL_LORA_TX
   serviceTransmit(valid, raw);
+#endif
 #endif
 }

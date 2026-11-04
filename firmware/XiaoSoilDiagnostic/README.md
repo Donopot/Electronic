@@ -5,7 +5,12 @@ vers le Heltec, sans changer les lignes `[MESURE]` du diagnostic ci-dessous.
 Voir [profils, protocole, branchements et capture LoRa](../../docs/soil-lora.md).
 Le profil par defaut `xiao_soil_diagnostic` conserve le fonctionnement USB seul.
 
-Les deux profils utilisent une [variante locale](variants/README.md) pour
+Le profil `xiao_soil_lora_pmos` ajoute la commande AO3401 sur D0, l'acquisition
+commutée et les contrôles USB OFF/ON/AUTO. Voir le [test P-MOS](../../docs/soil-pmos.md)
+pour le câblage avec rappel 10 kΩ, les limites et la validation au multimètre.
+Les paragraphes ci-dessous décrivent les profils historiques sans commutation.
+
+Les trois profils utilisent une [variante locale](variants/README.md) pour
 maintenir P0.14 / READ_BAT_ENABLE à LOW dès `initVariant()`, tout en conservant
 le réglage de recharge faible courant annoncé à environ 50 mA. Le bootloader
 et la recharge matérielle ne sont pas validés par cette correction. Pour le

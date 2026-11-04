@@ -1,0 +1,52 @@
+{
+  "reception_only": true,
+  "authenticated": false,
+  "port": "COM5",
+  "duration_s": 105.0619999999999,
+  "records": [
+    {
+      "session": 3105728615,
+      "seq": 11,
+      "uptime_ms": 342546,
+      "status": "ok",
+      "address": 72,
+      "raw": 20858,
+      "uv": 2607250,
+      "host_elapsed_s": 4.5
+    },
+    {
+      "session": 3105728615,
+      "seq": 12,
+      "uptime_ms": 373684,
+      "status": "ok",
+      "address": 72,
+      "raw": 20856,
+      "uv": 2607000,
+      "host_elapsed_s": 35.641
+    },
+    {
+      "session": 3105728615,
+      "seq": 13,
+      "uptime_ms": 404822,
+      "status": "ok",
+      "address": 72,
+      "raw": 20855,
+      "uv": 2606875,
+      "host_elapsed_s": 66.859
+    },
+    {
+      "session": 3105728615,
+      "seq": 14,
+      "uptime_ms": 435959,
+      "status": "ok",
+      "address": 72,
+      "raw": 20852,
+      "uv": 2606500,
+      "host_elapsed_s": 97.906
+    }
+  ],
+  "errors": [],
+  "consecutive": true,
+  "accepted": true,
+  "limits": "Pas de journal TX simultane, de mesure VCC ni de mesure de consommation."
+}

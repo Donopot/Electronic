@@ -85,15 +85,16 @@ class BatteryVariantTest(unittest.TestCase):
         self.assertEqual(config["env"]["board_build.variants_dir"], "variants")
         self.assertNotIn("board_build.variants_dir", config["env:xiao_soil_diagnostic"])
         self.assertNotIn("board_build.variants_dir", config["env:xiao_soil_lora_tx"])
+        self.assertNotIn("board_build.variants_dir", config["env:xiao_soil_lora_pmos"])
 
-    def test_both_linked_firmwares(self):
+    def test_all_linked_firmwares(self):
         root = Path(__file__).resolve().parents[1]
         suffix = ".exe" if os.name == "nt" else ""
         toolchain = root / ".tools/platformio/packages/toolchain-gccarmnoneeabi/bin"
-        for profile in ("xiao_soil_diagnostic", "xiao_soil_lora_tx"):
+        for profile in ("xiao_soil_diagnostic", "xiao_soil_lora_tx", "xiao_soil_lora_pmos"):
             with self.subTest(profile=profile):
                 elf = root / "firmware/XiaoSoilDiagnostic/.pio/build" / profile / "firmware.elf"
-                self.assertTrue(elf.is_file(), "Compiler les deux profils avant le test")
+                self.assertTrue(elf.is_file(), "Compiler les trois profils avant le test")
                 nm = subprocess.check_output([str(toolchain / ("arm-none-eabi-nm" + suffix)),
                                               "-C", str(elf)], text=True)
                 self.assertEqual(sum(" T initVariant()" in line for line in nm.splitlines()), 1)

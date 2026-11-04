@@ -1,0 +1,17 @@
+
+[XIAO-SOIL-DIAG] v1 / USB / D6=P1.11 SDA / D7=P1.12 SCL
+[CONFIG] ADS1115 attendu 0x48, selection unique 0x48..0x4B, A0/GND, +/-4.096 V, 128 SPS.
+[INFO] D0 relachee ; SOIL-01 LoRa 868.1 MHz / 0 dBm / 30 s ; diagnostic non authentifie ; aucun pourcentage.
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x48
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ADC] adresse_selectionnee=0x48
+[MESURE] t_ms=915183 adresse=0x48 A0_brut=24 A0_V=0.003000 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=896 mesures=896 erreurs=0
+[MESURE] t_ms=916198 adresse=0x48 A0_brut=26 A0_V=0.003250 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=897 mesures=897 erreurs=0
+[MESURE] t_ms=917212 adresse=0x48 A0_brut=24 A0_V=0.003000 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=898 mesures=898 erreurs=0
+[MESURE] t_ms=918227 adresse=0x48 A0_brut=25 A0_V=0.003125 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=899 mesures=899 erreurs=0
