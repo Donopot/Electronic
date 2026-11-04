@@ -1,0 +1,10 @@
+Capture COM14, UTC=2026-11-04T12:42:15.580984+00:00, seconds=105
+[HOST t_s=11.203000] [BUS] SDA=1 SCL=1
+[HOST t_s=11.250000] [I2C] ACK adresse=0x48
+[HOST t_s=11.266000] [SCAN] peripheriques=1
+[HOST t_s=11.266000] [INFO] Un ACK seul ne permet pas d'identifier la puce.
+[HOST t_s=11.266000] [ADC] adresse_selectionnee=0x48
+[HOST t_s=12.297000] [SOIL_POWER] mode=AUTO_OFF_AFTER_SAMPLE gate=1 node=SOIL-03
+[HOST t_s=12.297000] [MESURE] t_ms=41083 adresse=0x48 A0_brut=21696 A0_V=2.712000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=12.297000] [BILAN] essais=1 mesures=1 erreurs=0
+[HOST t_s=12.360000] [SOIL_TX] authenticated=no node=SOIL-03 session=534338323 seq=1 uptime_ms=41083 status=ok address=72 raw=21696 uv=2712000

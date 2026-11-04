@@ -99,11 +99,11 @@ int main() {
     assert(bank.accept(first, sizeof(first), base + kStaleMs + 20) == Result::Accepted);
     assert(bank.node(1).state(base + kStaleMs + 20) == Freshness::Current);
     assert(bank.node(2).state(base + kStaleMs + 20) == Freshness::AdcFault);
-    second[3] = 3;
+    second[3] = 4;
     assert(bank.accept(second, sizeof(second), base + kStaleMs + 30) == Result::Node);
     assert(bank.node(2).age(base + kStaleMs + 30) == 20);
-    assert(bank.node(0).state(0) == Freshness::Waiting && bank.node(3).state(0) == Freshness::Waiting);
-    two.node = 3; assert(encode(two, second, sizeof(second)) == Result::Node);
+    assert(bank.node(0).state(0) == Freshness::Waiting && bank.node(4).state(0) == Freshness::Waiting);
+    two.node = 4; assert(encode(two, second, sizeof(second)) == Result::Node);
     ReceiverBank wrapped;
     one.session = 999; one.sequence = 0xFFFFFFFF;
     two = one; two.node = 2; two.sequence = 0xFFFFFFFE; two.raw = 16000;
@@ -125,5 +125,36 @@ int main() {
     assert(wrapped.accept(first, sizeof(first), base + 70) == Result::Accepted);
     assert(wrapped.accept(second, sizeof(second), base + 80) == Result::Accepted);
     assert(wrapped.node(1).packet().session == 1000 && wrapped.node(2).packet().session == 999);
-    puts("PASS protocole SOIL : codec compatible v1, noeuds 1/2 isoles, inconnu rejete, defauts, sessions, temps circulaires et frontiere 90min");
+    Packet three = one; three.node = 3; three.raw = 24000;
+    uint8_t third[kPacketSize];
+    assert(encode(three, third, sizeof(third)) == Result::Accepted && third[3] == 3);
+    assert(bank.accept(third, sizeof(third), base + kStaleMs + 100) == Result::Accepted);
+    assert(bank.node(3).packet().raw == 24000);
+    assert(bank.node(1).age(base + kStaleMs + 100) == 80 && bank.node(2).age(base + kStaleMs + 100) == 90);
+    assert(bank.accept(third, sizeof(third), base + kStaleMs + 110) == Result::Duplicate);
+    three.sequence++; three.status = AdcStatus::ReadError; three.raw = 0;
+    encode(three, third, sizeof(third));
+    assert(bank.accept(third, sizeof(third), base + kStaleMs + 120) == Result::Accepted);
+    assert(bank.node(3).state(base + kStaleMs + 120) == Freshness::AdcFault);
+    assert(bank.node(1).packet().raw == 8000 && bank.node(2).packet().status == AdcStatus::ReadError);
+    ReceiverBank tripleWrap;
+    Packet wrapPackets[3]; uint8_t wrapBytes[3][kPacketSize];
+    for (uint8_t id=1; id<=3; ++id) {
+        auto& p=wrapPackets[id-1]; p.node=id; p.session=777; p.sequence=0xFFFFFFFF;
+        p.status=AdcStatus::Ok; p.address=0x48; p.raw=id*8000;
+        encode(p, wrapBytes[id-1], kPacketSize);
+        assert(tripleWrap.accept(wrapBytes[id-1], kPacketSize, base+(id-1)*10) == Result::Accepted);
+        p.sequence=0; encode(p, wrapBytes[id-1], kPacketSize);
+    }
+    assert(tripleWrap.accept(wrapBytes[2], kPacketSize, base+30) == Result::Accepted);
+    assert(tripleWrap.accept(wrapBytes[0], kPacketSize, base+40) == Result::Accepted);
+    assert(tripleWrap.accept(wrapBytes[1], kPacketSize, base+50) == Result::Accepted);
+    wrapPackets[2].sequence=0xFFFFFFFF; encode(wrapPackets[2], wrapBytes[2], kPacketSize);
+    assert(tripleWrap.accept(wrapBytes[2], kPacketSize, base+60) == Result::OldSequence);
+    assert(tripleWrap.node(3).packet().raw == 24000 && tripleWrap.node(3).packet().sequence == 0);
+    assert(tripleWrap.node(1).age(base+70) == 30 && tripleWrap.node(2).age(base+70) == 20 && tripleWrap.node(3).age(base+70) == 40);
+    wrapPackets[2].session=778; wrapPackets[2].sequence=1; encode(wrapPackets[2], wrapBytes[2], kPacketSize);
+    assert(tripleWrap.accept(wrapBytes[2], kPacketSize, base+80) == Result::Accepted);
+    assert(tripleWrap.node(1).packet().session == 777 && tripleWrap.node(2).packet().session == 777 && tripleWrap.node(3).packet().session == 778);
+    puts("PASS protocole SOIL : codec compatible v1, noeuds 1/2/3 isoles, inconnu rejete, defauts, sessions, temps circulaires et frontiere 90min");
 }

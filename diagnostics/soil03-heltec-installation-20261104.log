@@ -1,0 +1,33 @@
+esptool.py v4.9.0
+Serial port COM5
+Connecting....
+Chip is ESP32-S3 (QFN56) (revision v0.2)
+Features: WiFi, BLE, Embedded Flash 8MB (GD)
+Crystal is 40MHz
+MAC: 3c:0f:02:eb:f5:28
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00010000 to 0x00065fff...
+Compressed 352112 bytes to 201445...
+Writing at 0x00010000... (7 %)
+Writing at 0x0001a6d9... (15 %)
+Writing at 0x00027536... (23 %)
+Writing at 0x0002cf36... (30 %)
+Writing at 0x0003255f... (38 %)
+Writing at 0x0003783b... (46 %)
+Writing at 0x0003d513... (53 %)
+Writing at 0x00042d57... (61 %)
+Writing at 0x00048322... (69 %)
+Writing at 0x0004da29... (76 %)
+Writing at 0x00053e48... (84 %)
+Writing at 0x0005e326... (92 %)
+Writing at 0x000642b0... (100 %)
+Wrote 352112 bytes (201445 compressed) at 0x00010000 in 4.7 seconds (effective 601.9 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...

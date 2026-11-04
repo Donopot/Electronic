@@ -6,7 +6,7 @@
 // Transport diagnostic : identifiants et CRC n'authentifient pas l'emetteur.
 namespace plantsoil {
 constexpr uint8_t kVersion = 1, kNode = 1;
-constexpr uint8_t kNodeCount = 2;
+constexpr uint8_t kNodeCount = 3;
 constexpr bool validNode(uint8_t node) { return node >= 1 && node <= kNodeCount; }
 constexpr size_t kPacketSize = 20;
 constexpr uint32_t kTransmitMs = 30UL * 60UL * 1000UL;

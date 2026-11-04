@@ -1,0 +1,49 @@
+PASS protocole SOIL : codec compatible v1, noeuds 1/2/3 isoles, inconnu rejete, defauts, sessions, temps circulaires et frontiere 90min
+PASS vrais radio/main/OLED : RX, age inchange au rejet, peremption, defaut sans valeur, lux concurrents, reprise, PRG et sommeil/reset de secours
+PASS vrais radio/main/OLED : RX, age inchange au rejet, peremption, defaut sans valeur, lux concurrents, reprise, PRG et sommeil/reset de secours
+PASS vrais radio/main/OLED : RX, age inchange au rejet, peremption, defaut sans valeur, lux concurrents, reprise, PRG et sommeil/reset de secours
+PASS initialisation differee : lux/PRG apres 14s, boucle sans attente, sommeil attend le proprietaire SPI
+PASS deux sondes : etats, sessions et ages isoles, peremption individuelle et deux valeurs OLED
+PASS trois sondes : etats, reprise, peremption individuelle et trois lignes OLED
+PASS disposition trois sondes : valeurs extremes, age 89m, lux en cours/erreur et limites ecran
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence

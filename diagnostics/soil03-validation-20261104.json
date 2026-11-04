@@ -1,0 +1,27 @@
+{
+  "accepted": true,
+  "expected_node": 3,
+  "expected_identity_verified": true,
+  "auto_gate_released": true,
+  "capture": "diagnostics\\soil03-demarrage-20261104-124215Z.json",
+  "banner_log": "diagnostics\\soil03-xiao-banniere-20261104.log",
+  "matched": [
+    {
+      "node": 3,
+      "session": 534338323,
+      "seq": 1,
+      "uptime_ms": 41083,
+      "status": "ok",
+      "address": 72,
+      "raw": 21696,
+      "uv": 2712000,
+      "tx_host_s": 12.36,
+      "rx_host_s": 12.375
+    }
+  ],
+  "duration_s": 105.0630000000001,
+  "no_repeat_after_first_s": 92.7030000000001,
+  "valid_lux_count": 105,
+  "background_rx": [],
+  "limitations": "Controle SOIL-03 sur USB, premieres sondes non observees dans cette fenetre; compatibilite et independance verifiees en simulation. Pas de periode reelle complete de 30min ni calibration ou mesure VCC physique."
+}

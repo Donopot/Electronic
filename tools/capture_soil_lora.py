@@ -1,4 +1,4 @@
-"""Capture USB simultanee bornee et comparaison exacte des diagnostics SOIL-01/02 TX/RX."""
+"""Capture USB simultanee bornee et comparaison exacte des diagnostics SOIL-01/02/03 TX/RX."""
 import argparse
 from datetime import datetime, timezone
 import json
@@ -7,9 +7,9 @@ import re
 import threading
 import time
 
-PACKET = re.compile(r"^\[SOIL_(TX|RX)\] authenticated=no node=SOIL-(0[12]) session=(\d+) seq=(\d+) uptime_ms=(\d+) status=(ok|adc_unavailable|adc_error|adc_range) address=(\d+) raw=(-?\d+) uv=(-?\d+)$")
+PACKET = re.compile(r"^\[SOIL_(TX|RX)\] authenticated=no node=SOIL-(0[123]) session=(\d+) seq=(\d+) uptime_ms=(\d+) status=(ok|adc_unavailable|adc_error|adc_range) address=(\d+) raw=(-?\d+) uv=(-?\d+)$")
 ARRIVAL = re.compile(r"^\[HOST t_s=(\d{1,6}\.\d{6})\] (.*)$")
-ATTRIBUTED_REJECT = re.compile(r"^\[SOIL_REJECT\] node=SOIL-(0[12]) reason=(duplicate|old_sequence) authenticated=no$")
+ATTRIBUTED_REJECT = re.compile(r"^\[SOIL_REJECT\] node=SOIL-(0[123]) reason=(duplicate|old_sequence) authenticated=no$")
 FIELDS = ("node", "session", "seq", "uptime_ms", "status", "address", "raw", "uv")
 
 

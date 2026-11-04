@@ -98,19 +98,20 @@ void OledDisplay::showSoil(const Measurement& lux, const plantsoil::ReceiverBank
         snprintf(line, sizeof(line), "Lux %.1f", lux.lux);
     else snprintf(line, sizeof(line), "Lux %s", lux.status == Status::WarmingUp ? "EN COURS" : "ERREUR CAPTEUR");
     display_.print(line);
+    static_assert(plantsoil::kNodeCount == 3, "Disposition OLED prevue pour trois sondes");
+    display_.setCursor(0, 18); display_.print("SONDES NON AUTH");
     for (uint8_t id = 1; id <= plantsoil::kNodeCount; ++id) {
         const auto& node = soil.node(id);
-        display_.setCursor(0, 18 + (id - 1) * 18);
-        snprintf(line, sizeof(line), "SOIL-%02u NON AUTH", static_cast<unsigned>(id));
-        display_.print(line);
-        display_.setCursor(0, 27 + (id - 1) * 18);
+        display_.setCursor(0, 18 + id * 9);
         const auto state = node.state(now);
         if (state == plantsoil::Freshness::Current) {
-            snprintf(line, sizeof(line), "%.6f V %lum", plantsoil::microvolts(node.packet().raw) / 1000000.0,
+            snprintf(line, sizeof(line), "SOIL-%02u %.3f V %lum", static_cast<unsigned>(id),
+                     plantsoil::microvolts(node.packet().raw) / 1000000.0,
                      static_cast<unsigned long>(node.age(now) / 60000));
-            display_.print(line);
-        } else display_.print(state == plantsoil::Freshness::Waiting ? "ATTENTE SONDE" :
-                             state == plantsoil::Freshness::Stale ? "MESURE PERIMEE" : "DEFAUT ADS");
+        } else snprintf(line, sizeof(line), "SOIL-%02u %s", static_cast<unsigned>(id),
+                        state == plantsoil::Freshness::Waiting ? "ATTENTE" :
+                        state == plantsoil::Freshness::Stale ? "PERIMEE" : "DEFAUT ADS");
+        display_.print(line);
     }
     display_.setCursor(0, 54); display_.print(radioReady ? "RADIO ECOUTE" : "ERREUR RADIO");
     display_.display();

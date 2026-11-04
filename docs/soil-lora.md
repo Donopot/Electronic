@@ -1,6 +1,6 @@
 # SOIL-01 : test XIAO → Heltec, LoRa 868 MHz
 
-Le hub accepte aussi **SOIL-02**. Voir [deux sondes](soil-two-nodes.md) pour
+Le hub accepte aussi **SOIL-02 et SOIL-03**. Voir [trois sondes](soil-three-nodes.md) pour
 le profil dédié, l'affichage et la réception indépendante des deux nœuds.
 
 Ce test transporte la mesure brute ADS1115 de la sonde capacitive SOIL-01
@@ -78,7 +78,7 @@ multioctets sont encodes en petit-boutiste.
 | --- | --- |
 | 0–1 | Signature ASCII `PS` |
 | 2 | Version `1` |
-| 3 | Noeud `1` = SOIL-01, `2` = SOIL-02 ; autres identifiants rejetes |
+| 3 | Noeud `1` = SOIL-01, `2` = SOIL-02, `3` = SOIL-03 ; autres identifiants rejetes |
 | 4–7 | Session de demarrage non nulle, entier 32 bits |
 | 8–11 | Compteur circulaire 32 bits |
 | 12–15 | Uptime XIAO en ms, modulo 2³² |
@@ -101,12 +101,12 @@ Pour chaque noeud, une nouvelle session remplace son etat precedent. Dans la ses
 un compteur n'est nouveau que si la difference non signee est dans
 `1..0x7fffffff`. Doublon, ancien compteur, paquet malforme et erreur CRC ne
 rafraichissent ni mesure ni age. A **5 400 000 ms (90 minutes)** sans nouveau paquet accepte,
-l'ecran retire brut et volts et affiche « MESURE PERIMEE ». Un defaut ADS
+l'ecran retire brut et volts et affiche « PERIMEE ». Un defaut ADS
 accepte remplace immediatement la valeur. L'expiration reste acquise jusqu'au
 paquet suivant, meme apres un tour complet de `millis()` ; les calculs de
 cadence et d'age utilisent des differences non signees.
 
-L'OLED conserve lux, les deux tensions et ages individuels, leurs etats et celui de la radio ; les bruts restent dans les journaux USB. Un
+L'OLED conserve lux, les trois tensions arrondies et ages individuels, leurs etats et celui de la radio ; les bruts restent dans les journaux USB. Un
 nouveau paquet, un changement radio ou la frontiere de peremption rafraichit
 l'ecran sans attendre la prochaine mesure lux. Le service RX est non bloquant
 entre interruptions ; chaque traitement relance
@@ -205,17 +205,17 @@ de capture n'ouvrent aucun port serie. Les journaux historiques du 3 novembre so
 `diagnostics/soil-lora-heltec-builds-20261103.log`.
 
 Pour la cadence de 30 minutes, `python tools/run_soil_lora_host_tests.py`
-execute maintenant **35 scenarios** sur le protocole partage et les vrais firmwares,
+execute maintenant **49 scenarios** sur le protocole partage et les vrais firmwares,
 dont premier cycle apres 30 s, frontiere 30 min, attente sans alimentation de
 sonde, commandes AUTO repetees et maintien OLED jusqu'a la frontiere 90 min.
 Les preuves du changement sont consignees dans
 [le compte rendu cadence du 4 novembre](../diagnostics/soil-30min-20261104.md) ;
-les cas multisonde et leur installation sont decrits dans [deux sondes](soil-two-nodes.md).
+les cas multisonde et leur installation sont decrits dans [trois sondes](soil-three-nodes.md).
 
 Les corrections historiques du 3 novembre etaient aussi verifiees par
 `python tools/run_soil_lora_host_tests.py` : neuf scenarios executaient les vrais
 firmwares, notamment initialisation differee14s, CRC absent/incorrect,
-cadence TX, RNG et USB bloque/deconnecte. Les **vingt tests** actuels de
+cadence TX, RNG et USB bloque/deconnecte. Les **vingt-trois tests** actuels de
 `python tests/test_capture_soil_lora.py` couvrent appariement, frontieres,
 corruption, interruption, nettoyage des lecteurs et reservation exclusive
 du rapport. Aucun de ces tests n'accede aux vraies cartes.

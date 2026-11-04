@@ -147,10 +147,11 @@ int main(int argc, char** argv) {
     assert(delta >= 1800000UL && delta < 1802000UL && readings == 4);
   } else if (scenario == "cadence") {
     static_assert(plantsoil::kTransmitMs == 1800000UL, "Releves toutes les trente minutes");
-    static_assert(kInitialSampleDelayMs == (SOIL_NODE_ID == 2 ? 35000UL : 30000UL), "Delai initial selon le noeud");
+    constexpr uint32_t expectedInitial[] = {30000UL, 35000UL, 40000UL};
+    static_assert(kInitialSampleDelayMs == expectedInitial[SOIL_NODE_ID - 1], "Delai initial selon le noeud");
     host::connected() = false;
     adsAddress = 0x48;
-    const uint32_t firstDue = setupStarted + (SOIL_NODE_ID == 2 ? 35000UL : 30000UL);
+    const uint32_t firstDue = setupStarted + expectedInitial[SOIL_NODE_ID - 1];
     host::setNow(firstDue - 11); runPowerLoop(sample); assert(attempts == 0);
     host::setNow(firstDue - 10); runPowerLoop(sample);
     assert(attempts == 1 && readings == 1 && host::radio().transmissions.size() == 1);

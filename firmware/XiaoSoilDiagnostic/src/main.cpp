@@ -33,7 +33,7 @@ namespace {
 #if SOIL_LORA_TX
 static_assert(SOIL_NODE_ID >= 1 && SOIL_NODE_ID <= plantsoil::kNodeCount, "Identifiant de sonde invalide");
 #if SOIL_PMOS_CONTROL
-constexpr uint32_t kInitialSampleDelayMs = SOIL_NODE_ID == 2 ? 35000UL : 30000UL;
+constexpr uint32_t kInitialSampleDelayMs = 30000UL + (SOIL_NODE_ID - 1) * 5000UL;
 static_assert(kInitialSampleDelayMs <= plantsoil::kTransmitMs, "Delai initial superieur a la periode");
 #endif
 #endif
@@ -467,7 +467,7 @@ void setup() {
 #if SOIL_PMOS_CONTROL
   correctPinMap = correctPinMap && g_ADigitalPinMap[0] == 2;
   probePower.off();
-  // Premier relevé à 30/35 s suivant le nœud, puis période normale de 30 min.
+  // Premier relevé à 30/35/40 s suivant le nœud, puis période normale de 30 min.
   lastPowerCycle = millis() - plantsoil::kTransmitMs + kInitialSampleDelayMs;
 #endif
   if (correctPinMap) bus.release();

@@ -67,6 +67,35 @@ class CaptureTests(unittest.TestCase):
         self.assertEqual(result["rx_duplicates"], [])
         self.assertTrue(all(p["node"] == 2 for p in result["matched"]))
 
+    def test_node3_with_two_background_nodes(self):
+        tx = [line("TX", i, node=3) for i in range(3)]
+        rx = [line("RX", i, node=node) for node in (1, 2, 3) for i in range(3)]
+        rx += ["[SOIL_REJECT] node=SOIL-02 reason=duplicate authenticated=no"]
+        result = capture.compare(tx, rx)
+        self.assertTrue(result["accepted"])
+        self.assertEqual(result["compared_nodes"], [3])
+        self.assertEqual(result["valid_matched_by_node"], {3: 3})
+        self.assertEqual(len(result["background_rx"]), 6)
+        self.assertFalse(capture.compare(tx, rx + [line("RX", 0, node=4)])["accepted"])
+
+    def test_third_node_must_reach_its_own_minimum(self):
+        tx=[line("TX", i, node=node) for node in (1,2,3) for i in range(3 if node<3 else 2)]
+        rx=[value.replace("SOIL_TX", "SOIL_RX") for value in tx]
+        result=capture.compare(tx,rx)
+        self.assertFalse(result["accepted"])
+        self.assertEqual(result["valid_matched_by_node"], {1:3,2:3,3:2})
+        tx.append(line("TX",2,node=3)); rx.append(line("RX",2,node=3))
+        self.assertTrue(capture.compare(tx,rx)["accepted"])
+
+    def test_third_node_attributed_reject_scope(self):
+        reject="[SOIL_REJECT] node=SOIL-03 reason=old_sequence authenticated=no"
+        tx=[line("TX",i,node=2) for i in range(3)]
+        rx=[line("RX",i,node=2) for i in range(3)]
+        self.assertTrue(capture.compare(tx,rx+[reject])["accepted"])
+        tx=[line("TX",i,node=3) for i in range(3)]
+        rx=[line("RX",i,node=3) for i in range(3)]
+        self.assertFalse(capture.compare(tx,rx+[reject])["accepted"])
+
     def test_identical_counters_cannot_cross_pair_nodes(self):
         tx = [line("TX", i, node=2) for i in range(3)]
         wrong = capture.compare(tx, [line("RX", i, node=1) for i in range(3)])
@@ -100,7 +129,7 @@ class CaptureTests(unittest.TestCase):
         tx = [line("TX", i, node=2) for i in range(3)]
         rx = [line("RX", i, node=2) for i in range(3)]
         self.assertFalse(capture.compare(tx, rx + [rx[0]])["accepted"])
-        self.assertFalse(capture.compare(tx, rx + [line("RX", 0, node=3)])["accepted"])
+        self.assertFalse(capture.compare(tx, rx + [line("RX", 0, node=4)])["accepted"])
         changed_session = rx[0].replace("session=1234", "session=4321")
         self.assertFalse(capture.compare(tx, rx + [changed_session])["accepted"])
         self.assertFalse(capture.compare(tx, rx[1:])["accepted"])
@@ -240,7 +269,7 @@ class CaptureTests(unittest.TestCase):
         self.assertTrue(all(port.closed and not port.closed_while_reading for port in ports))
 
     def test_reader_checks_completed_long_lines_and_utf8(self):
-        created = []
+        created, completed = [], []
         class FakePort:
             def __init__(self, **kwargs):
                 self.data = b"A" * 8193 + b"\n" if not created else b"\xffbroken\n"
@@ -254,12 +283,14 @@ class CaptureTests(unittest.TestCase):
                 return len(self.data)
             def read(self, count):
                 chunk, self.data = self.data[:count], self.data[count:]
+                if chunk and not self.data:
+                    completed.append(self)
                 if not chunk:
                     time.sleep(0.001)
                 return chunk
             def close(self):
                 pass
-        with tempfile.TemporaryDirectory() as directory, mock.patch.dict(sys.modules, {"serial": types.SimpleNamespace(Serial=FakePort)}):
+        with tempfile.TemporaryDirectory() as directory, mock.patch.dict(sys.modules, {"serial": types.SimpleNamespace(Serial=FakePort)}), mock.patch.object(capture.time, "monotonic", side_effect=lambda: 1.0 if len(completed) == 2 else 0.0):
             result = capture.capture("COM8", "COM5", 0.03, Path(directory) / "tx.log", Path(directory) / "rx.log")
             self.assertIn("line_too_long", result["errors"])
             self.assertIn("invalid_utf8", result["errors"])

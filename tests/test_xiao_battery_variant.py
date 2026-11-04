@@ -89,15 +89,18 @@ class BatteryVariantTest(unittest.TestCase):
         self.assertEqual(config["env:xiao_soil_lora_pmos_node2"]["extends"], "env:xiao_soil_lora_pmos")
         self.assertIn("-DSOIL_NODE_ID=2", config["env:xiao_soil_lora_pmos_node2"]["build_flags"])
         self.assertNotIn("board_build.variants_dir", config["env:xiao_soil_lora_pmos_node2"])
+        self.assertEqual(config["env:xiao_soil_lora_pmos_node3"]["extends"], "env:xiao_soil_lora_pmos")
+        self.assertIn("-DSOIL_NODE_ID=3", config["env:xiao_soil_lora_pmos_node3"]["build_flags"])
+        self.assertNotIn("board_build.variants_dir", config["env:xiao_soil_lora_pmos_node3"])
 
     def test_all_linked_firmwares(self):
         root = Path(__file__).resolve().parents[1]
         suffix = ".exe" if os.name == "nt" else ""
         toolchain = root / ".tools/platformio/packages/toolchain-gccarmnoneeabi/bin"
-        for profile in ("xiao_soil_diagnostic", "xiao_soil_lora_tx", "xiao_soil_lora_pmos", "xiao_soil_lora_pmos_node2"):
+        for profile in ("xiao_soil_diagnostic", "xiao_soil_lora_tx", "xiao_soil_lora_pmos", "xiao_soil_lora_pmos_node2", "xiao_soil_lora_pmos_node3"):
             with self.subTest(profile=profile):
                 elf = root / "firmware/XiaoSoilDiagnostic/.pio/build" / profile / "firmware.elf"
-                self.assertTrue(elf.is_file(), "Compiler les quatre profils avant le test")
+                self.assertTrue(elf.is_file(), "Compiler les cinq profils avant le test")
                 nm = subprocess.check_output([str(toolchain / ("arm-none-eabi-nm" + suffix)),
                                               "-C", str(elf)], text=True)
                 self.assertEqual(sum(" T initVariant()" in line for line in nm.splitlines()), 1)

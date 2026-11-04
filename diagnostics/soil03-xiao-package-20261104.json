@@ -1,0 +1,10 @@
+{
+  "serial": "537B36EB9D8F46F1",
+  "boot_port": "COM13",
+  "expected_node": 3,
+  "profile": "xiao_soil_lora_pmos_node3",
+  "sha256": "9df75845a0c84c5ce31d6dd4b185f3458063a620d68ef0c646d3f014fb3e4fa3",
+  "application_bytes": 92596,
+  "application_only": true,
+  "battery_isolated_confirmed": true
+}
