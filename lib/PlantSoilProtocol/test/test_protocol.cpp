@@ -4,6 +4,8 @@
 #include <initializer_list>
 using namespace plantsoil;
 int main() {
+    static_assert(kTransmitMs == 1800000UL, "Cadence attendue : trente minutes");
+    static_assert(kStaleMs == 5400000UL, "Peremption attendue : quatre-vingt-dix minutes");
     Packet source;
     source.session = 0x12345678; source.sequence = 42; source.uptimeMs = 0xFEDCBA98;
     source.address = 0x48; source.status = AdcStatus::Ok; source.raw = 21565;
@@ -36,17 +38,18 @@ int main() {
     assert(receiver.state(0) == Freshness::Waiting);
     const uint32_t base = 0xFFFFF000;
     assert(receiver.accept(bytes, sizeof(bytes), base) == Result::Accepted);
-    assert(receiver.state(base + 89999) == Freshness::Current);
-    assert(receiver.state(base + 90000) == Freshness::Stale);
+    assert(receiver.state(base + kTransmitMs) == Freshness::Current);
+    assert(receiver.state(base + kStaleMs - 1) == Freshness::Current);
+    assert(receiver.state(base + kStaleMs) == Freshness::Stale);
     assert(receiver.state(base + 100) == Freshness::Stale); // expiration acquise apres un tour complet
-    assert(receiver.age(base + 90001) == 90001);
+    assert(receiver.age(base + kStaleMs + 1) == kStaleMs + 1);
     assert(receiver.accept(bytes, sizeof(bytes), base + 50000) == Result::Duplicate);
     assert(receiver.age(base + 50000) == 50000);
     source.sequence = 41; encode(source, bytes, sizeof(bytes));
     assert(receiver.accept(bytes, sizeof(bytes), base + 60000) == Result::OldSequence);
     memcpy(changed, bytes, kPacketSize); changed[16] = 255;
     assert(receiver.accept(changed, kPacketSize, base + 70000) == Result::Status);
-    assert(receiver.state(base + 90000) == Freshness::Stale);
+    assert(receiver.state(base + kStaleMs) == Freshness::Stale);
     source.session++; source.sequence = 0xFFFFFFFF; source.status = AdcStatus::ReadError; source.raw = 0;
     assert(encode(source, bytes, sizeof(bytes)) == Result::Accepted);
     assert(receiver.accept(bytes, sizeof(bytes), 100) == Result::Accepted);
@@ -67,5 +70,5 @@ int main() {
     char line[240]; assert(formatPacket(line, sizeof(line), "TX", source));
     assert(strstr(line, "authenticated=no") && strstr(line, "status=adc_range") && strstr(line, "raw=0 uv=0"));
     assert(!formatPacket(line, 10, "RX", source));
-    puts("PASS protocole SOIL : codec strict, brut signe, defauts, session, compteurs/temps circulaires, frontiere 90s, rejet sans rafraichir l'age");
+    puts("PASS protocole SOIL : codec strict, brut signe, defauts, session, compteurs/temps circulaires, cadence 30min, frontiere 90min, rejet sans rafraichir l'age");
 }

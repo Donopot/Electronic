@@ -203,12 +203,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--tx-port", required=True)
     parser.add_argument("--rx-port", required=True)
-    parser.add_argument("--seconds", type=float, default=105)
+    parser.add_argument("--seconds", type=float, default=5500)
     parser.add_argument("--boundary-margin", type=float, default=1.0)
     parser.add_argument("--output-prefix", type=Path, required=True)
     args = parser.parse_args()
-    if not 0 < args.seconds <= 600 or args.tx_port.upper() == args.rx_port.upper():
-        parser.error("utiliser des ports distincts et 0 < seconds <= 600")
+    if not 0 < args.seconds <= 7200 or args.tx_port.upper() == args.rx_port.upper():
+        parser.error("utiliser des ports distincts et 0 < seconds <= 7200")
     if not 0 <= args.boundary_margin <= 2 or args.seconds <= 2 * args.boundary_margin:
         parser.error("marge de 0 a 2 s, inferieure a la demi-duree de capture")
     paths = [Path(str(args.output_prefix) + suffix) for suffix in ("-tx.log", "-rx.log", ".json")]

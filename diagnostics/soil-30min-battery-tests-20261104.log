@@ -1,0 +1,9 @@
+test_all_linked_firmwares (__main__.BatteryVariantTest.test_all_linked_firmwares) ... ok
+test_gpio_initialization (__main__.BatteryVariantTest.test_gpio_initialization) ... ok
+test_platformio_selection (__main__.BatteryVariantTest.test_platformio_selection) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.498s
+
+OK
+PASS: initVariant réel, ordre LOW/OUTPUT, courant faible, brochage et autres sorties conservés

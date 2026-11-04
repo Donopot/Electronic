@@ -16,14 +16,46 @@ spec = importlib.util.spec_from_file_location("capture", Path(__file__).resolve(
 capture = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(capture)
 
-def line(direction, seq, raw=21565, status="ok", address=72):
-    return f"[SOIL_{direction}] authenticated=no node=SOIL-01 session=1234 seq={seq} uptime_ms={seq*30000} status={status} address={address} raw={raw} uv={raw*125}"
+def line(direction, seq, raw=21565, status="ok", address=72, uptime_ms=None):
+    uptime = seq * 30000 if uptime_ms is None else uptime_ms
+    return f"[SOIL_{direction}] authenticated=no node=SOIL-01 session=1234 seq={seq} uptime_ms={uptime} status={status} address={address} raw={raw} uv={raw*125}"
 
 
-def stamped(direction, seq, when):
-    return f"[HOST t_s={when:.6f}] " + line(direction, seq)
+def stamped(direction, seq, when, uptime_ms=None):
+    return f"[HOST t_s={when:.6f}] " + line(direction, seq, uptime_ms=uptime_ms)
 
 class CaptureTests(unittest.TestCase):
+    def test_capture_window_for_three_half_hour_samples(self):
+        for duration in (3700, 5500, 7200):
+            with self.subTest(duration=duration), tempfile.TemporaryDirectory() as directory:
+                prefix = Path(directory) / "half-hour"
+                def fake_capture(tx_port, rx_port, seconds, tx_path, rx_path):
+                    self.assertEqual(seconds, duration)
+                    arrivals = (30, 1831, 3632) if duration == 3700 else (1801, 3602, 5403)
+                    for direction, path in (("TX", tx_path), ("RX", rx_path)):
+                        path.write_text("\n".join(stamped(direction, i, when, uptime_ms=int(when * 1000))
+                                                  for i, when in enumerate(arrivals)) + "\n", encoding="utf-8")
+                    return {"errors": [], "duration_s": duration, "interrupted": False}
+                argv = ["capture", "--tx-port", "COM8", "--rx-port", "COM5", "--output-prefix", str(prefix)]
+                if duration != 5500:
+                    argv.extend(["--seconds", str(duration)])
+                with mock.patch.object(sys, "argv", argv), mock.patch.object(capture, "capture", fake_capture), contextlib.redirect_stdout(io.StringIO()):
+                    self.assertEqual(capture.main(), 0)
+                summary = json.loads(Path(str(prefix) + ".json").read_text(encoding="utf-8"))
+                self.assertEqual(summary["valid_matched_count"], 3)
+                self.assertTrue(summary["accepted"])
+                self.assertEqual([b["uptime_ms"] - a["uptime_ms"] for a, b in zip(summary["matched"], summary["matched"][1:])], [1801000, 1801000])
+
+    def test_capture_window_remains_bounded(self):
+        for duration in ("0", "7200.001"):
+            argv = ["capture", "--tx-port", "COM8", "--rx-port", "COM5", "--seconds", duration,
+                    "--output-prefix", "unused"]
+            with mock.patch.object(sys, "argv", argv), mock.patch.object(capture, "capture") as run_capture, contextlib.redirect_stderr(io.StringIO()):
+                with self.assertRaises(SystemExit) as raised:
+                    capture.main()
+                self.assertEqual(raised.exception.code, 2)
+                run_capture.assert_not_called()
+
     def test_exact_pairing(self):
         result = capture.compare([line("TX", i) for i in range(3)], [line("RX", i) for i in range(3)])
         self.assertTrue(result["accepted"])

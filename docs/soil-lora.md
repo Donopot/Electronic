@@ -97,7 +97,7 @@ de securite et sans garantie mathematique d'unicite.
 Une nouvelle session remplace l'etat precedent. Dans la session courante,
 un compteur n'est nouveau que si la difference non signee est dans
 `1..0x7fffffff`. Doublon, ancien compteur, paquet malforme et erreur CRC ne
-rafraichissent ni mesure ni age. A **90 000 ms** sans nouveau paquet accepte,
+rafraichissent ni mesure ni age. A **5 400 000 ms (90 minutes)** sans nouveau paquet accepte,
 l'ecran retire brut et volts et affiche « MESURE PERIMEE ». Un defaut ADS
 accepte remplace immediatement la valeur. L'expiration reste acquise jusqu'au
 paquet suivant, meme apres un tour complet de `millis()` ; les calculs de
@@ -124,13 +124,13 @@ les fonctions.
 
 868,1 MHz, BW125 kHz, SF7, CR4/5, sync prive `0x12`, CRC 2 octets, en-tete
 explicite, preambule 8, puissance emise conduite **0 dBm**. Une trame courante
-est tentee toutes les **30 s**, sans repetition, ACK ni rattrapage apres retard.
+est tentee toutes les **30 minutes**, sans repetition, ACK ni rattrapage apres retard.
 Le compteur avance egalement lors d'un echec d'emission. La prochaine trame
 contient une nouvelle lecture plutot qu'une ancienne valeur.
 
 Pour 20 octets, le calcul LoRa donne `(8 + 4,25 + 43) × 1,024 ms = 56,576 ms`,
-soit **0,1886 %** sur 30 s. Le TX verifie aussi `getTimeOnAir(20) <= 300000 µs`
-avant de declarer la radio prete : une configuration depassant 1 % est refusee.
+soit **0,003143 %** sur 30 minutes. Le TX verifie aussi `getTimeOnAir(20) <= 300000 µs`
+avant de declarer la radio prete : ce plafond historique reste conservateur pour la nouvelle cadence.
 L'[annexe, bande 48, de la decision UE 2025/105](https://eur-lex.europa.eu/eli/dec_impl/2025/105/oj/eng/pdf)
 prevoit pour 868–868,6 MHz une limite de 25 mW PAR avec, en alternative aux
 techniques d'acces au spectre indiquees, un rapport cyclique maximal de 1 %.
@@ -143,11 +143,21 @@ d'ecraser des preuves. Le fichier JSON est reserve exclusivement avant tout
 acces aux ports. Les deux ports sont ouverts avant une fenetre commune,
 puis leurs tampons d'entree sont vides. Chaque ligne porte un horodatage hote
 `[HOST t_s=...]`. Les lectures se font simultanement, avec timeout, lignes
-bornees et une duree limitee a 600 s.
+bornees et une duree limitee a 7200 s (deux heures).
 
 ```powershell
-python tools/capture_soil_lora.py --tx-port COM6 --rx-port COM5 --seconds 105 --output-prefix diagnostics/soil-lora-hardware-20261103
+python tools/capture_soil_lora.py --tx-port COM6 --rx-port COM5 --seconds 3700 --output-prefix diagnostics/soil-lora-30min-hardware
 ```
+
+Avec la cadence de 30 minutes, 3700 s permettent d'observer trois releves
+si la capture commence avant le premier cycle suivant le demarrage du profil
+P-MOS (premier releve apres 30 s). Sinon, choisir une fenetre plus longue,
+jusqu'a 7200 s. Un controle court peut seulement confirmer le premier echange :
+il ne valide pas trois periodes reelles, qui sont aussi testees avec une horloge
+simulee. Le profil USB historique continue ses lectures locales a environ 1 s ;
+les deux profils radio XIAO respectent maintenant un garde TX de 30 minutes.
+Sans option `--seconds`, la capture dure **5500 s**, pour couvrir trois releves
+meme si elle commence juste apres une emission.
 
 Ce prefixe est un exemple : verifier les vrais ports. Sorties distinctes :
 `-tx.log`, `-rx.log` et `.json`. La comparaison porte exactement sur session,
@@ -177,24 +187,31 @@ produit par la meme lecture utilisee pour le paquet.
 ## Preuves et limites
 
 Les tests hote couvrent codec, champs, longueurs, defauts, sessions, ordre,
-debordements, frontiere 90 s, remplacement des valeurs OLED, reessais radio,
+debordements, frontiere 90 min, remplacement des valeurs OLED, reessais radio,
 lux concurrents et veille/repli RESET avec les vrais modules firmware. Les
 tests cibles de `tools/run_soil_lora_host_tests.py` executent aussi le vrai
-`serviceTransmit` et le vrai `setup/loop` XIAO : espacement minimal 30 s,
+`serviceTransmit` et le vrai `setup/loop` XIAO : espacement minimal 30 min,
 absence de rattrapage, debordement, compteur apres erreur TX, echec/reprise du
 RNG, statuts ADS et terminal absent ou bloque. Le main Heltec est teste avec
 une initialisation differee de plus de 14 s, PRG et attente de sommeil, ainsi
 qu'avec de nouvelles trames distinctes dont le CRC est absent ou incorrect.
 Les tests historiques Heltec et leur schema JSON strict sont conserves. Les tests
-de capture n'ouvrent aucun port serie. Les journaux logiciels sont dans
+de capture n'ouvrent aucun port serie. Les journaux historiques du 3 novembre sont dans
 `diagnostics/soil-lora-host-tests-20261103.log`,
 `diagnostics/soil-lora-xiao-builds-20261103.log` et
 `diagnostics/soil-lora-heltec-builds-20261103.log`.
 
-Les corrections de relecture sont aussi verifiees par
-`python tools/run_soil_lora_host_tests.py` : neuf scenarios executent les vrais
+Pour la cadence de 30 minutes, `python tools/run_soil_lora_host_tests.py`
+execute **22 scenarios** sur le protocole partage et les vrais firmwares,
+dont premier cycle apres 30 s, frontiere 30 min, attente sans alimentation de
+sonde, commandes AUTO repetees et maintien OLED jusqu'a la frontiere 90 min.
+Les preuves du changement sont consignees dans
+[le compte rendu du 4 novembre](../diagnostics/soil-30min-20261104.md).
+
+Les corrections historiques du 3 novembre etaient aussi verifiees par
+`python tools/run_soil_lora_host_tests.py` : neuf scenarios executaient les vrais
 firmwares, notamment initialisation differee14s, CRC absent/incorrect,
-cadence TX, RNG et USB bloque/deconnecte. Les treize tests de
+cadence TX, RNG et USB bloque/deconnecte. Les **quinze tests** actuels de
 `python tests/test_capture_soil_lora.py` couvrent appariement, frontieres,
 corruption, interruption, nettoyage des lecteurs et reservation exclusive
 du rapport. Aucun de ces tests n'accede aux vraies cartes.

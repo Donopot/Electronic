@@ -31,27 +31,29 @@ batterie corrigée est commune aux trois profils.
 Au démarrage, D0 est relâchée et le premier cycle attend 30 s. En mode AUTO,
 le programme alimente la sonde, attend 1 s, prend cinq conversions et leur
 médiane, puis relâche D0 avant de journaliser et d'émettre. La prochaine
-acquisition attend 30 s après la fin du traitement précédent. Une acquisition
+acquisition attend **30 minutes** après la fin du traitement précédent. Une acquisition
 échouée coupe aussi la sonde et transmet un défaut, sans reprendre une ancienne
 mesure. Un appui bouton ou une grille maintenue basse peut empêcher la coupure
 physique malgré l'état logiciel ; le contrôle au multimètre reste requis.
 
 Ce profil valide la commutation, **pas la veille longue ni une autonomie**.
-Le Heltec et son seuil de données anciennes de 90 s restent inchangés.
+Le Heltec conserve la mesure comme courante pendant **90 minutes** sans
+nouveau paquet accepté, puis affiche « MESURE PERIMEE ».
 
 ## Commandes USB
 
 Port XIAO à 115200 bauds, lignes terminées par CR ou LF :
 
 - `OFF` : grille relâchée ; aucune acquisition ni émission jusqu'à une autre
-  commande. Le Heltec peut donc signaler des données anciennes après 90 s.
+  commande. Le Heltec peut donc signaler des données anciennes après 90 min.
 - `ON` : maintien allumé pour le contrôle au multimètre, limité à 120 s puis
   OFF. Débrancher physiquement l'USB coupe aussi ce mode ; fermer seulement le
   terminal, avec l'USB toujours configuré, laisse le temps de mesurer. Ce mode
   sert au contrôle de VCC : il n'effectue ni acquisition ni émission radio.
   L'échéance est vérifiée à chaque tour, avec une pause de 10 ms entre tours.
 - `AUTO` : coupe d'abord, puis reprend le cycle, avec première mesure immédiate
-  et respect du garde radio minimal de 30 s.
+  et respect du garde radio minimal de 30 min. Des commandes AUTO répétées
+  peuvent relancer une acquisition manuelle, sans accélérer les émissions.
 
 Le traitement des commandes lit au plus 64 octets par tour. Une ligne trop
 longue ou contenant un octet autre qu'une lettre majuscule est abandonnée
@@ -81,6 +83,10 @@ python -m platformio run --project-dir firmware/XiaoSoilDiagnostic -e xiao_soil_
 python tests/test_xiao_battery_variant.py
 ```
 
-Le lanceur hôte couvre le contrôleur réel (médiane et chaque erreur de lecture),
+Le lanceur hôte vérifie le premier cycle après 30 s, l'absence d'acquisition
+intermédiaire, la frontière de 30 min, les retards sans rattrapage et le
+débordement de l'horloge par simulation du temps. Il vérifie aussi le maintien
+de la mesure sur le Heltec à 30 min et sa péremption à 90 min.
+Il couvre le contrôleur réel (médiane et chaque erreur de lecture),
 le GPIO partagé, le parser, les commandes manuelles, USB absent/bloqué, les
 timeouts et le débordement de millis, plus les scénarios historiques TX/RX.

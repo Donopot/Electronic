@@ -316,9 +316,9 @@ void announce() {
   SOIL_LOG.println(F("\n[XIAO-SOIL-DIAG] v1 / USB / D6=P1.11 SDA / D7=P1.12 SCL"));
   SOIL_LOG.println(F("[CONFIG] ADS1115 attendu 0x48, selection unique 0x48..0x4B, A0/GND, +/-4.096 V, 128 SPS."));
 #if SOIL_PMOS_CONTROL
-  SOIL_LOG.println(F("[INFO] P-MOS D0 : commandes OFF / ON (120 s maximum) / AUTO ; radio 30 s ; pas de veille longue."));
+  SOIL_LOG.println(F("[INFO] P-MOS D0 : commandes OFF / ON (120 s maximum) / AUTO ; releves 30 min, premier apres 30 s ; pas de veille longue."));
 #elif SOIL_LORA_TX
-  SOIL_LOG.println(F("[INFO] D0 relachee ; SOIL-01 LoRa 868.1 MHz / 0 dBm / 30 s ; diagnostic non authentifie ; aucun pourcentage."));
+  SOIL_LOG.println(F("[INFO] D0 relachee ; SOIL-01 LoRa 868.1 MHz / 0 dBm / 30 min ; diagnostic non authentifie ; aucun pourcentage."));
 #else
   SOIL_LOG.println(F("[INFO] D0 relachee ; radio non initialisee ; aucun pourcentage sans etalonnage."));
 #endif
@@ -350,6 +350,8 @@ void reportMeasurement(bool valid, int16_t raw) {
 
 #if SOIL_PMOS_CONTROL
 ProbePower probePower;
+constexpr uint32_t kInitialSampleDelayMs = 30000;
+static_assert(kInitialSampleDelayMs <= plantsoil::kTransmitMs, "Delai initial superieur a la periode");
 enum class ProbeMode { Auto, Off, ManualOn };
 ProbeMode probeMode = ProbeMode::Auto;
 uint32_t lastPowerCycle = 0, manualStarted = 0;
@@ -440,7 +442,8 @@ void setup() {
 #if SOIL_PMOS_CONTROL
   correctPinMap = correctPinMap && g_ADigitalPinMap[0] == 2;
   probePower.off();
-  lastPowerCycle = millis();
+  // Conserver le premier relevé après 30 s, puis appliquer la période normale.
+  lastPowerCycle = millis() - plantsoil::kTransmitMs + kInitialSampleDelayMs;
 #endif
   if (correctPinMap) bus.release();
   Serial.begin(115200);

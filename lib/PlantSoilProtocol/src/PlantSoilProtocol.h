@@ -7,7 +7,8 @@
 namespace plantsoil {
 constexpr uint8_t kVersion = 1, kNode = 1;
 constexpr size_t kPacketSize = 20;
-constexpr uint32_t kTransmitMs = 30000, kStaleMs = 90000;
+constexpr uint32_t kTransmitMs = 30UL * 60UL * 1000UL;
+constexpr uint32_t kStaleMs = 3UL * kTransmitMs;
 enum class AdcStatus : uint8_t { Ok = 0, Unavailable = 1, ReadError = 2, RangeError = 3 };
 struct Packet {
     uint32_t session = 0, sequence = 0, uptimeMs = 0;

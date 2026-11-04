@@ -1,0 +1,42 @@
+{
+  "authenticated": false,
+  "tx_count": 1,
+  "rx_count": 1,
+  "matched": [
+    {
+      "session": 4029017078,
+      "seq": 1,
+      "uptime_ms": 31126,
+      "status": "ok",
+      "address": 72,
+      "raw": 21502,
+      "uv": 2687750,
+      "tx_host_s": 5.344,
+      "rx_host_s": 5.438
+    }
+  ],
+  "comparison_window_s": [
+    1.0,
+    104.09400000000005
+  ],
+  "boundary_margin_s": 1.0,
+  "boundary_pairs": [],
+  "valid_matched_count": 1,
+  "losses": [],
+  "unmatched_rx": [],
+  "mismatches": [],
+  "tx_duplicates": [],
+  "rx_duplicates": [],
+  "errors": [],
+  "accepted": false,
+  "purpose": "startup_only",
+  "minimum_pairs": 1,
+  "duration_s": 105.09400000000005,
+  "completed": true,
+  "capture_errors": [],
+  "interrupted": false,
+  "banner_30min": false,
+  "released_after_sample_count": 1,
+  "valid_lux_count": 105,
+  "limitation": "Controle court : ne mesure pas un intervalle reel de 30 min, verifie les frontieres temporelles par tests a horloge simulee."
+}

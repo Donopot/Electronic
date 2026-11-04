@@ -8,6 +8,9 @@ Le profil par defaut `xiao_soil_diagnostic` conserve le fonctionnement USB seul.
 Le profil `xiao_soil_lora_pmos` ajoute la commande AO3401 sur D0, l'acquisition
 commutée et les contrôles USB OFF/ON/AUTO. Voir le [test P-MOS](../../docs/soil-pmos.md)
 pour le câblage avec rappel 10 kΩ, les limites et la validation au multimètre.
+Le premier relevé automatique arrive après 30 s ; les suivants sont espacés
+de 30 minutes après la fin du cycle précédent. Le Heltec associé utilise une
+péremption de 90 minutes. Cette cadence n'ajoute pas de nouvelle veille matérielle.
 Les paragraphes ci-dessous décrivent les profils historiques sans commutation.
 
 Les trois profils utilisent une [variante locale](variants/README.md) pour

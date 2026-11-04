@@ -1,0 +1,26 @@
+{
+  "accepted": true,
+  "banner_30min": true,
+  "mode_auto_gate_released": true,
+  "short_capture": "diagnostics\\soil-30min-demarrage-20261104-102917Z.json",
+  "banner_log": "diagnostics\\soil-30min-xiao-banniere-20261104.log",
+  "duration_s": 105.09400000000005,
+  "matched": [
+    {
+      "session": 4029017078,
+      "seq": 1,
+      "uptime_ms": 31126,
+      "status": "ok",
+      "address": 72,
+      "raw": 21502,
+      "uv": 2687750,
+      "tx_host_s": 5.344,
+      "rx_host_s": 5.438
+    }
+  ],
+  "valid_lux_count": 105,
+  "no_repeat_after_first_s": 99.75000000000006,
+  "initial_capture_extra_banner_check": false,
+  "explanation": "La capture simultanee vide les tampons apres ouverture et peut perdre la banniere initiale. Banniere et mode verifies dans un journal USB separe sans purge.",
+  "scope": "Demarrage et absence de repetition a ancienne cadence; frontieres 30min/90min verifiees en simulation, pas un intervalle reel complet."
+}

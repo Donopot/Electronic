@@ -33,6 +33,7 @@ static void checkSafeGpio() {
 }
 int main(int argc, char** argv) {
   const std::string scenario = argc > 1 ? argv[1] : "acquire";
+  const uint32_t setupStarted = millis();
   setup();
   assert(!probePower.powered() && host::modes()[0] == INPUT);
   if (scenario == "acquire") {
@@ -81,26 +82,26 @@ int main(int argc, char** argv) {
   } else if (scenario == "integration" || scenario == "radio_fault") {
     adsAddress = 0x48;
     if (scenario == "radio_fault") { radioReady = false; host::radio().beginCode = -2; }
-    host::setNow(lastPowerCycle + 30000); runPowerLoop(sample);
+    host::setNow(lastPowerCycle + plantsoil::kTransmitMs); runPowerLoop(sample);
     assert(!probePower.powered());
     if (scenario == "integration") {
       assert(host::radio().transmissions.back().packet.raw == 20800 && readings == 1);
       failAt = sampleIndex + 2;
-      host::setNow(lastPowerCycle + 30000); runPowerLoop(sample);
+      host::setNow(lastPowerCycle + plantsoil::kTransmitMs); runPowerLoop(sample);
       const auto& failed = host::radio().transmissions.back().packet;
       assert(failed.status == plantsoil::AdcStatus::ReadError && failed.raw == 0 && errors == 1);
       failAt = -1;
-      host::setNow(lastPowerCycle + 30000); runPowerLoop(outOfRange);
+      host::setNow(lastPowerCycle + plantsoil::kTransmitMs); runPowerLoop(outOfRange);
       assert(host::radio().transmissions.back().packet.status == plantsoil::AdcStatus::RangeError);
       for (size_t i=1;i<host::radio().transmissions.size();++i)
-        assert(host::radio().transmissions[i].time - host::radio().transmissions[i-1].time >= 30000);
+        assert(host::radio().transmissions[i].time - host::radio().transmissions[i-1].time >= plantsoil::kTransmitMs);
     } else {
       assert(host::radio().transmissions.empty());
       host::radio().beginCode = 0; host::radio().transmitCode = -2;
-      host::setNow(lastPowerCycle + 30000); runPowerLoop(sample);
+      host::setNow(lastPowerCycle + plantsoil::kTransmitMs); runPowerLoop(sample);
       assert(!probePower.powered() && !radioReady && !host::radio().transmissions.empty());
       host::radio().transmitCode = 0;
-      host::setNow(lastPowerCycle + 30000); runPowerLoop(sample);
+      host::setNow(lastPowerCycle + plantsoil::kTransmitMs); runPowerLoop(sample);
       assert(!probePower.powered() && radioReady && host::radio().transmissions.back().result == 0);
     }
   } else if (scenario == "deferred_error") {
@@ -112,24 +113,76 @@ int main(int argc, char** argv) {
     host::connected() = scenario == "blocked";
     host::stalled() = scenario == "blocked";
     const uint32_t base = lastPowerCycle;
-    host::setNow(base + 29900); loop(); assert(attempts == 0);
+    host::setNow(base + plantsoil::kTransmitMs - 100); loop(); assert(attempts == 0);
     for (int i=0;i<3;++i) {
-      host::setNow(lastPowerCycle + 30000); loop();
+      host::setNow(lastPowerCycle + plantsoil::kTransmitMs); loop();
       assert(!probePower.powered() && host::modes()[0] == INPUT);
     }
     const auto& tx = host::radio().transmissions;
     assert(tx.size() == 3);
-    for (size_t i=1;i<tx.size();++i) assert(static_cast<uint32_t>(tx[i].time - tx[i-1].time) >= 30000);
+    for (size_t i=1;i<tx.size();++i) assert(static_cast<uint32_t>(tx[i].time - tx[i-1].time) >= plantsoil::kTransmitMs);
     assert(readings == 0 && errors == 3); // vrai bus sans ADS : aucun ancien brut reutilise
     for (const auto& t:tx) assert(t.packet.status == plantsoil::AdcStatus::Unavailable && t.packet.raw == 0);
+  } else if (scenario == "auto_guard") {
+    adsAddress = 0x48;
+    const auto requestAuto = []() {
+      host::serialInput() += "AUTO\n";
+      const uint32_t before = attempts;
+      runPowerLoop(sample);
+      assert(attempts == before + 1 && !probePower.powered());
+    };
+    requestAuto();
+    assert(host::radio().transmissions.size() == 1);
+    const uint32_t firstTx = host::radio().transmissions[0].time;
+    host::setNow(firstTx + 30000); requestAuto();
+    assert(host::radio().transmissions.size() == 1);
+    host::setNow(firstTx + 1800000UL - 2000); requestAuto();
+    assert(host::radio().transmissions.size() == 1);
+    host::setNow(firstTx + 1800000UL); requestAuto();
+    assert(host::radio().transmissions.size() == 2);
+    const uint32_t delta = host::radio().transmissions[1].time - firstTx;
+    assert(delta >= 1800000UL && delta < 1802000UL && readings == 4);
+  } else if (scenario == "cadence") {
+    static_assert(plantsoil::kTransmitMs == 1800000UL, "Releves toutes les trente minutes");
+    static_assert(kInitialSampleDelayMs == 30000UL, "Premier releve apres trente secondes");
+    host::connected() = false;
+    adsAddress = 0x48;
+    const uint32_t firstDue = setupStarted + 30000UL;
+    host::setNow(firstDue - 11); runPowerLoop(sample); assert(attempts == 0);
+    host::setNow(firstDue - 10); runPowerLoop(sample);
+    assert(attempts == 1 && readings == 1 && host::radio().transmissions.size() == 1);
+    const uint32_t completed = lastPowerCycle;
+    const auto gpioCount = host::gpio().size();
+    host::setNow(completed + 30000); runPowerLoop(sample);
+    host::setNow(completed + 1800000UL - 11); runPowerLoop(sample);
+    assert(attempts == 1 && host::gpio().size() == gpioCount && !probePower.powered());
+    host::setNow(completed + 1800000UL - 10); runPowerLoop(sample);
+    assert(attempts == 2 && readings == 2 && host::radio().transmissions.size() == 2);
+    const auto& tx = host::radio().transmissions;
+    assert(static_cast<uint32_t>(tx[1].time - tx[0].time) >= 1800000UL);
+    // Retard de plusieurs periodes : une seule acquisition, aucun rattrapage.
+    host::setNow(lastPowerCycle + 4 * plantsoil::kTransmitMs); runPowerLoop(sample);
+    const uint32_t afterPause = attempts;
+    for (int i = 0; i < 5; ++i) runPowerLoop(sample);
+    assert(attempts == afterPause && afterPause == 3);
+    // Une periode automatique traverse aussi le debordement de millis().
+    host::setNow(0xFFF00000U);
+    lastPowerCycle = millis() - plantsoil::kTransmitMs;
+    runPowerLoop(sample);
+    const uint32_t beforeWrap = lastPowerCycle;
+    const uint32_t beforeAttempts = attempts;
+    host::setNow(beforeWrap + 1800000UL - 11); runPowerLoop(sample);
+    assert(attempts == beforeAttempts && !probePower.powered());
+    host::setNow(beforeWrap + 1800000UL - 10); runPowerLoop(sample);
+    assert(attempts == beforeAttempts + 1 && !probePower.powered());
   } else if (scenario == "wrap") {
     host::setNow(0xFFFFFF00U); command("ON\n");
     const uint32_t start = manualStarted;
     host::setNow(start + 120000U); loop(); assert(!probePower.powered());
     command("AUTO\n");
     const uint32_t first = host::radio().transmissions.back().time;
-    host::setNow(lastPowerCycle + 30000U); loop();
-    assert(static_cast<uint32_t>(host::radio().transmissions.back().time - first) >= 30000);
+    host::setNow(lastPowerCycle + plantsoil::kTransmitMs); loop();
+    assert(static_cast<uint32_t>(host::radio().transmissions.back().time - first) >= plantsoil::kTransmitMs);
   }
   checkSafeGpio();
   puts("PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence");
