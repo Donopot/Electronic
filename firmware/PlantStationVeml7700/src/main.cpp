@@ -19,19 +19,23 @@ plant::PrgButton button;
 #if PLANT_SOIL_LORA
 plant::SoilRadio soilRadio;
 plant::Measurement lastLux;
-plantsoil::Freshness displayedSoil = plantsoil::Freshness::Waiting;
-uint32_t displayedSession = 0, displayedSequence = 0;
+plantsoil::Freshness displayedSoil[plantsoil::kNodeCount] = {};
+uint32_t displayedSession[plantsoil::kNodeCount] = {}, displayedSequence[plantsoil::kNodeCount] = {};
 bool displayedRadioReady = false;
 void refreshSoil(uint32_t now, bool force = false) {
     const auto& readings = soilRadio.readings();
-    const auto state = readings.state(now);
-    const auto& packet = readings.packet();
-    if (force || state != displayedSoil || packet.session != displayedSession ||
-        packet.sequence != displayedSequence || soilRadio.ready() != displayedRadioReady) {
+    bool changed = force || soilRadio.ready() != displayedRadioReady;
+    for (uint8_t i = 0; i < plantsoil::kNodeCount; ++i) {
+        const auto& node = readings.node(i + 1);
+        const auto state = node.state(now);
+        const auto& packet = node.packet();
+        changed |= state != displayedSoil[i] || packet.session != displayedSession[i] || packet.sequence != displayedSequence[i];
+        displayedSoil[i] = state;
+        displayedSession[i] = packet.session;
+        displayedSequence[i] = packet.sequence;
+    }
+    if (changed) {
         oled.showSoil(lastLux, readings, soilRadio.ready(), now);
-        displayedSoil = state;
-        displayedSession = packet.session;
-        displayedSequence = packet.sequence;
         displayedRadioReady = soilRadio.ready();
     }
 }

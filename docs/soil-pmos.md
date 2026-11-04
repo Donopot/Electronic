@@ -40,6 +40,9 @@ Ce profil valide la commutation, **pas la veille longue ni une autonomie**.
 Le Heltec conserve la mesure comme courante pendant **90 minutes** sans
 nouveau paquet accepté, puis affiche « MESURE PERIMEE ».
 
+SOIL-02 utilise le même montage avec le profil `xiao_soil_lora_pmos_node2`,
+premier cycle après 35 s puis 30 min. Voir [les deux sondes](soil-two-nodes.md).
+
 ## Commandes USB
 
 Port XIAO à 115200 bauds, lignes terminées par CR ou LF :
@@ -79,7 +82,7 @@ Depuis la racine, avec Python, uv, Zig 0.13.0 et paquets PlatformIO locaux :
 python tools/run_soil_lora_host_tests.py
 $env:PYTHONPATH = Join-Path $PWD '.tools/xiao-diagnostic-python'
 $env:PLATFORMIO_CORE_DIR = Join-Path $PWD '.tools/platformio'
-python -m platformio run --project-dir firmware/XiaoSoilDiagnostic -e xiao_soil_diagnostic -e xiao_soil_lora_tx -e xiao_soil_lora_pmos
+python -m platformio run --project-dir firmware/XiaoSoilDiagnostic -e xiao_soil_diagnostic -e xiao_soil_lora_tx -e xiao_soil_lora_pmos -e xiao_soil_lora_pmos_node2
 python tests/test_xiao_battery_variant.py
 ```
 

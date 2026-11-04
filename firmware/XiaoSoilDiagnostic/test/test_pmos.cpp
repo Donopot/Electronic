@@ -35,6 +35,7 @@ int main(int argc, char** argv) {
   const std::string scenario = argc > 1 ? argv[1] : "acquire";
   const uint32_t setupStarted = millis();
   setup();
+  assert(current.node == SOIL_NODE_ID);
   assert(!probePower.powered() && host::modes()[0] == INPUT);
   if (scenario == "acquire") {
     int16_t raw = -1;
@@ -97,6 +98,8 @@ int main(int argc, char** argv) {
         assert(host::radio().transmissions[i].time - host::radio().transmissions[i-1].time >= plantsoil::kTransmitMs);
     } else {
       assert(host::radio().transmissions.empty());
+      char marker[64]; snprintf(marker, sizeof(marker), "[SOIL_TX_ERROR] node=SOIL-%02u", static_cast<unsigned>(SOIL_NODE_ID));
+      assert(host::usb().find(marker) != std::string::npos);
       host::radio().beginCode = 0; host::radio().transmitCode = -2;
       host::setNow(lastPowerCycle + plantsoil::kTransmitMs); runPowerLoop(sample);
       assert(!probePower.powered() && !radioReady && !host::radio().transmissions.empty());
@@ -144,13 +147,14 @@ int main(int argc, char** argv) {
     assert(delta >= 1800000UL && delta < 1802000UL && readings == 4);
   } else if (scenario == "cadence") {
     static_assert(plantsoil::kTransmitMs == 1800000UL, "Releves toutes les trente minutes");
-    static_assert(kInitialSampleDelayMs == 30000UL, "Premier releve apres trente secondes");
+    static_assert(kInitialSampleDelayMs == (SOIL_NODE_ID == 2 ? 35000UL : 30000UL), "Delai initial selon le noeud");
     host::connected() = false;
     adsAddress = 0x48;
-    const uint32_t firstDue = setupStarted + 30000UL;
+    const uint32_t firstDue = setupStarted + (SOIL_NODE_ID == 2 ? 35000UL : 30000UL);
     host::setNow(firstDue - 11); runPowerLoop(sample); assert(attempts == 0);
     host::setNow(firstDue - 10); runPowerLoop(sample);
     assert(attempts == 1 && readings == 1 && host::radio().transmissions.size() == 1);
+    assert(host::radio().transmissions[0].packet.node == SOIL_NODE_ID);
     const uint32_t completed = lastPowerCycle;
     const auto gpioCount = host::gpio().size();
     host::setNow(completed + 30000); runPowerLoop(sample);

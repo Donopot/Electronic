@@ -6,6 +6,9 @@
 #ifndef SOIL_PMOS_CONTROL
 #define SOIL_PMOS_CONTROL 0
 #endif
+#ifndef SOIL_NODE_ID
+#define SOIL_NODE_ID 1
+#endif
 #if SOIL_PMOS_CONTROL
 #if !SOIL_LORA_TX
 #error Le profil P-MOS requiert le transport LoRa diagnostic.
@@ -27,6 +30,13 @@ BoundedUsbLog diagnosticLog;
 #endif
 
 namespace {
+#if SOIL_LORA_TX
+static_assert(SOIL_NODE_ID >= 1 && SOIL_NODE_ID <= plantsoil::kNodeCount, "Identifiant de sonde invalide");
+#if SOIL_PMOS_CONTROL
+constexpr uint32_t kInitialSampleDelayMs = SOIL_NODE_ID == 2 ? 35000UL : 30000UL;
+static_assert(kInitialSampleDelayMs <= plantsoil::kTransmitMs, "Delai initial superieur a la periode");
+#endif
+#endif
 constexpr uint8_t kSda = 6, kScl = 7;
 constexpr uint32_t kClockTimeoutUs = 2000;
 constexpr uint16_t kConfig = 0xC383;  // A0/GND, +/-4.096 V, single-shot, 128 SPS.
@@ -160,6 +170,13 @@ bool radioReady = false, sessionReady = false, transmitted = false;
 uint32_t radioAttempt = 0, lastTransmit = 0;
 plantsoil::Packet current;
 
+void reportTxError(const char* reason) {
+  char line[160];
+  snprintf(line, sizeof(line), "[SOIL_TX_ERROR] node=SOIL-%02u %s authenticated=no",
+           static_cast<unsigned>(SOIL_NODE_ID), reason);
+  SOIL_LOG.println(line);
+}
+
 bool makeSession(uint32_t& session) {
   session = 0;
   NRF_RNG->CONFIG = RNG_CONFIG_DERCEN_Enabled << RNG_CONFIG_DERCEN_Pos;
@@ -214,12 +231,12 @@ void serviceTransmit(bool valid, int16_t raw) {
       raw < -8 || raw > 26400 ? plantsoil::AdcStatus::RangeError : plantsoil::AdcStatus::Ok;
   current.raw = current.status == plantsoil::AdcStatus::Ok ? raw : 0;
   if (!radioReady) {
-    SOIL_LOG.println(F("[SOIL_TX_ERROR] radio_unavailable authenticated=no"));
+    reportTxError("radio_unavailable");
     return;
   }
   uint8_t bytes[plantsoil::kPacketSize];
   if (plantsoil::encode(current, bytes, sizeof(bytes)) != plantsoil::Result::Accepted) {
-    SOIL_LOG.println(F("[SOIL_TX_ERROR] invalid_packet authenticated=no"));
+    reportTxError("invalid_packet");
     return;
   }
   const int16_t code = radio.transmit(bytes, sizeof(bytes));
@@ -227,7 +244,8 @@ void serviceTransmit(bool valid, int16_t raw) {
   if (code == RADIOLIB_ERR_NONE) {
     if (plantsoil::formatPacket(line, sizeof(line), "TX", current)) SOIL_LOG.println(line);
   } else {
-    SOIL_LOG.print(F("[SOIL_TX_ERROR] code=")); SOIL_LOG.println(code);
+    char reason[32]; snprintf(reason, sizeof(reason), "code=%d", code);
+    reportTxError(reason);
     radioReady = false; radioAttempt = millis();
   }
 }
@@ -316,11 +334,18 @@ void announce() {
   SOIL_LOG.println(F("\n[XIAO-SOIL-DIAG] v1 / USB / D6=P1.11 SDA / D7=P1.12 SCL"));
   SOIL_LOG.println(F("[CONFIG] ADS1115 attendu 0x48, selection unique 0x48..0x4B, A0/GND, +/-4.096 V, 128 SPS."));
 #if SOIL_PMOS_CONTROL
-  SOIL_LOG.println(F("[INFO] P-MOS D0 : commandes OFF / ON (120 s maximum) / AUTO ; releves 30 min, premier apres 30 s ; pas de veille longue."));
+  SOIL_LOG.print(F("[INFO] P-MOS D0 : commandes OFF / ON (120 s maximum) / AUTO ; releves 30 min, premier apres "));
+  SOIL_LOG.print(kInitialSampleDelayMs / 1000);
+  SOIL_LOG.println(F(" s ; pas de veille longue."));
 #elif SOIL_LORA_TX
-  SOIL_LOG.println(F("[INFO] D0 relachee ; SOIL-01 LoRa 868.1 MHz / 0 dBm / 30 min ; diagnostic non authentifie ; aucun pourcentage."));
+  SOIL_LOG.println(F("[INFO] D0 relachee ; LoRa 868.1 MHz / 0 dBm / 30 min ; diagnostic non authentifie ; aucun pourcentage."));
 #else
   SOIL_LOG.println(F("[INFO] D0 relachee ; radio non initialisee ; aucun pourcentage sans etalonnage."));
+#endif
+#if SOIL_LORA_TX
+  char identity[48];
+  snprintf(identity, sizeof(identity), "[CONFIG] node=SOIL-%02u", static_cast<unsigned>(SOIL_NODE_ID));
+  SOIL_LOG.println(identity);
 #endif
   if (!correctPinMap) {
     SOIL_LOG.println(F("[ERREUR] Variante Arduino incompatible : test GPIO interdit."));
@@ -350,8 +375,6 @@ void reportMeasurement(bool valid, int16_t raw) {
 
 #if SOIL_PMOS_CONTROL
 ProbePower probePower;
-constexpr uint32_t kInitialSampleDelayMs = 30000;
-static_assert(kInitialSampleDelayMs <= plantsoil::kTransmitMs, "Delai initial superieur a la periode");
 enum class ProbeMode { Auto, Off, ManualOn };
 ProbeMode probeMode = ProbeMode::Auto;
 uint32_t lastPowerCycle = 0, manualStarted = 0;
@@ -360,8 +383,10 @@ uint8_t powerCommandLength = 0;
 bool powerCommandOverflow = false;
 
 void reportPower(const char* mode) {
-  SOIL_LOG.print(F("[SOIL_POWER] mode=")); SOIL_LOG.print(mode);
-  SOIL_LOG.print(F(" gate=")); SOIL_LOG.println(probePower.gate());
+  char line[96];
+  snprintf(line, sizeof(line), "[SOIL_POWER] mode=%s gate=%d node=SOIL-%02u", mode,
+           probePower.gate(), static_cast<unsigned>(SOIL_NODE_ID));
+  SOIL_LOG.println(line);
 }
 
 void applyPowerCommand() {
@@ -442,12 +467,13 @@ void setup() {
 #if SOIL_PMOS_CONTROL
   correctPinMap = correctPinMap && g_ADigitalPinMap[0] == 2;
   probePower.off();
-  // Conserver le premier relevé après 30 s, puis appliquer la période normale.
+  // Premier relevé à 30/35 s suivant le nœud, puis période normale de 30 min.
   lastPowerCycle = millis() - plantsoil::kTransmitMs + kInitialSampleDelayMs;
 #endif
   if (correctPinMap) bus.release();
   Serial.begin(115200);
 #if SOIL_LORA_TX
+  current.node = SOIL_NODE_ID;
   initializeRadio();
 #endif
 }

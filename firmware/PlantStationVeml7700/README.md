@@ -1,12 +1,17 @@
 # Plant Station — diagnostic VEML7700 / Heltec V3
 
-Le profil optionnel `heltec_v3_soil_lora` ajoute la reception SOIL-01 du XIAO
-et son affichage brut/volts/age sur l'OLED tout en conservant lux et PRG.
+Le profil optionnel **`heltec_v3_soil_lora`** recoit maintenant **SOIL-01 et
+SOIL-02** et affiche simultanement leurs tensions et ages avec les lux.
+Leurs etats et peremptions de 90 minutes sont independants. Voir [deux sondes](../../docs/soil-two-nodes.md).
+Les paragraphes historiques ci-dessous decrivent les profils lux texte/JSON.
+
+Les bruts de chaque sonde restent disponibles sur l'UART ; l'écran montre
+leurs tensions et âges, et conserve les contrôles PRG.
 Voir [profils, protocole, branchements et capture LoRa](../../docs/soil-lora.md).
 Les descriptions sans radio ci-dessous concernent les profils historiques
 `heltec_v3_text` et `heltec_v3_json`, dont le schema JSON reste identique.
 
-Firmware autonome pour valider la luminosité du futur hub Plant Station. Il lit un VEML7700 en I2C, affiche les lux sur l'OLED du Heltec et publie les mesures sur l'UART0 à 115200 bauds via le pont USB CP2102. Wi-Fi et LoRa ne sont pas initialisés. Le diagnostic RX [PlantHubDiagnostic](../PlantHubDiagnostic/README.md) et les projets météo ESP32-C3 restent distincts.
+Firmware autonome pour valider la luminosité du futur hub Plant Station. Il lit un VEML7700 en I2C, affiche les lux sur l'OLED du Heltec et publie les mesures sur l'UART0 à 115200 bauds via le pont USB CP2102. Dans les profils lux texte/JSON, Wi-Fi et LoRa ne sont pas initialisés. Le diagnostic RX [PlantHubDiagnostic](../PlantHubDiagnostic/README.md) et les projets météo ESP32-C3 restent distincts.
 
 **Version 1.2.0 avec OLED et veille PRG installée sur COM5 le 28 octobre 2026.** Appui court, appui long puis relâchement, sommeil du capteur, silence en veille et reprise OLED/lux après RST vérifiés sur carte. Voir les [preuves de veille](../../diagnostics/plant-station-veille-20261028.md).
 

@@ -82,7 +82,7 @@ void OledDisplay::showSleepPrompt() {
     display_.display();
 }
 #if PLANT_SOIL_LORA
-void OledDisplay::showSoil(const Measurement& lux, const plantsoil::Receiver& soil, bool radioReady, uint32_t now) {
+void OledDisplay::showSoil(const Measurement& lux, const plantsoil::ReceiverBank& soil, bool radioReady, uint32_t now) {
     // Meme politique bornee de presence/reprise OLED que l'affichage lux seul.
     if (!ready_ && elapsed(millis(), lastAttempt_, 10000)) begin();
     if (!ready_) return;
@@ -98,21 +98,20 @@ void OledDisplay::showSoil(const Measurement& lux, const plantsoil::Receiver& so
         snprintf(line, sizeof(line), "Lux %.1f", lux.lux);
     else snprintf(line, sizeof(line), "Lux %s", lux.status == Status::WarmingUp ? "EN COURS" : "ERREUR CAPTEUR");
     display_.print(line);
-    display_.setCursor(0, 18); display_.print("SOIL-01 NON AUTH");
-    display_.setCursor(0, 27);
-    const auto state = soil.state(now);
-    if (state == plantsoil::Freshness::Current) {
-        snprintf(line, sizeof(line), "Brut %d", soil.packet().raw); display_.print(line);
-        display_.setCursor(0, 36);
-        snprintf(line, sizeof(line), "%.6f V", plantsoil::microvolts(soil.packet().raw) / 1000000.0); display_.print(line);
-    } else {
-        display_.print(state == plantsoil::Freshness::Waiting ? "ATTENTE SONDE" :
-                       state == plantsoil::Freshness::Stale ? "MESURE PERIMEE" : "DEFAUT ADS");
-        display_.setCursor(0, 36); display_.print("Valeur indisponible");
+    for (uint8_t id = 1; id <= plantsoil::kNodeCount; ++id) {
+        const auto& node = soil.node(id);
+        display_.setCursor(0, 18 + (id - 1) * 18);
+        snprintf(line, sizeof(line), "SOIL-%02u NON AUTH", static_cast<unsigned>(id));
+        display_.print(line);
+        display_.setCursor(0, 27 + (id - 1) * 18);
+        const auto state = node.state(now);
+        if (state == plantsoil::Freshness::Current) {
+            snprintf(line, sizeof(line), "%.6f V %lum", plantsoil::microvolts(node.packet().raw) / 1000000.0,
+                     static_cast<unsigned long>(node.age(now) / 60000));
+            display_.print(line);
+        } else display_.print(state == plantsoil::Freshness::Waiting ? "ATTENTE SONDE" :
+                             state == plantsoil::Freshness::Stale ? "MESURE PERIMEE" : "DEFAUT ADS");
     }
-    display_.setCursor(0, 45);
-    if (state == plantsoil::Freshness::Waiting) display_.print("Age --");
-    else { snprintf(line, sizeof(line), "Age %lu s", static_cast<unsigned long>(soil.age(now) / 1000)); display_.print(line); }
     display_.setCursor(0, 54); display_.print(radioReady ? "RADIO ECOUTE" : "ERREUR RADIO");
     display_.display();
 }

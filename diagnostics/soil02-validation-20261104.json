@@ -1,0 +1,28 @@
+{
+  "accepted": true,
+  "expected_node": 2,
+  "expected_identity_verified": true,
+  "auto_gate_released": true,
+  "capture": "diagnostics\\soil02-demarrage-20261104-121436Z.json",
+  "banner_log": "diagnostics\\soil02-xiao-banniere-20261104.log",
+  "matched": [
+    {
+      "node": 2,
+      "session": 3231110779,
+      "seq": 1,
+      "uptime_ms": 36083,
+      "status": "ok",
+      "address": 72,
+      "raw": 21584,
+      "uv": 2698000,
+      "tx_host_s": 9.204,
+      "rx_host_s": 9.235
+    }
+  ],
+  "duration_s": 105.0,
+  "no_repeat_after_first_s": 95.79599999999999,
+  "valid_lux_count": 105,
+  "node1_packets_observed": 0,
+  "node1_verification": "Aucun paquet SOIL-01 dans cette fenetre; compatibilite et etats isoles verifies par tests du codec historique et du vrai main/radio/OLED.",
+  "limitations": "Controle SOIL-02 sur USB; pas de mesure VCC physique ni de periode reelle complete de 30min, pas de calibration."
+}

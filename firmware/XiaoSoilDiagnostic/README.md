@@ -13,7 +13,10 @@ de 30 minutes après la fin du cycle précédent. Le Heltec associé utilise une
 péremption de 90 minutes. Cette cadence n'ajoute pas de nouvelle veille matérielle.
 Les paragraphes ci-dessous décrivent les profils historiques sans commutation.
 
-Les trois profils utilisent une [variante locale](variants/README.md) pour
+Pour une deuxième sonde, utiliser **`xiao_soil_lora_pmos_node2`** : identifiant
+SOIL-02 et premier cycle après 35 s, puis 30 min. Voir [deux sondes](../../docs/soil-two-nodes.md).
+
+Les quatre profils utilisent une [variante locale](variants/README.md) pour
 maintenir P0.14 / READ_BAT_ENABLE à LOW dès `initVariant()`, tout en conservant
 le réglage de recharge faible courant annoncé à environ 50 mA. Le bootloader
 et la recharge matérielle ne sont pas validés par cette correction. Pour le

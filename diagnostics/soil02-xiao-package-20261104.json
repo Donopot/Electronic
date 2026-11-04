@@ -1,0 +1,9 @@
+{
+  "serial": "2E1B165998772BC5",
+  "boot_port": "COM10",
+  "profile": "xiao_soil_lora_pmos_node2",
+  "sha256": "c24d875edfa1c3f3a558b9f2917e8ef9edb229432fd4c834c61d4f2f1afd668f",
+  "application_bytes": 92596,
+  "application_only": true,
+  "battery_isolated_confirmed": true
+}

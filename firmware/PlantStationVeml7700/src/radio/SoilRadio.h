@@ -13,14 +13,14 @@ public:
     bool sleep();
     bool initializing() const { return initialization_.load(std::memory_order_acquire) != Initialization::Idle; }
     bool ready() const { return ready_; }
-    const plantsoil::Receiver& readings() const { return readings_; }
+    const plantsoil::ReceiverBank& readings() const { return readings_; }
 private:
     enum class Initialization { Idle, Running, Finished };
     void initialize();
     static void initializeTask(void* context);
     void fail(const char* operation, int16_t code);
     SX1262 radio_{new Module(8, 14, 12, 13, SPI, SPISettings(2000000, MSBFIRST, SPI_MODE0))};
-    plantsoil::Receiver readings_;
+    plantsoil::ReceiverBank readings_;
     bool ready_ = false;
     uint32_t lastAttempt_ = 0;
     std::atomic<Initialization> initialization_{Initialization::Idle};

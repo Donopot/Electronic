@@ -6,22 +6,26 @@
 // Transport diagnostic : identifiants et CRC n'authentifient pas l'emetteur.
 namespace plantsoil {
 constexpr uint8_t kVersion = 1, kNode = 1;
+constexpr uint8_t kNodeCount = 2;
+constexpr bool validNode(uint8_t node) { return node >= 1 && node <= kNodeCount; }
 constexpr size_t kPacketSize = 20;
 constexpr uint32_t kTransmitMs = 30UL * 60UL * 1000UL;
 constexpr uint32_t kStaleMs = 3UL * kTransmitMs;
 enum class AdcStatus : uint8_t { Ok = 0, Unavailable = 1, ReadError = 2, RangeError = 3 };
 struct Packet {
+    uint8_t node = kNode;
     uint32_t session = 0, sequence = 0, uptimeMs = 0;
     AdcStatus status = AdcStatus::Unavailable;
     uint8_t address = 0;
     int16_t raw = 0;
 };
-enum class Result { Accepted, Length, Header, Session, Status, Address, Raw, Duplicate, OldSequence };
+enum class Result { Accepted, Length, Header, Node, Session, Status, Address, Raw, Duplicate, OldSequence };
 inline const char* resultName(Result result) {
     switch (result) {
     case Result::Accepted: return "accepted";
     case Result::Length: return "length";
     case Result::Header: return "header";
+    case Result::Node: return "node";
     case Result::Session: return "session";
     case Result::Status: return "status";
     case Result::Address: return "address";
@@ -39,6 +43,7 @@ inline const char* statusName(AdcStatus status) {
     }
 }
 inline Result validate(const Packet& packet) {
+    if (!validNode(packet.node)) return Result::Node;
     if (!packet.session) return Result::Session;
     if (static_cast<uint8_t>(packet.status) > 3) return Result::Status;
     const bool adsAddress = packet.address >= 0x48 && packet.address <= 0x4B;
@@ -63,7 +68,7 @@ inline Result encode(const Packet& packet, uint8_t* out, size_t size) {
     if (!out || size != kPacketSize) return Result::Length;
     const Result valid = validate(packet);
     if (valid != Result::Accepted) return valid;
-    out[0] = 'P'; out[1] = 'S'; out[2] = kVersion; out[3] = kNode;
+    out[0] = 'P'; out[1] = 'S'; out[2] = kVersion; out[3] = packet.node;
     put32(out + 4, packet.session); put32(out + 8, packet.sequence); put32(out + 12, packet.uptimeMs);
     out[16] = static_cast<uint8_t>(packet.status); out[17] = packet.address;
     const uint16_t bits = static_cast<uint16_t>(packet.raw);
@@ -72,8 +77,9 @@ inline Result encode(const Packet& packet, uint8_t* out, size_t size) {
 }
 inline Result decode(const uint8_t* in, size_t size, Packet& out) {
     if (!in || size != kPacketSize) return Result::Length;
-    if (in[0] != 'P' || in[1] != 'S' || in[2] != kVersion || in[3] != kNode) return Result::Header;
+    if (in[0] != 'P' || in[1] != 'S' || in[2] != kVersion) return Result::Header;
     Packet value;
+    value.node = in[3];
     value.session = get32(in + 4); value.sequence = get32(in + 8); value.uptimeMs = get32(in + 12);
     value.status = static_cast<AdcStatus>(in[16]); value.address = in[17];
     const uint16_t bits = static_cast<uint16_t>(in[18]) | (static_cast<uint16_t>(in[19]) << 8);
@@ -91,6 +97,7 @@ public:
         Packet next;
         const Result parsed = decode(data, size, next);
         if (parsed != Result::Accepted) return parsed;
+        if (seen_ && next.node != packet_.node) return Result::Node;
         if (seen_ && next.session == packet_.session) {
             const uint32_t delta = next.sequence - packet_.sequence;
             if (!delta) return Result::Duplicate;
@@ -115,11 +122,30 @@ private:
     bool seen_ = false;
     mutable bool stale_ = false;
 };
+// Chaque identifiant conserve son propre compteur, sa session et son expiration.
+class ReceiverBank {
+public:
+    Result accept(const uint8_t* data, size_t size, uint32_t now) {
+        Packet packet;
+        const Result result = decode(data, size, packet);
+        if (result != Result::Accepted) return result;
+        return nodes_[packet.node - 1].accept(data, size, now);
+    }
+    const Receiver& node(uint8_t id) const {
+        return validNode(id) ? nodes_[id - 1] : empty_;
+    }
+    void update(uint32_t now) const {
+        for (const auto& value : nodes_) value.state(now);
+    }
+private:
+    Receiver nodes_[kNodeCount];
+    Receiver empty_;
+};
 // Ligne commune pour comparer TX/RX sans modifier le schema JSON lux existant.
 inline bool formatPacket(char* out, size_t size, const char* direction, const Packet& packet) {
     const int count = snprintf(out, size,
-        "[SOIL_%s] authenticated=no node=SOIL-01 session=%lu seq=%lu uptime_ms=%lu status=%s address=%u raw=%d uv=%ld",
-        direction, static_cast<unsigned long>(packet.session), static_cast<unsigned long>(packet.sequence),
+        "[SOIL_%s] authenticated=no node=SOIL-%02u session=%lu seq=%lu uptime_ms=%lu status=%s address=%u raw=%d uv=%ld",
+        direction, static_cast<unsigned>(packet.node), static_cast<unsigned long>(packet.session), static_cast<unsigned long>(packet.sequence),
         static_cast<unsigned long>(packet.uptimeMs), statusName(packet.status), packet.address, packet.raw,
         static_cast<long>(packet.status == AdcStatus::Ok ? microvolts(packet.raw) : 0));
     return count >= 0 && static_cast<size_t>(count) < size;

@@ -1,4 +1,4 @@
-"""Capture USB simultanee bornee et comparaison exacte des diagnostics SOIL-01 TX/RX."""
+"""Capture USB simultanee bornee et comparaison exacte des diagnostics SOIL-01/02 TX/RX."""
 import argparse
 from datetime import datetime, timezone
 import json
@@ -7,12 +7,13 @@ import re
 import threading
 import time
 
-PACKET = re.compile(r"^\[SOIL_(TX|RX)\] authenticated=no node=SOIL-01 session=(\d+) seq=(\d+) uptime_ms=(\d+) status=(ok|adc_unavailable|adc_error|adc_range) address=(\d+) raw=(-?\d+) uv=(-?\d+)$")
+PACKET = re.compile(r"^\[SOIL_(TX|RX)\] authenticated=no node=SOIL-(0[12]) session=(\d+) seq=(\d+) uptime_ms=(\d+) status=(ok|adc_unavailable|adc_error|adc_range) address=(\d+) raw=(-?\d+) uv=(-?\d+)$")
 ARRIVAL = re.compile(r"^\[HOST t_s=(\d{1,6}\.\d{6})\] (.*)$")
-FIELDS = ("session", "seq", "uptime_ms", "status", "address", "raw", "uv")
+ATTRIBUTED_REJECT = re.compile(r"^\[SOIL_REJECT\] node=SOIL-(0[12]) reason=(duplicate|old_sequence) authenticated=no$")
+FIELDS = ("node", "session", "seq", "uptime_ms", "status", "address", "raw", "uv")
 
 
-def parse_records(lines, direction):
+def parse_records(lines, direction, nodes=None):
     records, errors = [], []
     for line in lines:
         line = line.rstrip("\r\n")
@@ -20,6 +21,9 @@ def parse_records(lines, direction):
         elapsed = float(arrival[1]) if arrival else None
         if arrival:
             line = arrival[2]
+        rejected = ATTRIBUTED_REJECT.fullmatch(line)
+        if rejected and nodes is not None and int(rejected[1]) not in nodes:
+            continue
         match = PACKET.fullmatch(line)
         if match:
             if match[1] != direction:
@@ -42,6 +46,8 @@ def parse_records(lines, direction):
             else:
                 valid &= item["raw"] == 0 and item["uv"] == 0 and (item["address"] == 0 if item["status"] == "adc_unavailable" else 0x48 <= item["address"] <= 0x4B)
             if valid:
+                if nodes is not None and item["node"] not in nodes:
+                    continue
                 item["host_elapsed_s"] = elapsed
                 records.append(item)
                 if item["status"] != "ok":
@@ -55,14 +61,17 @@ def parse_records(lines, direction):
 
 def compare(tx_lines, rx_lines, minimum=3, duration=None, margin=1.0):
     tx, tx_errors = parse_records(tx_lines, "TX")
-    rx, rx_errors = parse_records(rx_lines, "RX")
+    nodes = {packet["node"] for packet in tx}
+    all_rx, _ = parse_records(rx_lines, "RX")
+    rx, rx_errors = parse_records(rx_lines, "RX", nodes=nodes or None)
+    background_rx = [packet for packet in all_rx if nodes and packet["node"] not in nodes]
     def interior(packet):
         when = packet["host_elapsed_s"]
         return duration is None or when is not None and margin <= when <= duration - margin
     def index(records):
         result, duplicates = {}, []
         for packet in records:
-            key = (packet["session"], packet["seq"])
+            key = (packet["node"], packet["session"], packet["seq"])
             if key in result:
                 duplicates.append(list(key))
             result[key] = packet
@@ -93,17 +102,20 @@ def compare(tx_lines, rx_lines, minimum=3, duration=None, margin=1.0):
         else:
             boundary.append({"kind": "rx_incomplete_boundary", "rx": packet})
     valid_matches = sum(packet["status"] == "ok" for packet in matched)
+    matched_by_node = {node: sum(p["status"] == "ok" and p["node"] == node for p in matched) for node in sorted(nodes)}
     errors = tx_errors + rx_errors
     if duration is not None:
         for direction, records in (("TX", tx), ("RX", rx)):
             if any(packet["host_elapsed_s"] is None for packet in records):
                 errors.append("missing_host_timestamp: " + direction)
-    return {"authenticated": False, "tx_count": len(tx), "rx_count": len(rx), "matched": matched,
+    return {"authenticated": False, "compared_nodes": sorted(nodes), "background_rx": background_rx,
+            "tx_count": len(tx), "rx_count": len(rx), "matched": matched,
             "comparison_window_s": [margin, max(margin, duration - margin)] if duration is not None else None,
             "boundary_margin_s": margin, "boundary_pairs": boundary,
             "valid_matched_count": valid_matches, "losses": losses, "unmatched_rx": unmatched_rx,
+            "valid_matched_by_node": matched_by_node, "minimum_per_node": minimum,
             "mismatches": mismatches, "tx_duplicates": tx_duplicate, "rx_duplicates": rx_duplicate,
-            "errors": errors, "accepted": valid_matches >= minimum and not (losses or unmatched_rx or mismatches or tx_duplicate or rx_duplicate or errors)}
+            "errors": errors, "accepted": bool(nodes) and all(count >= minimum for count in matched_by_node.values()) and not (losses or unmatched_rx or mismatches or tx_duplicate or rx_duplicate or errors)}
 
 
 def record_raw(log, raw, elapsed, errors):

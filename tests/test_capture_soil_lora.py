@@ -16,9 +16,9 @@ spec = importlib.util.spec_from_file_location("capture", Path(__file__).resolve(
 capture = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(capture)
 
-def line(direction, seq, raw=21565, status="ok", address=72, uptime_ms=None):
+def line(direction, seq, raw=21565, status="ok", address=72, uptime_ms=None, node=1):
     uptime = seq * 30000 if uptime_ms is None else uptime_ms
-    return f"[SOIL_{direction}] authenticated=no node=SOIL-01 session=1234 seq={seq} uptime_ms={uptime} status={status} address={address} raw={raw} uv={raw*125}"
+    return f"[SOIL_{direction}] authenticated=no node=SOIL-{node:02d} session=1234 seq={seq} uptime_ms={uptime} status={status} address={address} raw={raw} uv={raw*125}"
 
 
 def stamped(direction, seq, when, uptime_ms=None):
@@ -55,6 +55,55 @@ class CaptureTests(unittest.TestCase):
                     capture.main()
                 self.assertEqual(raised.exception.code, 2)
                 run_capture.assert_not_called()
+
+    def test_node2_with_background_node1(self):
+        tx = [line("TX", i, node=2) for i in range(3)]
+        rx = [line("RX", i, node=2) for i in range(3)]
+        rx += [line("RX", 0), line("RX", 0), line("RX", 1, raw=0, status="adc_error")]
+        result = capture.compare(tx, rx)
+        self.assertTrue(result["accepted"])
+        self.assertEqual(result["compared_nodes"], [2])
+        self.assertEqual(len(result["background_rx"]), 3)
+        self.assertEqual(result["rx_duplicates"], [])
+        self.assertTrue(all(p["node"] == 2 for p in result["matched"]))
+
+    def test_identical_counters_cannot_cross_pair_nodes(self):
+        tx = [line("TX", i, node=2) for i in range(3)]
+        wrong = capture.compare(tx, [line("RX", i, node=1) for i in range(3)])
+        self.assertFalse(wrong["accepted"])
+        self.assertEqual(len(wrong["losses"]), 3)
+        tx += [line("TX", i, node=1) for i in range(3)]
+        rx = [line("RX", i, node=node) for node in (1, 2) for i in range(3)]
+        both = capture.compare(tx, rx)
+        self.assertTrue(both["accepted"])
+        self.assertEqual(both["valid_matched_count"], 6)
+        self.assertEqual(both["tx_duplicates"], [])
+
+    def test_minimum_is_per_node(self):
+        tx = [line("TX", i, node=node) for node in (1, 2) for i in range(2)]
+        rx = [value.replace("SOIL_TX", "SOIL_RX") for value in tx]
+        result = capture.compare(tx, rx)
+        self.assertFalse(result["accepted"])
+        self.assertEqual(result["valid_matched_count"], 4)
+        self.assertEqual(result["valid_matched_by_node"], {1: 2, 2: 2})
+
+    def test_only_validated_background_rejections_are_ignored(self):
+        tx = [line("TX", i, node=2) for i in range(3)]
+        rx = [line("RX", i, node=2) for i in range(3)]
+        background = "[SOIL_REJECT] node=SOIL-01 reason=duplicate authenticated=no"
+        self.assertTrue(capture.compare(tx, rx + [background])["accepted"])
+        self.assertFalse(capture.compare(tx, rx + [background.replace("SOIL-01", "SOIL-02")])["accepted"])
+        self.assertFalse(capture.compare(tx, rx + ["[SOIL_REJECT] reason=duplicate authenticated=no"])["accepted"])
+        self.assertFalse(capture.compare(tx, rx + [background.replace("duplicate", "header")])["accepted"])
+
+    def test_node2_duplicates_unknown_and_unmatched_session(self):
+        tx = [line("TX", i, node=2) for i in range(3)]
+        rx = [line("RX", i, node=2) for i in range(3)]
+        self.assertFalse(capture.compare(tx, rx + [rx[0]])["accepted"])
+        self.assertFalse(capture.compare(tx, rx + [line("RX", 0, node=3)])["accepted"])
+        changed_session = rx[0].replace("session=1234", "session=4321")
+        self.assertFalse(capture.compare(tx, rx + [changed_session])["accepted"])
+        self.assertFalse(capture.compare(tx, rx[1:])["accepted"])
 
     def test_exact_pairing(self):
         result = capture.compare([line("TX", i) for i in range(3)], [line("RX", i) for i in range(3)])

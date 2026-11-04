@@ -1,0 +1,51 @@
+{
+  "authenticated": false,
+  "compared_nodes": [
+    2
+  ],
+  "background_rx": [],
+  "tx_count": 1,
+  "rx_count": 1,
+  "matched": [
+    {
+      "node": 2,
+      "session": 3231110779,
+      "seq": 1,
+      "uptime_ms": 36083,
+      "status": "ok",
+      "address": 72,
+      "raw": 21584,
+      "uv": 2698000,
+      "tx_host_s": 9.204,
+      "rx_host_s": 9.235
+    }
+  ],
+  "comparison_window_s": [
+    1.0,
+    104.0
+  ],
+  "boundary_margin_s": 1.0,
+  "boundary_pairs": [],
+  "valid_matched_count": 1,
+  "losses": [],
+  "unmatched_rx": [],
+  "valid_matched_by_node": {
+    "2": 1
+  },
+  "minimum_per_node": 1,
+  "mismatches": [],
+  "tx_duplicates": [],
+  "rx_duplicates": [],
+  "errors": [],
+  "accepted": true,
+  "purpose": "startup_only",
+  "expected_node": 2,
+  "expected_identity_verified": true,
+  "xiao_port": "COM11",
+  "duration_s": 105.0,
+  "completed": true,
+  "capture_errors": [],
+  "released_after_sample_count": 1,
+  "valid_lux_count": 105,
+  "limitation": "Premiere paire SOIL-02 seulement, pas trois periodes reelles de trente minutes."
+}

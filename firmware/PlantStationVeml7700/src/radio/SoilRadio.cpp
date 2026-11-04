@@ -47,14 +47,14 @@ void SoilRadio::initializeTask(void* context) {
     vTaskDelete(nullptr);
 }
 void SoilRadio::service(uint32_t now) {
-    readings_.state(now); // acquerir la peremption meme si l'OLED est absent
+    readings_.update(now); // acquerir les peremptions meme si l'OLED est absent
     const auto initialization = initialization_.load(std::memory_order_acquire);
     if (initialization == Initialization::Running) return;
     if (initialization == Initialization::Finished) {
         initialization_.store(Initialization::Idle, std::memory_order_release);
         if (initializationCode_ != RADIOLIB_ERR_NONE) { fail("begin", initializationCode_); return; }
         ready_ = true;
-        Serial.println("[SOIL_RADIO] state=listening node=SOIL-01 authenticated=no frequency=868100000");
+        Serial.println("[SOIL_RADIO] state=listening nodes=SOIL-01,SOIL-02 authenticated=no frequency=868100000");
     }
     if (!ready_) {
         if (elapsed(now, lastAttempt_, 10000)) initialize();
@@ -85,9 +85,12 @@ void SoilRadio::service(uint32_t now) {
         const auto result = readings_.accept(bytes, length, now);
         char line[240];
         if (result == plantsoil::Result::Accepted) {
-            if (plantsoil::formatPacket(line, sizeof(line), "RX", readings_.packet())) Serial.println(line);
+            if (plantsoil::formatPacket(line, sizeof(line), "RX", readings_.node(bytes[3]).packet())) Serial.println(line);
         } else {
-            snprintf(line, sizeof(line), "[SOIL_REJECT] reason=%s authenticated=no", plantsoil::resultName(result));
+            if (result == plantsoil::Result::Duplicate || result == plantsoil::Result::OldSequence)
+                snprintf(line, sizeof(line), "[SOIL_REJECT] node=SOIL-%02u reason=%s authenticated=no",
+                         static_cast<unsigned>(bytes[3]), plantsoil::resultName(result));
+            else snprintf(line, sizeof(line), "[SOIL_REJECT] reason=%s authenticated=no", plantsoil::resultName(result));
             Serial.println(line);
         }
     } else {

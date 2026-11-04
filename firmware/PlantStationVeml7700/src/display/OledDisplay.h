@@ -16,7 +16,7 @@ public:
     bool begin();
     void show(const Measurement& value, uint64_t uptime);
 #if PLANT_SOIL_LORA
-    void showSoil(const Measurement& lux, const plantsoil::Receiver& soil, bool radioReady, uint32_t now);
+    void showSoil(const Measurement& lux, const plantsoil::ReceiverBank& soil, bool radioReady, uint32_t now);
 #endif
     void showSleepPrompt();
     void sleep();
@@ -30,7 +30,7 @@ private:
     bool begin() { return false; }
     void show(const Measurement&, uint64_t) {}
 #if PLANT_SOIL_LORA
-    void showSoil(const Measurement&, const plantsoil::Receiver&, bool, uint32_t) {}
+    void showSoil(const Measurement&, const plantsoil::ReceiverBank&, bool, uint32_t) {}
 #endif
     void showSleepPrompt() {}
     void sleep() {}
