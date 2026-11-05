@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-04",
+  "scope": "apercu fictif, pas de firmware installe",
+  "http_status": 200,
+  "ui_observations": [
+    "page ouverte, quatre cartes presentes",
+    "etat sec distingue les plantes1et3",
+    "quatre etats a etalonner, aucune alerte secheresse",
+    "SOIL04perimee masquee et distinguee de secheresse",
+    "etat satisfaisant observe",
+    "courbes24h et30j selectionnees",
+    "vue OLED detail et visage observees"
+  ],
+  "screenshot": "preview.jpg",
+  "limits": [
+    "QR reel et stockage persistant non implementes dans cet apercu",
+    "pas de validation materielle",
+    "pas de verification desktop large effectuee"
+  ]
+}

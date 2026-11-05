@@ -1,5 +1,10 @@
 # Plant Station — diagnostic VEML7700 / Heltec V3
 
+Le nouveau profil **`heltec_v3_plant_dashboard`** prépare le robot OLED, les quatre
+plantes, leur batterie non communiquée, le Wi-Fi domestique avec provisioning BLE
+et un historique local de trente jours. Voir le [tableau de bord local](../../docs/plant-dashboard.md)
+pour l’utilisation, l’API, le stockage et les limites de vérification.
+
 Le profil optionnel **`heltec_v3_soil_lora`** recoit maintenant **SOIL-01 et
 SOIL-02, SOIL-03 et SOIL-04** et affiche simultanement leurs tensions et ages avec les lux.
 Leurs etats et peremptions de 90 minutes sont independants. Voir [quatre sondes](../../docs/soil-four-nodes.md).

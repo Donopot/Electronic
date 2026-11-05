@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 namespace plant {
-enum class ButtonEvent { None, LongPress, ReleasedForSleep };
+enum class ButtonEvent { None, ShortPress, LongPress, ReleasedForSleep };
 
 class PrgButton {
 public:
@@ -12,13 +12,15 @@ public:
         armed_ = !pressed;
         requested_ = false;
     }
-    ButtonEvent update(uint32_t now, bool pressed) {
+    ButtonEvent update(uint32_t now, bool pressed, bool reportShortPress = false) {
         if (pressed != raw_) { raw_ = pressed; changed_ = now; }
         const bool stable = static_cast<uint32_t>(now - changed_) >= 40;
         if (stable && pressed_ != raw_) {
             pressed_ = raw_;
             if (pressed_) pressedAt_ = changed_;
             else if (requested_) return ButtonEvent::ReleasedForSleep;
+            else if (armed_ && reportShortPress && static_cast<uint32_t>(changed_ - pressedAt_) < 3000)
+                return ButtonEvent::ShortPress;
         }
         if (!pressed_) {
             if (stable && !raw_) armed_ = true;

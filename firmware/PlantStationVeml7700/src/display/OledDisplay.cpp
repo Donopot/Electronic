@@ -3,6 +3,10 @@
 #include <Arduino.h>
 #include <math.h>
 #include <stdio.h>
+#if PLANT_DASHBOARD
+#include <qrcode.h>
+#include <string.h>
+#endif
 
 namespace plant {
 bool OledDisplay::begin() {
@@ -124,5 +128,95 @@ void OledDisplay::sleep() {
     pinMode(18, INPUT);
     ready_ = false;
 }
+#if PLANT_DASHBOARD
+namespace {
+Adafruit_SSD1306* qrDisplay = nullptr;
+bool qrRendered = false;
+void drawQr(esp_qrcode_handle_t code) {
+    const int size=esp_qrcode_get_size(code);
+    // Uppercase HTTP://IP/ is QR alphanumeric: version 1 fits at two pixels
+    // per module with the full four-module quiet zone on this 64px display.
+    if(size!=21 || !qrDisplay) return;
+    qrDisplay->fillRect(0,3,58,58,SSD1306_WHITE);
+    for(int y=0;y<size;++y) for(int x=0;x<size;++x)
+        if(esp_qrcode_get_module(code,x,y)) qrDisplay->fillRect(8+x*2,11+y*2,2,2,SSD1306_BLACK);
+    qrRendered=true;
+}
+const char* oledState(PlantState state) {
+    switch(state) {
+    case PlantState::Waiting:return "EN ATTENTE";
+    case PlantState::Uncalibrated:return "A ETALONNER";
+    case PlantState::Healthy:return "SATISFAISANT";
+    case PlantState::Dry:return "SECHE";
+    case PlantState::AdcFault:return "DEFAUT ADC";
+    default:return "PERIMEE";
+    }
+}
+}
+void OledDisplay::showDashboard(const PlantView& view,Screen screen,const DashboardNetwork& network) {
+    if(!ready_ && elapsed(millis(),lastAttempt_,10000)) begin();
+    if(!ready_) return;
+    wire_.beginTransmission(0x3C);
+    if(wire_.endTransmission(true)!=0) {ready_=false;lastAttempt_=millis();return;}
+    display_.clearDisplay();display_.setTextSize(1);display_.setTextColor(SSD1306_WHITE);
+    char line[40];
+    if(screen==Screen::Details) {
+        for(unsigned i=0;i<4;++i) {
+            const auto& p=view.plants[i];display_.setCursor(0,i*16);
+            if(p.voltageValid) snprintf(line,sizeof(line),"SOIL-%02u %.3fV B--",i+1,p.microvolts/1000000.0);
+            else snprintf(line,sizeof(line),"SOIL-%02u --V B--",i+1);
+            display_.print(line);display_.setCursor(0,i*16+8);
+            if(p.seen) snprintf(line,sizeof(line),"%s %lum",oledState(p.state),static_cast<unsigned long>(p.ageMs/60000));
+            else snprintf(line,sizeof(line),"%s",oledState(p.state));
+            display_.print(line);
+        }
+    } else if(screen==Screen::Qr) {
+        if(network.online) {
+            char url[40];snprintf(url,sizeof(url),"%s",network.url);
+            for(char* p=url;*p;++p) if(*p>='a' && *p<='z') *p-=32;
+            qrDisplay=&display_;qrRendered=false;
+            esp_qrcode_config_t config=ESP_QRCODE_CONFIG_DEFAULT();config.display_func=drawQr;config.max_qrcode_version=2;
+            esp_qrcode_generate(&config,url);qrDisplay=nullptr;
+            display_.setCursor(62,3);display_.print("ACCES LOCAL");
+            display_.setCursor(63,17);display_.print("Meme Wi-Fi");
+            const char* ip=network.url+7;char ipText[24];snprintf(ipText,sizeof(ipText),"%s",ip);
+            char* slash=strchr(ipText,'/');if(slash)*slash=0;
+            // Split the IP into two groups so it remains readable beside QR.
+            char* split=strchr(ipText,'.');if(split)split=strchr(split+1,'.');
+            if(split) {*split=0;display_.setCursor(63,32);display_.print(ipText);display_.setCursor(63,42);display_.print(split+1);}
+            if(!qrRendered) {display_.setCursor(0,20);display_.print("QR indisponible");}
+            display_.setCursor(63,56);display_.print("PRG:visage");
+        } else {
+            display_.setCursor(0,0);display_.print(network.provisioning?"CONFIGURATION BLE":"WI-FI ABSENT");
+            if(network.provisioning) {
+                display_.setCursor(0,12);display_.print("ESP BLE Provisioning");
+                display_.setCursor(0,25);display_.print(network.bluetoothName);
+                display_.setCursor(0,38);display_.print("Code ");display_.print(network.proof);
+            } else {display_.setCursor(0,18);display_.print("Reconnexion en cours");}
+            display_.setCursor(0,54);display_.print("Radio/lux maintenus");
+        }
+    } else {
+        display_.setCursor(0,0);display_.print("PLANT STATION");
+        display_.drawRoundRect(3,20,43,30,7,SSD1306_WHITE);
+        display_.drawLine(24,20,24,14,SSD1306_WHITE);display_.fillCircle(24,12,2,SSD1306_WHITE);
+        display_.fillRect(12,28,5,5,SSD1306_WHITE);display_.fillRect(32,28,5,5,SSD1306_WHITE);
+        if(view.mood==Mood::Happy) {display_.drawLine(13,39,23,45,SSD1306_WHITE);display_.drawLine(23,45,35,39,SSD1306_WHITE);}
+        else if(view.mood==Mood::Sad) {display_.drawLine(13,44,23,38,SSD1306_WHITE);display_.drawLine(23,38,35,44,SSD1306_WHITE);}
+        else if(view.mood==Mood::Worried) {display_.drawLine(13,42,20,38,SSD1306_WHITE);display_.drawLine(20,38,27,42,SSD1306_WHITE);display_.drawLine(27,42,35,38,SSD1306_WHITE);}
+        else display_.drawLine(13,41,35,41,SSD1306_WHITE);
+        for(unsigned i=0;i<4;++i) {
+            display_.setCursor(53,15+i*9);
+            const auto state=view.plants[i].state;
+            const char* shortState=state==PlantState::Dry?"SECHE":state==PlantState::Healthy?"OK":state==PlantState::Uncalibrated?"ETAL.":state==PlantState::Waiting?"ATT.":state==PlantState::AdcFault?"ADC!":"PERIM.";
+            snprintf(line,sizeof(line),"S%02u %s",i+1,shortState);display_.print(line);
+        }
+        display_.setCursor(0,56);
+        if(!view.radioReady) display_.print("RADIO! PRG:details");
+        else if(view.luxValid) {snprintf(line,sizeof(line),"Lux %.0f PRG:details",view.lux);display_.print(line);}
+        else display_.print("Lux -- PRG:details");
+    }
+    display_.display();
+}
+#endif
 }
 #endif

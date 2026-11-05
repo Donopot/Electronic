@@ -7,6 +7,9 @@
 #ifndef PLANT_SOIL_LORA
 #define PLANT_SOIL_LORA 0
 #endif
+#ifndef PLANT_DASHBOARD
+#define PLANT_DASHBOARD 0
+#endif
 #ifndef PLANT_OLED
 #define PLANT_OLED 1
 #endif

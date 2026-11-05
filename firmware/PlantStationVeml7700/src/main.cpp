@@ -8,6 +8,11 @@
 #include "power/PrgButton.h"
 #include "power/SleepPower.h"
 #include "radio/SoilRadio.h"
+#if PLANT_DASHBOARD
+#include "ui/PlantView.h"
+#include "web/PlantDashboard.h"
+#include <math.h>
+#endif
 
 namespace {
 uint32_t readClock() { return millis(); }
@@ -19,11 +24,24 @@ plant::PrgButton button;
 #if PLANT_SOIL_LORA
 plant::SoilRadio soilRadio;
 plant::Measurement lastLux;
+#if PLANT_DASHBOARD
+plant::PlantDashboard dashboard;
+plant::PlantConfig plantConfig[plantsoil::kNodeCount];
+plant::Screen screen = plant::Screen::Face;
+uint32_t lastDashboardDisplay = 0;
+#endif
 plantsoil::Freshness displayedSoil[plantsoil::kNodeCount] = {};
 uint32_t displayedSession[plantsoil::kNodeCount] = {}, displayedSequence[plantsoil::kNodeCount] = {};
 bool displayedRadioReady = false;
 void refreshSoil(uint32_t now, bool force = false) {
     const auto& readings = soilRadio.readings();
+#if PLANT_DASHBOARD
+    dashboard.configuration(plantConfig);
+    auto view = plant::makePlantView(readings, plantConfig, soilRadio.ready(), now, uptime.update(now));
+    view.luxValid = lastLux.status == plant::Status::Ok && isfinite(lastLux.lux) && lastLux.lux >= 0 && lastLux.lux <= plant::kMaxLux;
+    view.lux = view.luxValid ? lastLux.lux : 0;
+    dashboard.publish(view);
+#endif
     bool changed = force || soilRadio.ready() != displayedRadioReady;
     for (uint8_t i = 0; i < plantsoil::kNodeCount; ++i) {
         const auto& node = readings.node(i + 1);
@@ -35,9 +53,20 @@ void refreshSoil(uint32_t now, bool force = false) {
         displayedSequence[i] = packet.sequence;
     }
     if (changed) {
+#if PLANT_DASHBOARD
+        oled.showDashboard(view, screen, dashboard.network());
+        lastDashboardDisplay = now;
+#else
         oled.showSoil(lastLux, readings, soilRadio.ready(), now);
+#endif
         displayedRadioReady = soilRadio.ready();
     }
+#if PLANT_DASHBOARD
+    else if (plant::elapsed(now, lastDashboardDisplay, 1000)) {
+        oled.showDashboard(view, screen, dashboard.network());
+        lastDashboardDisplay = now;
+    }
+#endif
 }
 #endif
 bool sleepRequested = false;
@@ -87,11 +116,22 @@ void setup() {
 #if PLANT_SOIL_LORA
     soilRadio.begin();
 #endif
+#if PLANT_DASHBOARD
+    plant::defaultPlants(plantConfig);
+    dashboard.begin();
+    refreshSoil(millis(), true);
+#endif
 }
 void loop() {
     const uint32_t now = millis();
     uptime.update(now);
-    const auto buttonEvent = button.update(now, digitalRead(0) == LOW);
+    const auto buttonEvent = button.update(now, digitalRead(0) == LOW, PLANT_DASHBOARD);
+#if PLANT_DASHBOARD
+    if (buttonEvent == plant::ButtonEvent::ShortPress) {
+        screen = plant::nextScreen(screen);
+        refreshSoil(now, true);
+    }
+#endif
     if (buttonEvent == plant::ButtonEvent::LongPress) {
         sleepRequested = true;
         plant::Measurement state;
@@ -100,11 +140,17 @@ void loop() {
     }
     if (buttonEvent == plant::ButtonEvent::ReleasedForSleep) {
         sleepReleased = true;
+#if PLANT_DASHBOARD
+        dashboard.requestStop();
+#endif
     }
     if (sleepReleased) {
 #if PLANT_SOIL_LORA
         soilRadio.service(now);
         if (soilRadio.initializing()) { yield(); return; }
+#endif
+#if PLANT_DASHBOARD
+        if (!dashboard.stopped()) { yield(); return; }
 #endif
         plant::Measurement state;
         state.status = transport.shutdown();

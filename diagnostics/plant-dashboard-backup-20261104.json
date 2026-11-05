@@ -1,0 +1,15 @@
+{
+  "utc": "2026-11-04T14:45:44.067788+00:00",
+  "usb_port": "COM5",
+  "usb_vid": "10C4",
+  "usb_pid": "EA60",
+  "usb_serial": "0001",
+  "backup_directory": ".tools\\private\\before-plant-dashboard-20261104-144225Z",
+  "flash_bytes": 8388608,
+  "flash_sha256": "44b1ec9da695a91eda5a0ec97e6bd714fe775c3d60761355e7dfdc696f82712a",
+  "spiffs_offset": 6750208,
+  "spiffs_bytes": 1572864,
+  "spiffs_entirely_erased": true,
+  "current_app_matches_local_binary": true,
+  "previous_app_sha256": "0f76c9e35a78ec6ee2706bbd09afe316387146c1bcc5070b0028004ad34974fe"
+}

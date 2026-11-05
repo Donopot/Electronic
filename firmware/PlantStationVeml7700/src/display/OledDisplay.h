@@ -1,6 +1,10 @@
 #pragma once
 #include "config.h"
 #include "sensors/VEML7700Sensor.h"
+#if PLANT_DASHBOARD
+#include "ui/PlantView.h"
+#include "web/PlantDashboard.h"
+#endif
 #if PLANT_SOIL_LORA
 #include <PlantSoilProtocol.h>
 #endif
@@ -18,6 +22,9 @@ public:
 #if PLANT_SOIL_LORA
     void showSoil(const Measurement& lux, const plantsoil::ReceiverBank& soil, bool radioReady, uint32_t now);
 #endif
+#if PLANT_DASHBOARD
+    void showDashboard(const PlantView& view, Screen screen, const DashboardNetwork& network);
+#endif
     void showSleepPrompt();
     void sleep();
 private:
@@ -31,6 +38,9 @@ private:
     void show(const Measurement&, uint64_t) {}
 #if PLANT_SOIL_LORA
     void showSoil(const Measurement&, const plantsoil::ReceiverBank&, bool, uint32_t) {}
+#endif
+#if PLANT_DASHBOARD
+    void showDashboard(const PlantView&, Screen, const DashboardNetwork&) {}
 #endif
     void showSleepPrompt() {}
     void sleep() {}
