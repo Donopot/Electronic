@@ -96,6 +96,7 @@ footer{max-width:1320px;margin:auto;padding:16px 26px 30px;color:var(--muted);fo
 <section id="tab-settings" role="tabpanel" hidden>
 <h1>Réglages</h1><p class="sub">Noms des quatre sondes, enregistrés en NVS sur le Heltec.</p>
 <div class="card"><form id="edit-form"><div id="name-fields" class="grid g2"></div><p id="edit-error" role="alert" class="small"></p><div class="row" style="margin-top:14px"><button type="submit" class="primary" id="save">Enregistrer les noms</button><span class="small muted" id="names-state"></span></div></form></div>
+<h2>Accès au tableau de bord</h2><div class="card small"><p>Depuis un téléphone ou un PC : rejoindre le Wi-Fi <b id="ap-ssid">du kit</b> (clé affichée sur l’écran du Heltec, appui PRG), puis ouvrir <code id="access-url">l’adresse du kit</code>. Le tableau de bord s’ouvre tout seul, sans configuration.</p><p id="setup-link-row" hidden><a href="/setup">Configurer un Wi-Fi domestique (optionnel)</a></p></div>
 <h2>Aide</h2><div class="card small muted">PRG court : visage → sondes → QR d’accès. PRG 3 s puis relâcher : veille. PRG 8 s : rouvrir l’assistant Wi-Fi. RST : réveiller.<br>Une mesure arrive toutes les 30 minutes ; au-delà de 90 minutes sans paquet accepté, la valeur devient <b>PERIMEE</b>. Un redémarrage du concentrateur n’efface ni le journal, ni la dernière mesure persistée.</div>
 </section>
 </main>
@@ -339,8 +340,15 @@ function fillNames(){
   wrap.append(label,input);box.append(wrap);
  }
 }
+function accessInfo(){
+ $('access-url').textContent=location.origin+'/';
+ if(location.hostname==='192.168.4.1')$('setup-link-row').hidden=false;
+ const host=state&&state.wifi&&state.wifi.hostname?state.wifi.hostname:'';
+ if(host)$('ap-ssid').textContent='PLANT-'+host.replace(/^plant-/i,'').replace(/\.local$/i,'').toUpperCase();
+}
 tab(location.hash.slice(1)||'overview');
 refresh();
-setInterval(refresh,5000);
+accessInfo();
+setInterval(function(){refresh();accessInfo();},5000);
 addEventListener('resize',()=>{if(!$('tab-history').hidden)drawChart();});
 </script></body></html>)PLANTHTML";

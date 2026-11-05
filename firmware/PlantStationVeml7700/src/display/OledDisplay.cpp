@@ -187,7 +187,7 @@ void OledDisplay::showDashboard(const PlantView& view,Screen screen,const Dashbo
         // puis Wi-Fi du kit pendant la configuration, puis acces local.
         char payload[192]={};int version=4;
         const bool android=network.bleSetup&&network.setupExplicit&&!network.setupSuccess;
-        const bool configWifi=!android&&network.provisioning&&!network.setupSuccess;
+        const bool configWifi=!android&&network.provisioning;
         if(android) {
             snprintf(payload,sizeof(payload),"{\"ver\":\"v1\",\"name\":\"%s\",\"transport\":\"ble\",\"security\":1,\"pop\":\"%s\"}",network.setupSsid,network.setupPassword);
             version=9;
@@ -221,11 +221,11 @@ void OledDisplay::showDashboard(const PlantView& view,Screen screen,const Dashbo
                 memcpy(half,network.setupPassword,8);put(half);
                 memcpy(half,network.setupPassword+8,8);put(half);
             } else if(configWifi) {
-                put("CONFIG WI-FI");put(network.setupSsid);put("Cle:");
+                put("WI-FI KIT");put(network.setupSsid);put("Cle:");
                 memcpy(half,network.setupPassword,8);put(half);
                 memcpy(half,network.setupPassword+8,8);put(half);
             } else {
-                put("ACCES LOCAL");
+                put("ACCES");
                 char ipText[24];snprintf(ipText,sizeof(ipText),"%s",network.url+7);
                 char* slash=strchr(ipText,'/');if(slash)*slash=0;
                 char* split=strchr(ipText,'.');if(split)split=strchr(split+1,'.');

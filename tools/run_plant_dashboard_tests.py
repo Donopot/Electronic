@@ -97,3 +97,15 @@ subprocess.run([str(worker_binary), "ble-worker-loop"], check=True)
 
 for scenario in ["ble-ap-failure", "ble-http-handoff", "saved-connection-recovery"]:
     subprocess.run([str(worker_binary), scenario], check=True)
+
+# AP permanent : tableau de bord servi sur le Wi-Fi du kit, sans configuration.
+ap_binary = build / ("always-ap.exe" if os.name == "nt" else "always-ap")
+ap_command = command[:command.index(str(project / "test/test_dashboard.cpp"))]
+ap_command += ["-DPLANT_ALWAYS_AP=1", "-I" + str(project / "test/dashboard-support"),
+               "-I" + str(project / "test/support"),
+               str(project / "test/test_dashboard_always_ap.cpp"), str(project / "src/ui/PlantView.cpp"),
+               str(project / "src/storage/PlantHistory.cpp"), "-o", str(ap_binary)]
+if os.name == "nt":
+    ap_command += ["-target", "x86_64-windows-gnu"]
+subprocess.run(ap_command, check=True)
+subprocess.run([str(ap_binary)], check=True)
