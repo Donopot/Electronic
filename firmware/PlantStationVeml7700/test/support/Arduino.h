@@ -34,6 +34,8 @@ struct FakeEsp {
     const char* getChipModel() { return "ESP32-S3"; }
     unsigned int getChipRevision() { return 2; }
     uint32_t getFlashChipSize() { return 8388608; }
+    uint32_t getFreeHeap() { return 182344; }
+    uint32_t getMinFreeHeap() { return 151880; }
 };
 extern FakeSerial Serial;
 extern FakeEsp ESP;

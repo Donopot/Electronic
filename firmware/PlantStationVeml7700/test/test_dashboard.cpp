@@ -40,6 +40,17 @@ static void model() {
     view=makePlantView(bank,config,true,100,100);
     assert(view.mood==Mood::Neutral && view.warningMask==0 && view.dryMask==0);
     for(const auto& p:view.plants)assert(p.state==PlantState::Uncalibrated && !p.batteryKnown && p.voltageValid && p.microvolts==2000000);
+    // Force du signal mesuree localement et compteurs de trames du concentrateur.
+    bank.noteSignal(1,-119,6,100);
+    view=makePlantView(bank,config,true,100,100);
+    assert(view.plants[0].signalValid && view.plants[0].rssiDbm==-119 && view.plants[0].snrDb==6 && !view.plants[1].signalValid);
+    assert(view.counters.accepted==4 && view.counters.rejected==0);
+    plantsoil::Packet same;same.node=2;same.session=1;same.sequence=100;same.status=plantsoil::AdcStatus::Ok;same.address=0x48;same.raw=16000;
+    uint8_t duplicate[plantsoil::kPacketSize];assert(plantsoil::encode(same,duplicate,sizeof(duplicate))==plantsoil::Result::Accepted);
+    assert(bank.accept(duplicate,sizeof(duplicate),110)==plantsoil::Result::Duplicate);
+    uint8_t wrong[plantsoil::kPacketSize]={0};assert(bank.accept(wrong,sizeof(wrong),110)==plantsoil::Result::Header);
+    view=makePlantView(bank,config,true,110,110);
+    assert(view.counters.accepted==4 && view.counters.rejected==2 && view.counters.duplicate==1 && view.counters.header==1);
     for(auto& c:config){c.calibrated=true;c.dryMicrovolts=2500000;}
     view=makePlantView(bank,config,true,101,101);assert(view.mood==Mood::Happy);
     packet(bank,1,102,plantsoil::AdcStatus::Ok,24000);packet(bank,4,102,plantsoil::AdcStatus::ReadError);
@@ -53,7 +64,7 @@ static void model() {
     assert(validPlantName("Basilic du balcon"));assert(validPlantName("Été 🌿"));
     assert(!validPlantName(" "));assert(!validPlantName("plante "));assert(!validPlantName("ligne\n2"));
     assert(!validPlantName("1234567890123456789012345"));assert(!validPlantName("\xC0\xAF"));assert(!validPlantName("\xED\xA0\x80"));
-    puts("PASS shared model: neutral/healthy/dry + independent warnings, battery unknown, stale, reboot, UTF-8 names");
+    puts("PASS shared model: neutral/healthy/dry + independent warnings, battery unknown, stale, reboot, UTF-8 names, local RSSI/SNR and frame counters");
 }
 static void historyTest() {
     MemoryFlash flash;PlantHistory history(flash);assert(history.begin());
@@ -75,6 +86,12 @@ static void historyTest() {
         }while(more);
         assert(count==(id==2?1440:1441));assert(faults==(id==3?1:0));
     }
+    // Curseur unique, tous les identifiants : alimente le graphe comparatif de l'API.
+    {uint64_t after=0,next=0;bool more=false;size_t total=0;uint8_t seen=0;HistoryRecord mixed[96];
+     do{const size_t n=reboot.page(0,after,start+31ULL*86400000,kHistoryMs,mixed,96,next,more);
+        for(size_t i=0;i<n;++i){assert(mixed[i].node>=1&&mixed[i].node<=4);seen|=uint8_t(1u<<(mixed[i].node-1));}
+        total+=n;after=next;}while(more);
+     assert(total>=4*1440&&seen==15);}
     HistoryRecord unknown;unknown.boot=124;unknown.node=1;unknown.raw=16000;assert(reboot.append(unknown));
     // An interrupted record is skipped; subsequent writes do not overwrite it.
     flash.cut=17;assert(!reboot.append(unknown));flash.cut=-1;
@@ -86,7 +103,7 @@ static void historyTest() {
     PlantHistory unsafe(unknownFlash);assert(!unsafe.begin());assert(unsafe.state()==PlantHistory::State::UnknownData);assert(!unknownFlash.writes&&!unknownFlash.erases);
     MemoryFlash bad;bad.failReads=true;PlantHistory failed(bad);assert(!failed.begin());assert(failed.state()==PlantHistory::State::IoError);
     MemoryFlash tiny(4096);PlantHistory tooSmall(tiny);assert(!tooSmall.begin());assert(!tiny.writes);
-    puts("PASS history: 31 simulated days / four nodes / 30-day filter / pagination / gaps / ADC faults / reboot / interrupted writes / unknown data preserved");
+    puts("PASS history: 31 simulated days / four nodes / 30-day filter / pagination / gaps / ADC faults / reboot / interrupted writes / unknown data preserved / multi-node cursor");
 }
 static void ring() {
     MemoryFlash flash(60*4096);PlantHistory history(flash);assert(history.begin());

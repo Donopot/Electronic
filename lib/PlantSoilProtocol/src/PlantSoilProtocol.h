@@ -116,30 +116,70 @@ public:
     }
     uint32_t age(uint32_t now) const { return static_cast<uint32_t>(now - receivedAt_); }
     const Packet& packet() const { return packet_; }
+    // Mesure locale du recepteur SX1262 sur le dernier paquet accepte. PS v1
+    // ne transporte ni RSSI ni SNR : ces deux valeurs ne viennent pas de la
+    // sonde et ne sont donc jamais persistees dans le journal.
+    void noteSignal(int16_t rssi, int16_t snr, uint32_t now) {
+        rssi_ = rssi; snr_ = snr; signalAt_ = now; signal_ = true;
+    }
+    bool hasSignal() const { return signal_; }
+    int16_t rssi() const { return rssi_; }
+    int16_t snr() const { return snr_; }
+    uint32_t signalAge(uint32_t now) const { return static_cast<uint32_t>(now - signalAt_); }
 private:
     Packet packet_;
     uint32_t receivedAt_ = 0;
     bool seen_ = false;
     mutable bool stale_ = false;
+    int16_t rssi_ = 0, snr_ = 0;
+    uint32_t signalAt_ = 0;
+    bool signal_ = false;
 };
+// Compteurs de trames du concentrateur, publies tels quels par l'API locale.
+struct Counters {
+    uint32_t accepted = 0, rejected = 0;
+    uint32_t length = 0, header = 0, node = 0, session = 0, status = 0, address = 0, raw = 0, duplicate = 0, oldSequence = 0;
+};
+inline void countRejected(Counters& counters, Result result) {
+    ++counters.rejected;
+    switch (result) {
+    case Result::Length: ++counters.length; break;
+    case Result::Header: ++counters.header; break;
+    case Result::Node: ++counters.node; break;
+    case Result::Session: ++counters.session; break;
+    case Result::Status: ++counters.status; break;
+    case Result::Address: ++counters.address; break;
+    case Result::Raw: ++counters.raw; break;
+    case Result::Duplicate: ++counters.duplicate; break;
+    default: ++counters.oldSequence; break;
+    }
+}
 // Chaque identifiant conserve son propre compteur, sa session et son expiration.
 class ReceiverBank {
 public:
     Result accept(const uint8_t* data, size_t size, uint32_t now) {
         Packet packet;
         const Result result = decode(data, size, packet);
-        if (result != Result::Accepted) return result;
-        return nodes_[packet.node - 1].accept(data, size, now);
+        if (result != Result::Accepted) { countRejected(counters_, result); return result; }
+        const Result accepted = nodes_[packet.node - 1].accept(data, size, now);
+        if (accepted == Result::Accepted) ++counters_.accepted;
+        else countRejected(counters_, accepted);
+        return accepted;
+    }
+    void noteSignal(uint8_t id, int16_t rssi, int16_t snr, uint32_t now) {
+        if (validNode(id)) nodes_[id - 1].noteSignal(rssi, snr, now);
     }
     const Receiver& node(uint8_t id) const {
         return validNode(id) ? nodes_[id - 1] : empty_;
     }
+    const Counters& counters() const { return counters_; }
     void update(uint32_t now) const {
         for (const auto& value : nodes_) value.state(now);
     }
 private:
     Receiver nodes_[kNodeCount];
     Receiver empty_;
+    Counters counters_;
 };
 // Ligne commune pour comparer TX/RX sans modifier le schema JSON lux existant.
 inline bool formatPacket(char* out, size_t size, const char* direction, const Packet& packet) {

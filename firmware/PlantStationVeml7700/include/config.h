@@ -10,6 +10,9 @@
 #ifndef PLANT_DASHBOARD
 #define PLANT_DASHBOARD 0
 #endif
+#ifndef PLANT_LUX
+#define PLANT_LUX 1
+#endif
 #ifndef PLANT_OLED
 #define PLANT_OLED 1
 #endif
@@ -42,6 +45,10 @@ constexpr uint32_t kConversionMs = 150;
 constexpr double kMaxLux = 140000.0;
 constexpr bool kJson = PLANT_JSON;
 constexpr bool kScan = PLANT_SCAN;
+// Le concentrateur de sondes peut etre monte sans VEML7700 : aucun scan I2C,
+// aucune lecture de lux, et l'API publie lux=null avec lux_available=false.
+constexpr bool kLux = PLANT_LUX;
+static_assert(PLANT_LUX == 0 || PLANT_LUX == 1, "PLANT_LUX doit valoir 0 ou 1");
 static_assert(PLANT_JSON == 0 || PLANT_JSON == 1, "PLANT_JSON doit valoir 0 ou 1");
 static_assert(PLANT_SOIL_LORA == 0 || PLANT_SOIL_LORA == 1, "PLANT_SOIL_LORA doit valoir 0 ou 1");
 static_assert(PLANT_OLED == 0 || PLANT_OLED == 1, "PLANT_OLED doit valoir 0 ou 1");

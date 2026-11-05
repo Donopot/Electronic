@@ -6,6 +6,12 @@
 #include <SPI.h>
 #include <atomic>
 namespace plant {
+// Parametres radio du concentrateur, publies par l'API locale du tableau de bord.
+constexpr float kSoilFrequencyMhz = 868.1f;
+constexpr float kSoilBandwidthKhz = 125.0f;
+constexpr uint8_t kSoilSpreadingFactor = 7;
+constexpr uint8_t kSoilCodingRate = 5;
+constexpr int8_t kSoilPowerDbm = 8;
 class SoilRadio {
 public:
     void begin();

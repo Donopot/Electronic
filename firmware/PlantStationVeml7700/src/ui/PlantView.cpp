@@ -49,12 +49,15 @@ PlantView makePlantView(const plantsoil::ReceiverBank& bank, const PlantConfig* 
                         bool radioReady, uint32_t now, uint64_t uptimeMs) {
     PlantView out;
     out.radioReady = radioReady; out.uptimeMs = uptimeMs;
+    out.counters = bank.counters();
     bool allHealthy = true;
     for (unsigned i = 0; i < plantsoil::kNodeCount; ++i) {
         auto& value = out.plants[i];
         const auto& source = bank.node(i + 1);
         value.id = i + 1;
         memcpy(value.name, config[i].name, sizeof(value.name));
+        value.signalValid = source.hasSignal();
+        value.rssiDbm = source.rssi(); value.snrDb = source.snr();
         const auto freshness = source.state(now);
         value.seen = freshness != plantsoil::Freshness::Waiting;
         if (value.seen) {

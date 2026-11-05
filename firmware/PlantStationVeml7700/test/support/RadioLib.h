@@ -11,6 +11,7 @@ struct Radio {
     int16_t beginCode = 0, readCode = 0, receiveCode = 0, sleepCode = 0, standbyCode = 0, headerCode = 0;
     bool frozen = false, hasCrc = true;
     unsigned begins = 0, receives = 0;
+    float rssi = -119.5f, snr = 6.25f;
     void (*callback)() = nullptr;
     std::vector<uint8_t> packet;
 };
@@ -44,5 +45,7 @@ public:
     size_t getPacketLength() { assert(host::radio().frozen); return host::radio().packet.size(); }
     int16_t getLoRaRxHeaderInfo(uint8_t*, bool* crc) { assert(host::radio().frozen); *crc = host::radio().hasCrc; return host::radio().headerCode; }
     int16_t readData(uint8_t* data, size_t length) { assert(host::radio().frozen); memcpy(data, host::radio().packet.data(), length); return host::radio().readCode; }
+    float getRSSI() { return host::radio().rssi; }
+    float getSNR() { return host::radio().snr; }
     int16_t sleep(bool retain) { assert(!retain); host::gpioCalls().push_back("radio_sleep"); return host::radio().sleepCode; }
 };

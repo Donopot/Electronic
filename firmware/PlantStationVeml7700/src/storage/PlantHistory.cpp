@@ -136,7 +136,7 @@ uint64_t PlantHistory::resolveUtc(const HistoryRecord& value) {
 size_t PlantHistory::page(uint8_t node,uint64_t after,uint64_t nowUtc,uint64_t periodMs,
                          HistoryRecord* out,size_t limit,uint64_t& next,bool& more) {
     next=after; more=false;
-    if(state_!=State::Ready || !plantsoil::validNode(node) || !limit) return 0;
+    if(state_!=State::Ready || (!plantsoil::validNode(node) && node) || !limit) return 0;
     limit=std::min(limit,size_t(96)); periodMs=std::min(periodMs,kHistoryMs);
     const uint32_t first=generation_>sectors_ ? generation_-sectors_+1 : 1;
     size_t count=0;
@@ -150,7 +150,7 @@ size_t PlantHistory::page(uint8_t node,uint64_t after,uint64_t nowUtc,uint64_t p
             if(cursor<=after) continue;
             uint8_t bytes[kRecord]; HistoryRecord value;
             if(!flash_.read(sector*kSector+kHeader+slot*kRecord,bytes,sizeof(bytes))) {state_=State::IoError; return count;}
-            if(!decode(bytes,value) || value.node!=node) continue;
+            if(!decode(bytes,value) || (node ? value.node!=node : !value.node)) continue;
             value.utcMs=resolveUtc(value);
             if(state_!=State::Ready)return count;
             // Unknown clock records stay explicitly undated. Never manufacture dates across boots.

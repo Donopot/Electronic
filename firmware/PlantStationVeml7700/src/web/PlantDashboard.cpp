@@ -7,6 +7,9 @@
 #include "PlantSetupPage.h"
 #include "CaptiveDns.h"
 #include "storage/PlantHistory.h"
+#if PLANT_SOIL_LORA
+#include "radio/SoilRadio.h"
+#endif
 #include <WiFi.h>
 #include <WiFiUdp.h>
 #include <Preferences.h>
@@ -53,6 +56,13 @@ bool namesFailed=false, clockFailed=false, pendingClock=false;
 uint32_t namesRevision=0,namesSavedRevision=0;
 uint64_t pendingUtc=0,pendingUptime=0;
 uint32_t connectAt=0,dirtyAt=0,apRetryAt=0,successAt=0,closeApAt=0,attemptAt=0,scanAt=0;
+// Derniere mesure acceptee par noeud, conservee en NVS pour survivre au reboot.
+// Ecrite par le travailleur (jamais par la boucle radio) et relue au demarrage.
+struct StoredLastNode {uint8_t node=0,status=0;int16_t raw=0;uint32_t session=0,sequence=0;uint64_t utcMs=0;};
+struct StoredLast {uint32_t version=0;StoredLastNode nodes[4];uint32_t crc=0;};
+StoredLast lastKnown;
+bool lastKnownDirty=false;
+uint32_t lastKnownSavedAt=0;
 String hostName,setupSsid,setupPassword,setupState="idle",setupMessage="Choisissez votre Wi-Fi domestique.",scanJson="[]";
 wifi_config_t savedWifi{},candidateWifi{};
 bool hasSavedWifi=false,ramStorageReady=false,candidatePending=false,testingWifi=false,cancelWifi=false;
@@ -258,12 +268,13 @@ void serviceNetwork(uint32_t now){
     serviceDns();publishBle();
 }
 String statusJson() {
-    String out;out.reserve(2200);
-    out="{\"api_version\":1,\"source\":\"live\",\"mood\":"+quote(moodName(current.mood));
+    String out;out.reserve(4200);
+    out="{\"api_version\":2,\"source\":\"live\",\"mood\":"+quote(moodName(current.mood));
     out+=",\"dry_mask\":"+String(current.dryMask)+",\"warning_mask\":"+String(current.warningMask);
     out+=",\"radio_ready\":"+String(current.radioReady?"true":"false")+",\"uptime_ms\":"+number(current.uptimeMs);
     out+=",\"utc_ms\":"+(clockKnown?number(utcAt(current.uptimeMs)):String("null"));
     out+=",\"lux\":"+(current.luxValid?String(current.lux,1):String("null"));
+    out+=",\"lux_available\":"+String(PLANT_LUX?"true":"false");
     out+=",\"wifi_connected\":"+String(online?"true":"false")+",\"url\":"+quote(networkState.url);
     out+=",\"setup_active\":"+String(provisioning?"true":"false");
     out+=",\"hostname\":"+quote(networkState.hostname)+",\"network_message\":"+quote(networkState.message);
@@ -273,13 +284,49 @@ String statusJson() {
     out+=",\"clock_persistence\":"+quote(clockFailed?"failed":pendingClock?"pending":clockKnown?"saved":"unknown")+",\"plants\":[";
     for(unsigned i=0;i<4;++i) {
         const auto& p=current.plants[i];if(i) out+=',';
+        const auto& known=lastKnown.nodes[i];
         out+="{\"id\":"+String(i+1)+",\"name\":"+quote(p.name)+",\"state\":"+quote(stateName(p.state))+",\"label\":"+quote(stateLabel(p.state));
         out+=",\"age_ms\":"+(p.seen?String(p.ageMs):String("null"));
         out+=",\"microvolts\":"+(p.voltageValid?String(p.microvolts):String("null"));
         out+=",\"battery_percent\":null,\"battery_status\":\"not_reported\"";
-        out+=",\"adc_status\":"+(p.seen?quote(plantsoil::statusName(p.packet.status)):String("null"))+"}";
+        out+=",\"adc_status\":"+(p.seen?quote(plantsoil::statusName(p.packet.status)):String("null"));
+        out+=",\"raw\":"+(p.seen?String(static_cast<int>(p.packet.raw)):String("null"));
+        out+=",\"ads_address\":"+(p.seen?String(static_cast<unsigned>(p.packet.address)):String("null"));
+        out+=",\"session\":"+(p.seen?number(p.packet.session):String("null"));
+        out+=",\"sequence\":"+(p.seen?number(p.packet.sequence):String("null"));
+        // RSSI/SNR mesures par le concentrateur, jamais transmis par la sonde.
+        out+=",\"rssi_dbm\":"+(p.signalValid?String(static_cast<int>(p.rssiDbm)):String("null"));
+        out+=",\"snr_db\":"+(p.signalValid?String(static_cast<int>(p.snrDb)):String("null"));
+        out+=",\"last_known\":{\"present\":"+String(known.node==i+1?"true":"false");
+        out+=",\"utc_ms\":"+(known.node==i+1&&known.utcMs?number(known.utcMs):String("null"));
+        out+=",\"microvolts\":"+(known.node==i+1&&known.status==0?String(plantsoil::microvolts(known.raw)):String("null"));
+        out+=",\"adc_status\":"+(known.node==i+1?quote(plantsoil::statusName(static_cast<plantsoil::AdcStatus>(known.status))):String("null"));
+        out+=",\"session\":"+(known.node==i+1?number(known.session):String("null"));
+        out+=",\"sequence\":"+(known.node==i+1?number(known.sequence):String("null"))+"}}";
     }
-    return out+"]}";
+    out+="]";
+#if PLANT_SOIL_LORA
+    const auto& c=current.counters;
+    out+=",\"radio\":{\"ready\":"+String(current.radioReady?"true":"false")+",\"frequency_mhz\":"+String(kSoilFrequencyMhz,1);
+    out+=",\"bandwidth_khz\":"+String(kSoilBandwidthKhz,1)+",\"spreading_factor\":"+String(static_cast<unsigned>(kSoilSpreadingFactor));
+    out+=",\"coding_rate\":\"4/"+String(static_cast<unsigned>(kSoilCodingRate))+"\",\"power_dbm\":"+String(static_cast<int>(kSoilPowerDbm));
+    out+=",\"crc\":\"on\",\"accepted\":"+String(c.accepted)+",\"rejected\":"+String(c.rejected);
+    out+=",\"reject_reasons\":{\"length\":"+String(c.length)+",\"header\":"+String(c.header)+",\"node\":"+String(c.node);
+    out+=",\"session\":"+String(c.session)+",\"status\":"+String(c.status)+",\"address\":"+String(c.address);
+    out+=",\"raw\":"+String(c.raw)+",\"duplicate\":"+String(c.duplicate)+",\"old_sequence\":"+String(c.oldSequence)+"}}";
+#else
+    out+=",\"radio\":null";
+#endif
+    out+=",\"wifi\":{\"connected\":"+String(online?"true":"false");
+    out+=",\"rssi_dbm\":"+(online?String(WiFi.RSSI()):String("null"));
+    out+=",\"channel\":"+(online?String(static_cast<unsigned>(WiFi.channel())):String("null"));
+    out+=",\"ip\":"+quote(online?WiFi.localIP().toString().c_str():"")+",\"hostname\":"+quote(networkState.hostname);
+    out+=",\"mdns\":"+String(mdns?"true":"false")+"}";
+    out+=",\"system\":{\"chip\":"+quote(ESP.getChipModel())+",\"revision\":"+String(static_cast<unsigned>(ESP.getChipRevision()));
+    out+=",\"flash_bytes\":"+number(ESP.getFlashChipSize())+",\"heap_free\":"+number(ESP.getFreeHeap())+",\"heap_min\":"+number(ESP.getMinFreeHeap());
+    out+=",\"boot\":"+number(bootId)+",\"node_count\":"+String(static_cast<unsigned>(plantsoil::kNodeCount));
+    out+=",\"version\":"+quote(plant::kVersion)+"}}";
+    return out;
 }
 void clearHttpRequest(){clearSetupSecret(const_cast<char*>(request.c_str()),request.length());request="";}
 void reply(unsigned code,const char* type,const String& body) {
@@ -372,7 +419,7 @@ void route() {
     if(method=="GET" && path=="/api/history") {
         FormFields fields;uint64_t node,days,after=0;
         if(query<0 || !parseForm(target.c_str()+query+1,fields) || fields.count<2 || fields.count>3 ||
-           !parseUnsigned(fields.get("node"),4,node) || !node || !parseUnsigned(fields.get("days"),30,days) ||
+           !parseUnsigned(fields.get("node"),4,node) || !parseUnsigned(fields.get("days"),30,days) ||
            (days!=1 && days!=7 && days!=30) || (fields.count==3 && !parseUnsigned(fields.get("after"),UINT64_MAX,after))) {error(400,"history_parameters");return;}
         if(history.state()!=PlantHistory::State::Ready) {error(503,PlantHistory::stateName(history.state()));return;}
         HistoryRecord values[96];uint64_t next;bool more;
@@ -383,7 +430,8 @@ void route() {
         for(size_t i=0;i<count;++i) {
             const auto& r=values[i];if(i) out+=',';
             const uint64_t utc=r.utcMs;
-            out+="{\"utc_ms\":"+(utc?number(utc):String("null"))+",\"boot\":"+String(r.boot)+",\"uptime_ms\":"+number(r.uptimeMs);
+            out+="{\"node\":"+String(static_cast<unsigned>(r.node))+
+                ",\"utc_ms\":"+(utc?number(utc):String("null"))+",\"boot\":"+String(r.boot)+",\"uptime_ms\":"+number(r.uptimeMs);
             out+=",\"microvolts\":"+(r.status==0?String(plantsoil::microvolts(r.raw)):String("null"))+",\"adc_status\":"+quote(plantsoil::statusName(static_cast<plantsoil::AdcStatus>(r.status)))+"}";
         }
         reply(200,"application/json; charset=utf-8",out+"]}");return;
@@ -462,6 +510,40 @@ void saveNames() {
     prefs.end();
     if(saved){dirtyNames=namesFailed=false;namesSavedRevision=namesRevision;}
 }
+void noteLastKnown(const HistoryRecord& record) {
+    if(!plantsoil::validNode(record.node))return;
+    auto& node=lastKnown.nodes[record.node-1];
+    // Une sequence plus ancienne ne remplace jamais la mesure deja connue.
+    if(node.node==record.node&&node.session==record.session&&record.sequence<node.sequence)return;
+    node.node=record.node;node.status=record.status;node.raw=record.raw;
+    node.session=record.session;node.sequence=record.sequence;node.utcMs=record.utcMs;
+    lastKnownDirty=true;
+}
+void loadLastKnown() {
+    Preferences prefs;
+    if(!prefs.begin("plant-last",true))return;
+    StoredLast stored{};
+    if(prefs.getBytesLength("nodes")==sizeof(stored)&&prefs.getBytes("nodes",&stored,sizeof(stored))==sizeof(stored)&&
+       stored.version==1&&stored.crc==PlantHistory::crc(reinterpret_cast<const uint8_t*>(&stored),offsetof(StoredLast,crc))){
+        for(unsigned i=0;i<4;++i) {
+            const StoredLastNode value=stored.nodes[i];
+            const bool valid=value.node==i+1&&value.status<=3&&(value.status!=0||(value.raw>=-8&&value.raw<=26400));
+            lastKnown.nodes[i]=valid?value:StoredLastNode{};
+        }
+    }
+    prefs.end();
+}
+void saveLastKnown() {
+    Preferences prefs;
+    if(!prefs.begin("plant-last",false))return;
+    lastKnown.version=1;
+    lastKnown.crc=PlantHistory::crc(reinterpret_cast<const uint8_t*>(&lastKnown),offsetof(StoredLast,crc));
+    StoredLast check{};
+    const bool saved=prefs.putBytes("nodes",&lastKnown,sizeof(lastKnown))==sizeof(lastKnown)&&
+        prefs.getBytes("nodes",&check,sizeof(check))==sizeof(check)&&!memcmp(&lastKnown,&check,sizeof(check));
+    prefs.end();
+    if(saved)lastKnownDirty=false;
+}
 void serviceStorage(uint32_t now) {
     if(pendingClock){
         pendingClock=false;
@@ -469,16 +551,22 @@ void serviceStorage(uint32_t now) {
         else clockFailed=true;
     }
     HistoryRecord record;
-    for(unsigned i=0;i<4&&xQueueReceive(records,&record,0)==pdTRUE;++i){record.utcMs=utcAt(record.uptimeMs);history.append(record);}
+    for(unsigned i=0;i<4&&xQueueReceive(records,&record,0)==pdTRUE;++i){
+        record.utcMs=utcAt(record.uptimeMs);
+        if(history.append(record))noteLastKnown(record);
+    }
+    // Une ecriture NVS toutes les soixante secondes au plus, jamais par la boucle radio.
+    if(lastKnownDirty&&(!lastKnownSavedAt||uint32_t(now-lastKnownSavedAt)>=60000)){lastKnownSavedAt=now;saveLastKnown();}
     if(dirtyNames&&uint32_t(now-dirtyAt)>=1500){saveNames();dirtyAt=now;}
 }
 void finishStorage() {
     serviceStorage(millis());HistoryRecord record;
-    while(xQueueReceive(records,&record,0)==pdTRUE){record.utcMs=utcAt(record.uptimeMs);history.append(record);}
+    while(xQueueReceive(records,&record,0)==pdTRUE){record.utcMs=utcAt(record.uptimeMs);if(history.append(record))noteLastKnown(record);}
+    if(lastKnownDirty)saveLastKnown();
     if(dirtyNames){saveNames();if(namesFailed)Serial.println("[PLANT_NAMES] persistence=failed");}
 }
 void worker(void*) {
-    loadNames();Preferences prefs;
+    loadNames();loadLastKnown();Preferences prefs;
     xQueueOverwrite(configurations,&config);
     flash.partition=esp_partition_find_first(ESP_PARTITION_TYPE_DATA,ESP_PARTITION_SUBTYPE_DATA_SPIFFS,"spiffs");
     history.begin();Serial.printf("[PLANT_HISTORY] state=%s\n",PlantHistory::stateName(history.state()));

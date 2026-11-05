@@ -37,7 +37,7 @@ $env:PYTHONUTF8 = '1'
 $env:PYTHONPATH = Join-Path $PWD '.tools/xiao-diagnostic-python'
 $env:PLATFORMIO_CORE_DIR = Join-Path $PWD '.tools/platformio'
 python -m platformio run --project-dir firmware/XiaoSoilDiagnostic -e xiao_soil_diagnostic -e xiao_soil_lora_tx -e xiao_soil_lora_pmos -e xiao_soil_lora_pmos_node2 -e xiao_soil_lora_pmos_node3 -e xiao_soil_lora_pmos_node4
-python -m platformio run --project-dir firmware/PlantStationVeml7700 -e heltec_v3_text -e heltec_v3_json -e heltec_v3_soil_lora
+python -m platformio run --project-dir firmware/PlantStationVeml7700 -e heltec_v3_text -e heltec_v3_json -e heltec_v3_soil_lora -e heltec_v3_soil_dashboard
 python tools/run_soil_lora_host_tests.py
 python tests/test_capture_soil_lora.py
 python tests/test_xiao_battery_variant.py
