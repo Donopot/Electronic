@@ -134,12 +134,21 @@ Adafruit_SSD1306* qrDisplay = nullptr;
 bool qrRendered = false;
 int qrExtent=0;
 void drawQr(esp_qrcode_handle_t code) {
-    const int size=esp_qrcode_get_size(code),scale=64/(size+8)>=2?2:1;
-    const int extent=(size+8)*scale,top=(64-extent)/2;
+    // Choisir la plus grande echelle possible sur 64 pixels de haut, en
+    // preferant 2 px par module : un QR de 1 px (~7 mm) n'est pas lisible
+    // par un telephone.
+    const int size=esp_qrcode_get_size(code);
+    int scale=1,margin=4;
+    bool found=false;
+    for(int s=3;s>=1&&!found;--s)
+        for(int m=4;m>=1;--m)
+            if((size+2*m)*s<=64){scale=s;margin=m;found=true;break;}
+    if(!found)return;
+    const int extent=(size+2*margin)*scale,top=(64-extent)/2,left=(128-extent)/2;
     if(extent>64||!qrDisplay)return;
-    qrDisplay->fillRect(0,top,extent,extent,SSD1306_WHITE);
+    qrDisplay->fillRect(left,top,extent,extent,SSD1306_WHITE);
     for(int y=0;y<size;++y)for(int x=0;x<size;++x)
-        if(esp_qrcode_get_module(code,x,y))qrDisplay->fillRect((x+4)*scale,top+(y+4)*scale,scale,scale,SSD1306_BLACK);
+        if(esp_qrcode_get_module(code,x,y))qrDisplay->fillRect(left+(x+margin)*scale,top+(y+margin)*scale,scale,scale,SSD1306_BLACK);
     qrExtent=extent;qrRendered=true;
 }
 void generateQr(Adafruit_SSD1306& display,const char* payload,int maxVersion) {
@@ -192,7 +201,8 @@ void OledDisplay::showDashboard(const PlantView& view,Screen screen,const Dashbo
             snprintf(payload,sizeof(payload),"{\"ver\":\"v1\",\"name\":\"%s\",\"transport\":\"ble\",\"security\":1,\"pop\":\"%s\"}",network.setupSsid,network.setupPassword);
             version=9;
         } else if(configWifi) {
-            snprintf(payload,sizeof(payload),"WIFI:T:WPA;S:%s;P:\"%s\";;",network.setupSsid,network.setupPassword);
+            // Sans guillemets autour de la cle : certains analyseurs Wi-Fi les refusent.
+            snprintf(payload,sizeof(payload),"WIFI:T:WPA;S:%s;P:%s;;",network.setupSsid,network.setupPassword);
             version=4;
         } else if(network.online) {
             snprintf(payload,sizeof(payload),"%s",network.url);
@@ -204,34 +214,6 @@ void OledDisplay::showDashboard(const PlantView& view,Screen screen,const Dashbo
             display_.setCursor(0,0);display_.print("WI-FI ABSENT");
             display_.setCursor(0,20);display_.print("Reconnexion en cours");
             display_.setCursor(0,48);display_.print("PRG 8s : configurer");
-        } else {
-            const int column=qrRendered?qrExtent+4:0;
-            const int chars=qrRendered?(128-column)/6:21;
-            int row=0;
-            const auto put=[&](const char* text){
-                if(row>=6)return;
-                char clipped[25];size_t n=strlen(text);
-                if(n>size_t(chars))n=size_t(chars);
-                memcpy(clipped,text,n);clipped[n]=0;
-                display_.setCursor(column,row*9);display_.print(clipped);++row;
-            };
-            char half[9]={};
-            if(android) {
-                put("ANDROID");put(network.setupSsid);put("Code:");
-                memcpy(half,network.setupPassword,8);put(half);
-                memcpy(half,network.setupPassword+8,8);put(half);
-            } else if(configWifi) {
-                put("WI-FI KIT");put(network.setupSsid);put("Cle:");
-                memcpy(half,network.setupPassword,8);put(half);
-                memcpy(half,network.setupPassword+8,8);put(half);
-            } else {
-                put("ACCES");
-                char ipText[24];snprintf(ipText,sizeof(ipText),"%s",network.url+7);
-                char* slash=strchr(ipText,'/');if(slash)*slash=0;
-                char* split=strchr(ipText,'.');if(split)split=strchr(split+1,'.');
-                if(split){*split=0;put(ipText);put(split+1);}else put(ipText);
-                put("PRG:visage");
-            }
         }
         if(!qrRendered&&*payload){display_.setCursor(0,20);display_.print("QR indisponible");}
     } else {

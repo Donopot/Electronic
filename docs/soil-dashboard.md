@@ -21,22 +21,28 @@ PRG court fait défiler **trois** écrans : visage, détails, QR.
 | --- | --- |
 | Visage | robot selon l’humeur, états courts des quatre sondes (`OK`, `ETAL.`, `ATT.`, `ADC!`, `PERIM.`, `SECHE`), ligne basse `N/4 fraiches PRG:>` (ou le lux si le capteur est présent) |
 | Détails | quatre blocs `SOIL-0X 2.701V B--` / état + âge en minutes |
-| QR | **un seul** QR, celui de l’action courante |
+| QR | **un seul** QR, seul sur l’écran, centré, au plus grand format possible |
 
 Contenu du QR unique, par priorité :
 
 1. **Appairage Android** — BLE actif **et** assistant demandé explicitement
    (PRG 8 s) : JSON
-   `{"ver":"v1","name":"PLANT-XXXX","transport":"ble","security":1,"pop":"…"}`,
-   code d’appairage en deux lignes de huit caractères.
+   `{"ver":"v1","name":"PLANT-XXXX","transport":"ble","security":1,"pop":"…"}`.
 2. **Wi-Fi du kit** (AP permanent) :
-   `WIFI:T:WPA;S:PLANT-XXXX;P:"…";;` — scanner suffit pour rejoindre le réseau ;
-   l’assistant s’ouvre ensuite par portail captif. Nom et clé restent affichés
-   en texte.
+   `WIFI:T:WPA;S:PLANT-XXXX;P:…;;` (clé sans guillemets, plus largement
+   reconnue) — scanner suffit pour rejoindre le réseau ; le portail captif
+   ouvre ensuite le tableau de bord.
 3. **Accès local** (connecté au Wi-Fi domestique) : `HTTP://<ip>/` — ouvre le
    tableau de bord à onglets depuis un téléphone.
 4. Sinon : `WI-FI ABSENT` / `Reconnexion en cours` / `PRG 8s : configurer`,
    sans QR.
+
+L’écran QR n’affiche **que le symbole** : aucun texte, aucune colonne latérale.
+Le QR est centré et utilise la plus grande échelle qui tient dans 128 × 64 px
+(2 px par module dès que possible, marge réduite à 1 module si nécessaire), sans
+quoi un téléphone ne le résout pas. Le nom et la clé du kit ne sont plus écrits
+à côté : ils sont dans le QR lui-même, et le nom apparaît de toute façon dans la
+liste des réseaux du téléphone.
 
 Règle concrète : au premier démarrage sans Wi-Fi enregistré, le QR est celui du
 **Wi-Fi du kit** (utile avec n’importe quel téléphone) ; le QR **Android**
