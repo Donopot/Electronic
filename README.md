@@ -10,10 +10,11 @@ par sonde conservée en NVS, donc visible après un redémarrage. Le profil
 `heltec_v3_soil_dashboard` fonctionne **sans capteur de lumière** (aucun scan
 I2C, `lux` toujours `null`). Voir [docs/soil-dashboard.md](docs/soil-dashboard.md).
 
-**Accès sans configuration** : ce profil compile `PLANT_ALWAYS_AP=1`, le Heltec
-diffuse en permanence son propre Wi-Fi `PLANT-XXXXXX` (clé affichée sur l’écran
-OLED) et sert lui-même le tableau de bord sur `http://192.168.4.1/`. Le Wi-Fi
-domestique reste optionnel, sur `/setup`.
+**Connexion** : ce profil compile `PLANT_OPEN_AP=1` — au premier démarrage le
+réseau `PLANTES-XXXX` apparaît **sans mot de passe**, on choisit son Wi-Fi
+2,4 GHz dans l’assistant, puis le kit referme son propre AP et sert le tableau
+de bord sur le réseau de la maison (`http://<ip>/`). **PRG 8 s** rouvre l’AP
+pendant 15 minutes pour changer de réseau.
 
 ⚠️ Le projet PlatformIO à ouvrir est le dossier **`firmware/PlantStationVeml7700`**.
 La racine du dépôt ne déclare que les environnements `enviroterminal_*` (carte
