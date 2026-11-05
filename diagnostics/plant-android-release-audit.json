@@ -1,0 +1,14 @@
+{
+  "apk": "android\\PlantStation\\app\\build\\outputs\\apk\\release\\app-release.apk",
+  "sha256": "dd84f14f44295b6b8ee2b64b1312c46a925b2f6062076342f27e06fddf7276bc",
+  "bytes": 23165724,
+  "signature_verified": true,
+  "certificate_sha256": "3ff44e455caaf5a2e4a24d50a33dd150f9ca2d919567ff29f0e6e81a32c337ce",
+  "min_sdk": 26,
+  "target_sdk": 35,
+  "internet_permission": false,
+  "espressif_log_invocations": 0,
+  "espressif_stacktrace_invocations": 0,
+  "android_log_writes": 0,
+  "physical_android_test": "not performed by this audit"
+}

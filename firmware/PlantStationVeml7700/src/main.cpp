@@ -29,11 +29,12 @@ plant::PlantDashboard dashboard;
 plant::PlantConfig plantConfig[plantsoil::kNodeCount];
 plant::Screen screen = plant::Screen::Face;
 uint32_t lastDashboardDisplay = 0;
+bool displayedSetupActive=false, displayedSetupSuccess=false, setupHeld=false;
 #endif
 plantsoil::Freshness displayedSoil[plantsoil::kNodeCount] = {};
 uint32_t displayedSession[plantsoil::kNodeCount] = {}, displayedSequence[plantsoil::kNodeCount] = {};
 bool displayedRadioReady = false;
-void refreshSoil(uint32_t now, bool force = false) {
+void refreshSoil(uint32_t now, bool force = false, bool render = true) {
     const auto& readings = soilRadio.readings();
 #if PLANT_DASHBOARD
     dashboard.configuration(plantConfig);
@@ -41,7 +42,13 @@ void refreshSoil(uint32_t now, bool force = false) {
     view.luxValid = lastLux.status == plant::Status::Ok && isfinite(lastLux.lux) && lastLux.lux >= 0 && lastLux.lux <= plant::kMaxLux;
     view.lux = view.luxValid ? lastLux.lux : 0;
     dashboard.publish(view);
+    if(!render)return; // Keep button prompts visible while radio data still reaches the worker.
+    const auto network=dashboard.network();
+    if((network.provisioning&&!displayedSetupActive)||(network.setupSuccess&&!displayedSetupSuccess))screen=plant::Screen::Qr;
+    displayedSetupActive=network.provisioning;displayedSetupSuccess=network.setupSuccess;
+    if(!network.provisioning&&screen==plant::Screen::PortalUrl)screen=plant::Screen::Qr;
 #endif
+    if(!render)return;
     bool changed = force || soilRadio.ready() != displayedRadioReady;
     for (uint8_t i = 0; i < plantsoil::kNodeCount; ++i) {
         const auto& node = readings.node(i + 1);
@@ -54,7 +61,7 @@ void refreshSoil(uint32_t now, bool force = false) {
     }
     if (changed) {
 #if PLANT_DASHBOARD
-        oled.showDashboard(view, screen, dashboard.network());
+        oled.showDashboard(view, screen, network);
         lastDashboardDisplay = now;
 #else
         oled.showSoil(lastLux, readings, soilRadio.ready(), now);
@@ -63,7 +70,7 @@ void refreshSoil(uint32_t now, bool force = false) {
     }
 #if PLANT_DASHBOARD
     else if (plant::elapsed(now, lastDashboardDisplay, 1000)) {
-        oled.showDashboard(view, screen, dashboard.network());
+        oled.showDashboard(view, screen, network);
         lastDashboardDisplay = now;
     }
 #endif
@@ -128,15 +135,23 @@ void loop() {
     const auto buttonEvent = button.update(now, digitalRead(0) == LOW, PLANT_DASHBOARD);
 #if PLANT_DASHBOARD
     if (buttonEvent == plant::ButtonEvent::ShortPress) {
-        screen = plant::nextScreen(screen);
+        screen=screen==plant::Screen::Qr&&dashboard.network().provisioning&&dashboard.network().bleSetup?plant::Screen::WifiQr:
+               screen==plant::Screen::WifiQr||(screen==plant::Screen::Qr&&dashboard.network().provisioning)?plant::Screen::PortalUrl:
+            screen==plant::Screen::PortalUrl?plant::Screen::Face:plant::nextScreen(screen);
         refreshSoil(now, true);
+    }
+    if(buttonEvent==plant::ButtonEvent::SetupHold) {
+        sleepRequested=false;setupHeld=true;oled.showSetupPrompt();
+    }
+    if(buttonEvent==plant::ButtonEvent::ReleasedForSetup) {
+        sleepRequested=setupHeld=false;screen=plant::Screen::Qr;dashboard.requestSetup();refreshSoil(now,true);
     }
 #endif
     if (buttonEvent == plant::ButtonEvent::LongPress) {
         sleepRequested = true;
         plant::Measurement state;
         emit("veille_demande", state, "Appui long valide ; relacher PRG pour la veille");
-        oled.showSleepPrompt();
+        oled.showSleepPrompt(PLANT_DASHBOARD);
     }
     if (buttonEvent == plant::ButtonEvent::ReleasedForSleep) {
         sleepReleased = true;
@@ -166,7 +181,17 @@ void loop() {
         plant::SleepPower::enter();
         return;
     }
-    if (sleepRequested) { yield(); return; }
+    if (sleepRequested
+#if PLANT_DASHBOARD
+        || setupHeld
+#endif
+       ) {
+#if PLANT_DASHBOARD
+        soilRadio.service(now);
+        refreshSoil(now,false,false);
+#endif
+        yield(); return;
+    }
 #if PLANT_SOIL_LORA
     soilRadio.service(now);
     refreshSoil(now);

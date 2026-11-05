@@ -1,0 +1,85 @@
+Capture COM8, UTC=2026-11-03T15:05:21.136517+00:00, duree=30.0s
+
+[XIAO-SOIL-DIAG] v1 / USB / D6=P1.11 SDA / D7=P1.12 SCL
+[CONFIG] ADS1115 attendu 0x48, selection unique 0x48..0x4B, A0/GND, +/-4.096 V, 128 SPS.
+[INFO] D0 relachee ; radio non initialisee ; aucun pourcentage sans etalonnage.
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x48
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ADC] adresse_selectionnee=0x48
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x48
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ADC] adresse_selectionnee=0x48
+[MESURE] t_ms=71722 adresse=0x48 A0_brut=8474 A0_V=1.059250 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=30 mesures=30 erreurs=0
+[MESURE] t_ms=72738 adresse=0x48 A0_brut=8472 A0_V=1.059000 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=31 mesures=31 erreurs=0
+[MESURE] t_ms=73753 adresse=0x48 A0_brut=8471 A0_V=1.058875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=32 mesures=32 erreurs=0
+[MESURE] t_ms=74769 adresse=0x48 A0_brut=8472 A0_V=1.059000 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=33 mesures=33 erreurs=0
+[MESURE] t_ms=75785 adresse=0x48 A0_brut=8471 A0_V=1.058875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=34 mesures=34 erreurs=0
+[MESURE] t_ms=76800 adresse=0x48 A0_brut=8479 A0_V=1.059875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=35 mesures=35 erreurs=0
+[MESURE] t_ms=77816 adresse=0x48 A0_brut=8481 A0_V=1.060125 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=36 mesures=36 erreurs=0
+[MESURE] t_ms=78832 adresse=0x48 A0_brut=8480 A0_V=1.060000 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=37 mesures=37 erreurs=0
+[MESURE] t_ms=79847 adresse=0x48 A0_brut=8480 A0_V=1.060000 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=38 mesures=38 erreurs=0
+[MESURE] t_ms=80863 adresse=0x48 A0_brut=8480 A0_V=1.060000 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=39 mesures=39 erreurs=0
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x48
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ADC] adresse_selectionnee=0x48
+[MESURE] t_ms=81923 adresse=0x48 A0_brut=8483 A0_V=1.060375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=40 mesures=40 erreurs=0
+[MESURE] t_ms=82939 adresse=0x48 A0_brut=8483 A0_V=1.060375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=41 mesures=41 erreurs=0
+[MESURE] t_ms=83955 adresse=0x48 A0_brut=8483 A0_V=1.060375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=42 mesures=42 erreurs=0
+[MESURE] t_ms=84970 adresse=0x48 A0_brut=8482 A0_V=1.060250 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=43 mesures=43 erreurs=0
+[MESURE] t_ms=85986 adresse=0x48 A0_brut=8483 A0_V=1.060375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=44 mesures=44 erreurs=0
+[MESURE] t_ms=87000 adresse=0x48 A0_brut=8481 A0_V=1.060125 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=45 mesures=45 erreurs=0
+[MESURE] t_ms=88016 adresse=0x48 A0_brut=8483 A0_V=1.060375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=46 mesures=46 erreurs=0
+[MESURE] t_ms=89031 adresse=0x48 A0_brut=8484 A0_V=1.060500 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=47 mesures=47 erreurs=0
+[MESURE] t_ms=90046 adresse=0x48 A0_brut=8482 A0_V=1.060250 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=48 mesures=48 erreurs=0
+[MESURE] t_ms=91061 adresse=0x48 A0_brut=8482 A0_V=1.060250 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=49 mesures=49 erreurs=0
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x48
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ADC] adresse_selectionnee=0x48
+[MESURE] t_ms=92122 adresse=0x48 A0_brut=8486 A0_V=1.060750 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=50 mesures=50 erreurs=0
+[MESURE] t_ms=93137 adresse=0x48 A0_brut=8483 A0_V=1.060375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=51 mesures=51 erreurs=0
+[MESURE] t_ms=94153 adresse=0x48 A0_brut=8484 A0_V=1.060500 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=52 mesures=52 erreurs=0
+[MESURE] t_ms=95168 adresse=0x48 A0_brut=8484 A0_V=1.060500 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=53 mesures=53 erreurs=0
+[MESURE] t_ms=96184 adresse=0x48 A0_brut=8485 A0_V=1.060625 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=54 mesures=54 erreurs=0
+[MESURE] t_ms=97200 adresse=0x48 A0_brut=8484 A0_V=1.060500 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=55 mesures=55 erreurs=0
+[MESURE] t_ms=98214 adresse=0x48 A0_brut=8485 A0_V=1.060625 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=56 mesures=56 erreurs=0
+[MESURE] t_ms=99229 adresse=0x48 A0_brut=8485 A0_V=1.060625 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=57 mesures=57 erreurs=0
+[MESURE] t_ms=100244 adresse=0x48 A0_brut=8486 A0_V=1.060750 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=58 mesures=58 erreurs=0
+[MESURE] t_ms=101258 adresse=0x48 A0_brut=8483 A0_V=1.060375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=59 mesures=59 erreurs=0

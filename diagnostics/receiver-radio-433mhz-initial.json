@@ -1,0 +1,20 @@
+{
+  "configuration_ok": true,
+  "radio_ready": true,
+  "version": 18,
+  "op_mode": 142,
+  "modem_config_1": 66,
+  "modem_config_2": 116,
+  "sync_word": 18,
+  "frequency_word": 7109345,
+  "nominal_frequency_hz": 433919982,
+  "expected_frequency_hz": 433920000,
+  "irq_flags": 0,
+  "modem_status": 36,
+  "current_rssi_dbm": -127,
+  "valid_header_count": 1,
+  "hardware_packet_count": 0,
+  "iq_register": 39,
+  "iq_register_2": 29,
+  "received_packets": 1
+}

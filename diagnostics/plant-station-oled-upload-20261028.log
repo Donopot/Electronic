@@ -1,0 +1,91 @@
+Processing heltec_v3_text (platform: espressif32@6.12.0; board: heltec_wifi_lora_32_V3; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/heltec_wifi_lora_32_V3.html
+PLATFORM: Espressif 32 (6.12.0) > Heltec WiFi LoRa 32 (V3)
+HARDWARE: ESP32S3 240MHz, 320KB RAM, 8MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-builtin, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 2.40900.250804 (4.9.0) 
+ - tool-mkfatfs @ 2.0.1 
+ - tool-mklittlefs @ 1.203.210628 (2.3) 
+ - tool-mkspiffs @ 2.230.0 (2.30) 
+ - toolchain-riscv32-esp @ 8.4.0+2021r2-patch5 
+ - toolchain-xtensa-esp32s3 @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 38 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- SparkFun VEML7700 Arduino Library @ 2.0.1
+|-- SparkFun Toolkit @ 1.2.1
+|-- Adafruit SSD1306 @ 2.5.13
+|-- Adafruit GFX Library @ 1.13.0
+|-- Adafruit BusIO @ 1.17.4
+|-- Wire @ 2.0.0
+Building in release mode
+Retrieving maximum program size .pio\build\heltec_v3_text\firmware.elf
+Checking size .pio\build\heltec_v3_text\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]   5.8% (used 18984 bytes from 327680 bytes)
+Flash: [=         ]   8.9% (used 297101 bytes from 3342336 bytes)
+Configuring upload protocol...
+AVAILABLE: cmsis-dap, esp-bridge, esp-builtin, esp-prog, espota, esptool, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa
+CURRENT: upload_protocol = esptool
+Looking for upload port...
+Using manually specified: COM5
+Uploading .pio\build\heltec_v3_text\firmware.bin
+esptool.py v4.9.0
+Serial port COM5
+Connecting....
+Chip is ESP32-S3 (QFN56) (revision v0.2)
+Features: WiFi, BLE, Embedded Flash 8MB (GD)
+Crystal is 40MHz
+MAC: 3c:0f:02:eb:f5:28
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00000000 to 0x00003fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Flash will be erased from 0x0000e000 to 0x0000ffff...
+Flash will be erased from 0x00010000 to 0x00058fff...
+SHA digest in image updated
+Compressed 15104 bytes to 10430...
+Writing at 0x00000000... (100 %)
+Wrote 15104 bytes (10430 compressed) at 0x00000000 in 0.4 seconds (effective 291.7 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 146...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (146 compressed) at 0x00008000 in 0.0 seconds (effective 505.8 kbit/s)...
+Hash of data verified.
+Compressed 8192 bytes to 47...
+Writing at 0x0000e000... (100 %)
+Wrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 761.6 kbit/s)...
+Hash of data verified.
+Compressed 297472 bytes to 167774...
+Writing at 0x00010000... (9 %)
+Writing at 0x0001ab88... (18 %)
+Writing at 0x00023e10... (27 %)
+Writing at 0x000297cb... (36 %)
+Writing at 0x0002ed59... (45 %)
+Writing at 0x000341bd... (54 %)
+Writing at 0x00039b57... (63 %)
+Writing at 0x00042455... (72 %)
+Writing at 0x0004c27f... (81 %)
+Writing at 0x000516dc... (90 %)
+Writing at 0x0005719c... (100 %)
+Wrote 297472 bytes (167774 compressed) at 0x00010000 in 3.9 seconds (effective 608.6 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
+========================= [SUCCESS] Took 12.02 seconds =========================
+
+Environment     Status    Duration
+--------------  --------  ------------
+heltec_v3_text  SUCCESS   00:00:12.025
+========================= 1 succeeded in 00:00:12.025 =========================

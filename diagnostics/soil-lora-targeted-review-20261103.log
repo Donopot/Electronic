@@ -1,0 +1,32 @@
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src\sfTk\sfDevVEML7700.cpp:25:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src\sfTk/sfDevVEML7700.h:30:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkII2C.h:16:
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  445 |         uint16_t data16[length];
+      |                         ^~~~~~
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: note: function parameter 'length' with unknown value cannot be used in a constant expression
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:438:85: note: declared here
+  438 |     virtual sfTkError_t writeRegister(uint16_t devReg, const uint16_t *data, size_t length)
+      |                                                                                     ^
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\src\main.cpp:5:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\src/sensors/StrictWireTransport.h:4:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src/sfTk/sfDevVEML7700.h:30:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkII2C.h:16:
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  445 |         uint16_t data16[length];
+      |                         ^~~~~~
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: note: function parameter 'length' with unknown value cannot be used in a constant expression
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:438:85: note: declared here
+  438 |     virtual sfTkError_t writeRegister(uint16_t devReg, const uint16_t *data, size_t length)
+      |                                                                                     ^
+1 warning generated.
+1 warning generated.
+PASS vrais radio/main/OLED : RX, age inchange au rejet, peremption, defaut sans valeur, lux concurrents, reprise, PRG et sommeil/reset de secours
+PASS vrais radio/main/OLED : RX, age inchange au rejet, peremption, defaut sans valeur, lux concurrents, reprise, PRG et sommeil/reset de secours
+PASS vrais radio/main/OLED : RX, age inchange au rejet, peremption, defaut sans valeur, lux concurrents, reprise, PRG et sommeil/reset de secours
+PASS initialisation differee : lux/PRG apres 14s, boucle sans attente, sommeil attend le proprietaire SPI
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites

@@ -1,0 +1,23 @@
+Heltec V3 RX diagnostic, COM5, 115200 bauds, UTC=2026-10-26T15:06:33.3890179Z
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x1 (POWERON),boot:0x29 (SPI_FAST_FLASH_BOOT)
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce3808,len:0x4bc
+load:0x403c9700,len:0xbd8
+load:0x403cc700,len:0x2a0c
+entry 0x403c98d0
+
+PLANT STATION - HELTEC V3 - DIAGNOSTIC RX v1
+[CARTE] ESP32-S3 revision=0 flash=8388608 octets
+[OK] OLED detecte a 0x3C et initialise.
+[RADIO] Initialisation SX1262, TCXO 1.8 V, SPI 2 MHz...
+[OK] SX1262 initialise ; reception continue active.
+[CONFIG] 868100000 Hz / BW125 kHz / SF7 / CR4/5 / sync 0x12 / CRC / preambule 8
+[INFO] Aucune emission. Sans emetteur compatible, zero paquet est normal.
+[ETAT] uptime_s=5 radio_rx=OK paquets=0 crc_erreurs=0 code=0
+[ETAT] uptime_s=10 radio_rx=OK paquets=0 crc_erreurs=0 code=0
+[ETAT] uptime_s=15 radio_rx=OK paquets=0 crc_erreurs=0 code=0
+[ETAT] uptime_s=20 radio_rx=OK paquets=0 crc_erreurs=0 code=0
+

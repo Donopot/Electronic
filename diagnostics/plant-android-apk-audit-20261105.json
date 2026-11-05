@@ -1,0 +1,73 @@
+{
+  "apk": "android\\PlantStation\\app\\build\\outputs\\apk\\release\\app-release.apk",
+  "bytes": 23165724,
+  "sha256": "28b310f4fba01347d8ed290031785819e7a0cb9cebf39e28ed727edfbfbbbdb3",
+  "application_id": "local.plantstation.kit",
+  "min_sdk": 26,
+  "signature_verified": true,
+  "certificate_sha256": "3ff44e455caaf5a2e4a24d50a33dd150f9ca2d919567ff29f0e6e81a32c337ce",
+  "android_log_invocations": 16,
+  "espressif_log_invocations": 0,
+  "sample": [
+    {
+      "dex": "classes.dex",
+      "class": "Class descriptor  : 'LB/c0;'",
+      "instruction": "094774: 7110 fd0f 0300                         |0046: invoke-static {v3}, Landroid/util/Log;.getStackTraceString:(Ljava/lang/Throwable;)Ljava/lang/String; // method@0ffd"
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Class descriptor  : 'LN1/c;'",
+      "instruction": "0b1e10: 7120 fe0f 2100                         |0024: invoke-static {v1, v2}, Landroid/util/Log;.isLoggable:(Ljava/lang/String;I)Z // method@0ffe"
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Class descriptor  : 'LV1/a;'",
+      "instruction": "0c31ba: 7120 fe0f 3000                         |0055: invoke-static {v0, v3}, Landroid/util/Log;.isLoggable:(Ljava/lang/String;I)Z // method@0ffe"
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Class descriptor  : 'LV1/c;'",
+      "instruction": "0c34aa: 7120 fe0f 1000                         |0005: invoke-static {v0, v1}, Landroid/util/Log;.isLoggable:(Ljava/lang/String;I)Z // method@0ffe"
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Class descriptor  : 'LX0/g;'",
+      "instruction": "0c6532: 7120 fe0f 7600                         |0059: invoke-static {v6, v7}, Landroid/util/Log;.isLoggable:(Ljava/lang/String;I)Z // method@0ffe"
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Class descriptor  : 'LX0/g;'",
+      "instruction": "0c6570: 7120 fe0f 7600                         |0078: invoke-static {v6, v7}, Landroid/util/Log;.isLoggable:(Ljava/lang/String;I)Z // method@0ffe"
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Class descriptor  : 'LX0/g;'",
+      "instruction": "0c65ac: 7120 fe0f 6400                         |0096: invoke-static {v4, v6}, Landroid/util/Log;.isLoggable:(Ljava/lang/String;I)Z // method@0ffe"
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Class descriptor  : 'LX0/g;'",
+      "instruction": "0c65d8: 7120 fe0f 2100                         |00ac: invoke-static {v1, v2}, Landroid/util/Log;.isLoggable:(Ljava/lang/String;I)Z // method@0ffe"
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Class descriptor  : 'Landroidx/camera/core/ImageProcessingUtil;'",
+      "instruction": "0dc8a6: 7120 fe0f 1000                         |0091: invoke-static {v0, v1}, Landroid/util/Log;.isLoggable:(Ljava/lang/String;I)Z // method@0ffe"
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Class descriptor  : 'Landroidx/fragment/app/D;'",
+      "instruction": "0e7c58: 7120 fe0f 1000                         |0002: invoke-static {v0, v1}, Landroid/util/Log;.isLoggable:(Ljava/lang/String;I)Z // method@0ffe"
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Class descriptor  : 'Lcom/google/android/gms/vision/clearcut/VisionClearcutLogger;'",
+      "instruction": "1425d6: 7120 fe0f 0100                         |0099: invoke-static {v1, v0}, Landroid/util/Log;.isLoggable:(Ljava/lang/String;I)Z // method@0ffe"
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Class descriptor  : 'Lg0/L;'",
+      "instruction": "1bc386: 7120 fe0f 1000                         |0003: invoke-static {v0, v1}, Landroid/util/Log;.isLoggable:(Ljava/lang/String;I)Z // method@0ffe"
+    }
+  ]
+}

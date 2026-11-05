@@ -1,0 +1,132 @@
+{
+  "utc": "2026-11-04T17:29:47.317143+00:00",
+  "baseline_commit": "417908321bd610b6f82d0fe941eb1805d64cd5ca",
+  "source_state": "working tree before installation",
+  "checks": {
+    "builds": {
+      "command": [
+        "C:/Users/Anwender/AppData/Local/Programs/Python/Python312/python.exe",
+        "-m",
+        "platformio",
+        "run",
+        "-d",
+        "firmware/PlantStationVeml7700",
+        "-e",
+        "heltec_v3_text",
+        "-e",
+        "heltec_v3_json",
+        "-e",
+        "heltec_v3_soil_lora",
+        "-e",
+        "heltec_v3_plant_dashboard"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-setup-final-builds-20261104.log",
+      "sha256": "504dd8f62e0a3e4b8b7317f826203a7cab5ee97d0c0c33eddbbf80d2555a2b18"
+    },
+    "dashboard": {
+      "command": [
+        "C:/Users/Anwender/AppData/Local/Programs/Python/Python312/python.exe",
+        "tools/run_plant_dashboard_tests.py"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-setup-final-dashboard-20261104.log",
+      "sha256": "00e1871514fca1d4b5e8f8bf03d7124c2eb251d07d6c89c22de7d3cba05750c6"
+    },
+    "soil": {
+      "command": [
+        "C:/Users/Anwender/AppData/Local/Programs/Python/Python312/python.exe",
+        "tools/run_soil_lora_host_tests.py"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-setup-final-soil-20261104.log",
+      "sha256": "9b1a27a9cf1429ed8ec9269601e384b97d1a3c1aacd43e42cc6d173d364cf824"
+    },
+    "lux": {
+      "command": [
+        "C:/Users/Anwender/AppData/Local/Programs/Python/Python312/python.exe",
+        "firmware/PlantStationVeml7700/test/run_host_tests.py"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-setup-final-lux-20261104.log",
+      "sha256": "84dfbeead52ee767a8f80890f2ec26c6411954f05ec9d88ad1a39606fafdb857"
+    },
+    "browser-dashboard": {
+      "command": [
+        "node",
+        "tests/plant_dashboard_browser_test.cjs"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-setup-final-browser-dashboard-20261104.log",
+      "sha256": "3b28e806cc180c5c195d72657b65bac4023280f3ef6aac9071cb7ff5d3b9f676"
+    },
+    "browser-setup": {
+      "command": [
+        "node",
+        "tests/plant_setup_browser_test.cjs"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-setup-final-browser-setup-20261104.log",
+      "sha256": "60139c6ffeb286a69fbe0589b9ef185cdfb9374cd0f88f57aec2b2dd1d205771"
+    }
+  },
+  "source_sha256": {
+    "firmware/PlantStationVeml7700/include/config.h": "f890ef40b477f25d1ae46f2de52977ff2f7c8cd515f3fb83debeb6b8e13e1fc0",
+    "firmware/PlantStationVeml7700/platformio.ini": "d554f362b8a50d711b2fce225b6679c75314a1eeed662c59e88204c34cc5146e",
+    "firmware/PlantStationVeml7700/src/display/OledDisplay.cpp": "9729643c24c96cb72d9cdc8acae2ebd2812e8dcc6f51cf6dbc81ffc8c833532c",
+    "firmware/PlantStationVeml7700/src/display/OledDisplay.h": "19fe242b6410ffef05163dd4bd9f546d35d23bfd64ee75d46f2fef4ebae0c388",
+    "firmware/PlantStationVeml7700/src/main.cpp": "512ca2624d694257ab7f82fc0d3429f7b9450cface5cbf5c7a5efbc7e7fbd2c2",
+    "firmware/PlantStationVeml7700/src/power/PrgButton.h": "65b6cb86158b85ecbcbe0656de6649948530903bbea280087b8027c6a9a11ca3",
+    "firmware/PlantStationVeml7700/src/storage/PlantHistory.cpp": "d39a49fe07c44fd698cb5529fed92fd2fa28c299849e94492bf7d69c2427bbdf",
+    "firmware/PlantStationVeml7700/src/storage/PlantHistory.h": "29b7001a86d082cd6cac26f274fbc1118b5df264d3e6cedc30100052b32f6b1b",
+    "firmware/PlantStationVeml7700/src/ui/PlantView.cpp": "e61ad1c06596cd225df7279040152546f52e9f72d7d1d05c808f63bf12e1240d",
+    "firmware/PlantStationVeml7700/src/ui/PlantView.h": "a7a6144e2cdba2a00c1bdb43d506c1c333a5897a4c3f2f56acb9743f6eb0e526",
+    "firmware/PlantStationVeml7700/src/web/CaptiveDns.h": "05b17824c44c85a5542d0f2d045884410de80a0305ae6fd0507c01e54b18c328",
+    "firmware/PlantStationVeml7700/src/web/NonBlockingHttp.h": "0f82a5cae3e0523e159084ec4435e2a989bfe408b1ac52e7d1b60b1731a079a4",
+    "firmware/PlantStationVeml7700/src/web/PlantDashboard.cpp": "e9b0984200f5b2dcb3899d7293e4169049ab50c2ae3bc7f6272a29dac6d2bd4b",
+    "firmware/PlantStationVeml7700/src/web/PlantDashboard.h": "1e81485bb68dadd7c66a2ff078c91ba580a0e48f9e7a14e4ee5da4fa7c7eda92",
+    "firmware/PlantStationVeml7700/src/web/PlantDashboardApi.h": "5b5914a1efd5f669ea5da318303725436c52e906d1dcdf8c1f699e4788701510",
+    "firmware/PlantStationVeml7700/src/web/PlantDashboardPage.h": "8f65b8094f7d05667bf45a9502dd1b1ed147380d689e672d5323e3f757544ed3",
+    "firmware/PlantStationVeml7700/src/web/PlantSetupPage.h": "94630758fa1ccbe8f8b2085968194b555bd5fb20f45b439b525dc7dfc1fd06f3",
+    "firmware/PlantStationVeml7700/test/dashboard-support/Arduino.h": "3f1ad5f2235fd6290caf276e94a5bfcd42bb01afa0a735957ee6261183d7bd64",
+    "firmware/PlantStationVeml7700/test/dashboard-support/DashboardSdk.h": "9eed6e50dbfb7ddd5be381ae84da2f561e734a589ebd102fd277061afb28aef0",
+    "firmware/PlantStationVeml7700/test/dashboard-support/ESPmDNS.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/Preferences.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/WiFi.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/WiFiClient.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/WiFiUdp.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/esp_partition.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/esp_wifi.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/freertos/FreeRTOS.h": "da88c43a8e3b9924533284c7f37c908a64be91e7eb3d1c55a5affcc7a1b56e58",
+    "firmware/PlantStationVeml7700/test/dashboard-support/freertos/queue.h": "f2f85c6f4b87b1f4ebd69c58af2e08dcf046cb0eca3b5dee9a3a0782362bd20a",
+    "firmware/PlantStationVeml7700/test/dashboard-support/freertos/task.h": "e72a3bd02b036a6dccc0c0b8c0c0e169a0c08e4eb9172e0bd84333458bfc8571",
+    "firmware/PlantStationVeml7700/test/support/Adafruit_SSD1306.h": "6b6e75edabe78eb1b68b7bdb87ed8260a13ad2716080ec6b1c77698c9e068a1d",
+    "firmware/PlantStationVeml7700/test/support/Arduino.h": "f7e080005312822968b15f737de51080ec69c16ef64891a71cd82f3f65ddc6a9",
+    "firmware/PlantStationVeml7700/test/support/lwip/sockets.h": "15610d072dbdbb1686c5ce13801b632d6264126d16baddabef705a7a47d2a14a",
+    "firmware/PlantStationVeml7700/test/support/qrcode.h": "6401590154c047f1f7accff1947c283ea9363b546b45688852a8d1127bb596e7",
+    "firmware/PlantStationVeml7700/test/test_dashboard.cpp": "eb1eb4bce6697eb0e3cc813098f0d8f74363fa77474e2353bf0b2b3a2e1bef08",
+    "firmware/PlantStationVeml7700/test/test_dashboard_orchestration.cpp": "ecebc99ed6fad823a02bb4928931000841df9ee88d761154e6bdff5afb753c19",
+    "firmware/PlantStationVeml7700/test/test_dashboard_worker.cpp": "e1b30fe0fad7985f241acda630a51954e78c551d33de2b7bec297139e1508271",
+    "firmware/PlantStationVeml7700/test/test_http_transport.cpp": "468721e0d0ba1d399abdeece9635420f34fd6705c0ad24d6a12ad02a14ef4992",
+    "tests/plant_dashboard_browser_test.cjs": "8d4fa2354d9083f1b516a926eeb11af3f24867991fcc91b37953b180ac618543",
+    "tests/plant_setup_browser_test.cjs": "0c5963549a0882681b9bbf8aee7de05c08432c5978a5b6ff92a21673db8a9e6d",
+    "tools/run_plant_dashboard_tests.py": "fcec858bddf906affc1aa086e60893c7581634becea32b20298b0844f0596bb4"
+  },
+  "application": {
+    "bytes": 881504,
+    "sha256": "4c2277e00206dda021399c745a636c615170c1bb2ba1e693b123bccbe2bd6a5d"
+  },
+  "all_passed": true,
+  "review_confirmations": {
+    "blind": "all 7 retained initial findings resolved",
+    "edge": "all 3 initial findings resolved",
+    "verification": "both initial gaps resolved; worker executables PASS"
+  },
+  "hardware_setup_verified": false
+}

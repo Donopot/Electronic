@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-03",
+  "port": "COM8",
+  "address": "0x49",
+  "stages": [
+    {
+      "condition": "terre humide initiale",
+      "confirmation": "utilisateur",
+      "file": "diagnostics\\humidite-reference-20261103-154447.json",
+      "n": 20,
+      "duration_s": 20.18699999999808,
+      "median_V": 1.906625,
+      "mean_V": 1.906725,
+      "min_V": 1.90625,
+      "max_V": 1.90775,
+      "tail_median_V": 1.906625,
+      "last5_median_V": 1.9065,
+      "errors": 0,
+      "coverage_ok": true
+    },
+    {
+      "condition": "air",
+      "confirmation": "utilisateur",
+      "file": "diagnostics\\humidite-air-20261103-154549.json",
+      "n": 29,
+      "duration_s": 30.18699999999808,
+      "median_V": 1.91,
+      "mean_V": 1.9096637931034484,
+      "min_V": 1.9085,
+      "max_V": 1.911,
+      "tail_median_V": 1.910125,
+      "last5_median_V": 1.910375,
+      "errors": 0,
+      "coverage_ok": true
+    },
+    {
+      "condition": "retour terre humide",
+      "confirmation": "utilisateur",
+      "file": "diagnostics\\humidite-retour-humide-20261103-154747.json",
+      "n": 30,
+      "duration_s": 30.14100000000326,
+      "median_V": 1.9149375000000002,
+      "mean_V": 1.9138416666666667,
+      "min_V": 1.909,
+      "max_V": 1.917125,
+      "tail_median_V": 1.9155,
+      "last5_median_V": 1.9155,
+      "errors": 0,
+      "coverage_ok": true
+    }
+  ],
+  "total_samples": 79,
+  "total_errors": 0,
+  "air_minus_initial_wet_V": 0.003374999999999906,
+  "return_wet_minus_initial_wet_V": 0.008312500000000167,
+  "humidity_function_validated": false,
+  "conclusion": "Lecture ADC fonctionnelle, mais absence de separation reproductible des conditions dans cet essai. Aucun etalonnage ni pourcentage valide."
+}

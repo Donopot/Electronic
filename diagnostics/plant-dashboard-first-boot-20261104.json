@@ -1,0 +1,8 @@
+{
+  "utc": "2026-11-04T15:58:55.158931+00:00",
+  "port": "COM5",
+  "valid_lux_count": 15,
+  "fatal_errors": [],
+  "requested_screen": "QR/setup after two short PRG pulses",
+  "public_log": "diagnostics/plant-dashboard-first-boot-20261104.log"
+}

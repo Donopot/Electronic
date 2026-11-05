@@ -1,0 +1,78 @@
+Processing xiao_soil_diagnostic (platform: https://github.com/Seeed-Studio/platform-seeedboards.git#a6fd41debbbcda13b5340fff50c9092ed3289194; board: seeed-xiao-afruitnrf52-nrf52840; framework: arduino)
+--------------------------------------------------------------------------------
+Tool Manager: Installing platformio/tool-scons @ ~4.41101.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-scons@4.41101.0 has been installed!
+Tool Manager: Removing tool-scons @ 4.40801.0
+Tool Manager: tool-scons@4.40801.0 has been removed!
+Verbose mode can be enabled via `-v, --verbose` option
+board id is nrf,will call board_build/nrf/nrf_build.py
+CONFIGURATION: https://docs.platformio.org/page/boards/SeeedStudio/seeed-xiao-afruitnrf52-nrf52840.html
+PLATFORM: Seeed Studio Xiao Series (1.1.1+sha.a6fd41d) > Seeed Studio XIAO nRF52840
+HARDWARE: NRF52840 64MHz, 232KB RAM, 792KB Flash
+DEBUG: Current (blackmagic) External (blackmagic, cmsis-dap, jlink)
+PACKAGES: 
+ - framework-arduinoadafruitnrf52 @ 1.10101.0 (1.1.1) 
+ - framework-cmsis @ 2.50700.210515 (5.7.0) 
+ - tool-adafruit-nrfutil @ 1.503.0 (5.3) 
+ - tool-esp_install @ 5.3.4 
+ - tool-sreccat @ 1.164.0 (1.64) 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+board id is 52840,will call ../board_build/nrf/nrf_arduino.py
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 13 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- Adafruit TinyUSB Library
+|-- SPI @ 1.0
+Building in release mode
+Compiling .pio\build\xiao_soil_diagnostic\src\main.cpp.o
+Checking size .pio\build\xiao_soil_diagnostic\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [          ]   3.0% (used 7148 bytes from 237568 bytes)
+Flash: [=         ]   6.9% (used 55684 bytes from 811008 bytes)
+========================= [SUCCESS] Took 5.50 seconds =========================
+
+Processing xiao_soil_lora_tx (platform: https://github.com/Seeed-Studio/platform-seeedboards.git#a6fd41debbbcda13b5340fff50c9092ed3289194; board: seeed-xiao-afruitnrf52-nrf52840; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+board id is nrf,will call board_build/nrf/nrf_build.py
+CONFIGURATION: https://docs.platformio.org/page/boards/SeeedStudio/seeed-xiao-afruitnrf52-nrf52840.html
+PLATFORM: Seeed Studio Xiao Series (1.1.1+sha.a6fd41d) > Seeed Studio XIAO nRF52840
+HARDWARE: NRF52840 64MHz, 232KB RAM, 792KB Flash
+DEBUG: Current (blackmagic) External (blackmagic, cmsis-dap, jlink)
+PACKAGES: 
+ - framework-arduinoadafruitnrf52 @ 1.10101.0 (1.1.1) 
+ - framework-cmsis @ 2.50700.210515 (5.7.0) 
+ - tool-adafruit-nrfutil @ 1.503.0 (5.3) 
+ - tool-esp_install @ 5.3.4 
+ - tool-sreccat @ 1.164.0 (1.64) 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+board id is 52840,will call ../board_build/nrf/nrf_arduino.py
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 16 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- RadioLib @ 7.8.1
+|-- Adafruit TinyUSB Library
+|-- PlantSoilProtocol @ 1.0.0
+|-- SPI @ 1.0
+Building in release mode
+Compiling .pio\build\xiao_soil_lora_tx\src\main.cpp.o
+In file included from src\main.cpp:8:0:
+.pio\libdeps\xiao_soil_lora_tx\RadioLib\src/RadioLib.h:69:4: warning: #warning "Use of USB CDC for debug output is not recommended (might stop on first sleep). Use hardware UART instead." [-Wcpp]
+   #warning "Use of USB CDC for debug output is not recommended (might stop on first sleep). Use hardware UART instead."
+    ^~~~~~~
+Checking size .pio\build\xiao_soil_lora_tx\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [          ]   3.4% (used 8176 bytes from 237568 bytes)
+Flash: [=         ]  11.0% (used 89080 bytes from 811008 bytes)
+========================= [SUCCESS] Took 3.96 seconds =========================
+
+Environment           Status    Duration
+--------------------  --------  ------------
+xiao_soil_diagnostic  SUCCESS   00:00:05.497
+xiao_soil_lora_tx     SUCCESS   00:00:03.963
+========================= 2 succeeded in 00:00:09.460 =========================

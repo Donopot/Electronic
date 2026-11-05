@@ -1,0 +1,23 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T13:02:12.747859+00:00
+[OK] t=86238 ms | Temperature : 24.8 °C | Pression : 1006.88 hPa
+[OK] t=88238 ms | Temperature : 24.8 °C | Pression : 1006.99 hPa
+[OK] t=90238 ms | Temperature : 24.8 °C | Pression : 1006.96 hPa
+[OK] t=92238 ms | Temperature : 24.8 °C | Pression : 1006.93 hPa
+[OK] t=94238 ms | Temperature : 24.7 °C | Pression : 1006.97 hPa
+[OK] t=96238 ms | Temperature : 24.7 °C | Pression : 1006.96 hPa
+[LCD] Test cible a 0x3F : SDA=GPIO3, SCL=GPIO2.
+[ERREUR] LCD 0x3F : aucune reponse, NACK (code 2).
+[INFO] LCD indisponible ; nouvelle tentative dans 10 s. Lecture BMP180 maintenue.
+[OK] t=98238 ms | Temperature : 24.7 °C | Pression : 1006.98 hPa
+[OK] t=100238 ms | Temperature : 24.7 °C | Pression : 1006.96 hPa
+[OK] t=102238 ms | Temperature : 24.7 °C | Pression : 1006.92 hPa
+[OK] t=104238 ms | Temperature : 24.7 °C | Pression : 1006.97 hPa
+[OK] t=106238 ms | Temperature : 24.6 °C | Pression : 1006.91 hPa
+[OK] t=108238 ms | Temperature : 24.6 °C | Pression : 1006.88 hPa
+[LCD] Test cible a 0x3F : SDA=GPIO3, SCL=GPIO2.
+[ERREUR] LCD 0x3F : aucune reponse, NACK (code 2).
+[INFO] LCD indisponible ; nouvelle tentative dans 10 s. Lecture BMP180 maintenue.
+[OK] t=110238 ms | Temperature : 24.6 °C | Pression : 1006.88 hPa
+[OK] t=112238 ms | Temperature : 24.6 °C | Pression : 1006.98 hPa
+[OK] t=114238 ms | Temperature : 24.6 °C | Pression : 1006.94 hPa
+BILAN : 15 mesures, 2 erreurs, 30.1 s de capture. Temperature=24.6..24.8 C; pression=1006.88..1006.99 hPa. Intervalles=2000..2000 ms.

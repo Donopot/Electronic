@@ -1,0 +1,62 @@
+{
+  "oled_initialized": true,
+  "readings": [
+    {
+      "uptime_ms": 1397,
+      "lux": 77.952
+    },
+    {
+      "uptime_ms": 2397,
+      "lux": 80.64
+    },
+    {
+      "uptime_ms": 3397,
+      "lux": 77.4144
+    },
+    {
+      "uptime_ms": 4397,
+      "lux": 77.4144
+    },
+    {
+      "uptime_ms": 5397,
+      "lux": 79.5648
+    },
+    {
+      "uptime_ms": 6397,
+      "lux": 77.4144
+    },
+    {
+      "uptime_ms": 7397,
+      "lux": 76.3392
+    },
+    {
+      "uptime_ms": 8397,
+      "lux": 77.952
+    },
+    {
+      "uptime_ms": 9397,
+      "lux": 78.4896
+    },
+    {
+      "uptime_ms": 10397,
+      "lux": 56.9856
+    },
+    {
+      "uptime_ms": 11397,
+      "lux": 409.1136
+    },
+    {
+      "uptime_ms": 12397,
+      "lux": 504.8064
+    },
+    {
+      "uptime_ms": 13397,
+      "lux": 496.7424
+    },
+    {
+      "uptime_ms": 14397,
+      "lux": 439.7568
+    }
+  ],
+  "errors": []
+}

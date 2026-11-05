@@ -1,0 +1,31 @@
+{
+  "parent_verification": "diagnostics/plant-android-parent-verification-20261105.json",
+  "apk": {
+    "path": "android/PlantStation/app/build/outputs/apk/release/app-release.apk",
+    "bytes": 23165724,
+    "sha256": "dd84f14f44295b6b8ee2b64b1312c46a925b2f6062076342f27e06fddf7276bc"
+  },
+  "firmware": {
+    "path": "firmware/PlantStationVeml7700/.pio/build/heltec_v3_plant_dashboard/firmware.bin",
+    "bytes": 1451296,
+    "sha256": "980f3b2d4d3d08be7863876da97b24360fa0e8da8f6ccaf6c76ec754f1a64c77"
+  },
+  "android_tests": [
+    {
+      "name": "local.plantstation.kit.MainActivityTest",
+      "tests": "15",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "local.plantstation.kit.SetupContractTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "review": "All retained findings resolved and independently confirmed",
+  "physical_phone_test": "pending"
+}

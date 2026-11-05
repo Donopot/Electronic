@@ -25,6 +25,8 @@ public:
     explicit PlantHistory(HistoryFlash& flash) : flash_(flash) {}
     bool begin();
     bool append(const HistoryRecord& value);
+    // Anchor records share the CRC journal. A date is exposed only after this succeeds.
+    bool anchor(uint32_t boot, uint64_t uptimeMs, uint64_t utcMs);
     // Cursor is a physical monotonic record number. Requests may scan bounded flash,
     // and are limited to 96 returned records; interrupted writes remain gaps.
     size_t page(uint8_t node, uint64_t after, uint64_t nowUtc, uint64_t periodMs,
@@ -39,6 +41,10 @@ private:
     bool startSector(uint32_t generation);
     bool sectorGeneration(size_t sector, uint32_t& generation);
     bool decode(const uint8_t* bytes, HistoryRecord& value) const;
+    uint64_t resolveUtc(const HistoryRecord& value);
+    void rememberAnchor(const HistoryRecord& value);
+    HistoryRecord anchors_[64];
+    size_t anchorCount_ = 0, anchorNext_ = 0;
     HistoryFlash& flash_;
     State state_ = State::IoError;
     uint32_t generation_ = 0, corrupt_ = 0;

@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-03",
+  "conditions_confirmed_by_user": true,
+  "port": "COM8",
+  "address": "0x48",
+  "stages": [
+    {
+      "condition": "air",
+      "source": "diagnostics\\humidite-air-apres-controle-gnd-20261103-160424.json",
+      "sample_count": 29,
+      "median_V": 2.695625,
+      "median_raw": 21565,
+      "min_V": 2.693625,
+      "max_V": 2.701375,
+      "errors": 0,
+      "coverage_ok": true,
+      "addresses": [
+        "0x48"
+      ]
+    },
+    {
+      "condition": "terre humide",
+      "source": "diagnostics\\humidite-humide-apres-controle-gnd-20261103-160521.json",
+      "sample_count": 30,
+      "median_V": 1.060375,
+      "median_raw": 8483.0,
+      "min_V": 1.058875,
+      "max_V": 1.06075,
+      "errors": 0,
+      "coverage_ok": true,
+      "addresses": [
+        "0x48"
+      ]
+    }
+  ],
+  "total_samples": 59,
+  "total_errors": 0,
+  "air_minus_wet_median_V": 1.63525,
+  "humidity_response_observed": true,
+  "calibrated_soil_moisture": false,
+  "conclusion": "Reponse nette entre air et terre humide observee apres echange sur les masses communes. Le nouveau scan acquitte 0x48. Nature exacte du recablage non documentee par photo. Aucun pourcentage calibre."
+}

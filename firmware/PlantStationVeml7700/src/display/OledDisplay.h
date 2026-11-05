@@ -25,7 +25,10 @@ public:
 #if PLANT_DASHBOARD
     void showDashboard(const PlantView& view, Screen screen, const DashboardNetwork& network);
 #endif
-    void showSleepPrompt();
+    void showSleepPrompt(bool setupChoice = false);
+#if PLANT_DASHBOARD
+    void showSetupPrompt();
+#endif
     void sleep();
 private:
     // Controleur 1 independant du VEML7700 sur Wire / controleur 0.
@@ -42,7 +45,10 @@ private:
 #if PLANT_DASHBOARD
     void showDashboard(const PlantView&, Screen, const DashboardNetwork&) {}
 #endif
-    void showSleepPrompt() {}
+    void showSleepPrompt(bool = false) {}
+#if PLANT_DASHBOARD
+    void showSetupPrompt() {}
+#endif
     void sleep() {}
 #endif
 };

@@ -1,0 +1,10 @@
+<resources>
+    <style name="PlantTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#355B43</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">#F4F0E5</item>
+        <item name="android:navigationBarColor">#F4F0E5</item>
+        <item name="android:windowBackground">#F4F0E5</item>
+    </style>
+</resources>

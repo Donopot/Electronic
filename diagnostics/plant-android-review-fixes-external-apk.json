@@ -1,0 +1,14 @@
+{
+  "apk": "C:\\Users\\Anwender\\AppData\\Local\\Temp\\plant-external-apk-6ko373sm\\PlantStation.apk",
+  "sha256": "28b310f4fba01347d8ed290031785819e7a0cb9cebf39e28ed727edfbfbbbdb3",
+  "bytes": 23165724,
+  "signature_verified": true,
+  "certificate_sha256": "3ff44e455caaf5a2e4a24d50a33dd150f9ca2d919567ff29f0e6e81a32c337ce",
+  "min_sdk": 26,
+  "target_sdk": 35,
+  "internet_permission": false,
+  "espressif_log_invocations": 0,
+  "espressif_stacktrace_invocations": 0,
+  "android_log_writes": 0,
+  "physical_android_test": "not performed by this audit"
+}

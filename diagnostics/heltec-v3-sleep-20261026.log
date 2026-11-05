@@ -1,0 +1,75 @@
+Heltec sleep test COM5, UTC=2026-10-26T15:24:00.309584+00:00
+
+[TEST] RTS : redemarrage, puis verification du diagnostic v2
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x1 (POWERON),boot:0x8 (SPI_FAST_FLASH_BOOT)
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce3808,len:0x4bc
+load:0x403c9700,len:0xbd8
+load:0x403cc700,len:0x2a0c
+entry 0x403c98d0
+
+PLANT STATION - HELTEC V3 - DIAGNOSTIC RX v2
+[BOUTONS] PRG 3 secondes puis relacher = veille ; RST = redemarrage.
+[CARTE] ESP32-S3 revision=0 flash=8388608 octets
+[OK] OLED detecte a 0x3C et initialise.
+[RADIO] Initialisation SX1262, TCXO 1.8 V, SPI 2 MHz...
+[OK] SX1262 initialise ; reception continue active.
+[CONFIG] 868100000 Hz / BW125 kHz / SF7 / CR4/5 / sync 0x12 / CRC / preambule 8
+[INFO] Aucune emission. Sans emetteur compatible, zero paquet est normal.
+[ETAT] uptime_s=5 radio_rx=OK paquets=0 crc_erreurs=0 code=0
+
+[TEST] DTR : appui court PRG 0,3 s, puis maintien de l'ecoute
+[PRG] Appui detecte.
+[ETAT] uptime_s=10 radio_rx=OK paquets=0 crc_erreurs=0 code=0
+
+[TEST] PASS : appui court sans mise en veille
+
+[TEST] DTR : PRG maintenu 3,4 s, puis relache
+[PRG] Appui detecte.
+[PRG] Appui long valide ; relacher PRG pour la veille.
+[VEILLE] Arret de la reception et extinction de l'ecran.
+[VEILLE] SX1262 en sommeil (code=0).
+[VEILLE] Entree en veille profonde ; RST pour redemarrer.
+
+[TEST] Observation 8 s : aucun journal ni redemarrage attendu
+
+[TEST] PASS : appui long, sommeil radio et silence apres entree en veille
+
+[TEST] RTS : equivalent RST pour reprendre apres veille
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x1 (POWERON),boot:0x29 (SPI_FAST_FLASH_BOOT)
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce3808,len:0x4bc
+load:0x403c9700,len:0xbd8
+load:0x403cc700,len:0x2a0c
+entry 0x403c98d0
+
+PLANT STATION - HELTEC V3 - DIAGNOSTIC RX v2
+[BOUTONS] PRG 3 secondes puis relacher = veille ; RST = redemarrage.
+[CARTE] ESP32-S3 revision=0 flash=8388608 octets
+[OK] OLED detecte a 0x3C et initialise.
+[RADIO] Initialisation SX1262, TCXO 1.8 V, SPI 2 MHz...
+[OK] SX1262 initialise ; reception continue active.
+[CONFIG] 868100000 Hz / BW125 kHz / SF7 / CR4/5 / sync 0x12 / CRC / preambule 8
+[INFO] Aucune emission. Sans emetteur compatible, zero paquet est normal.
+[ETAT] uptime_s=5 radio_rx=OK paquets=0 crc_erreurs=0 code=0
+
+[TEST] PASS : redemarrage et reprise de la reception
+
+[TEST] DTR : PRG maintenu 3,4 s, puis relache
+[PRG] Appui detecte.
+[PRG] Appui long valide ; relacher PRG pour la veille.
+[VEILLE] Arret de la reception et extinction de l'ecran.
+[VEILLE] SX1262 en sommeil (code=0).
+[VEILLE] Entree en veille profonde ; RST pour redemarrer.
+
+[TEST] Observation 8 s : aucun journal ni redemarrage attendu
+
+[TEST] PASS : appui long, sommeil radio et silence apres entree en veille
+
+[TEST] SUCCESS : carte laissee en veille

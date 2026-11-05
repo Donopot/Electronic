@@ -1,0 +1,37 @@
+plugins { id 'com.android.application' }
+def signingFile = rootProject.file('../../.tools/private/plantstation-signing.properties')
+def localSigning = new Properties()
+if (signingFile.exists()) signingFile.withInputStream { localSigning.load(it) }
+android {
+    namespace 'local.plantstation.kit'
+    compileSdk 35
+    defaultConfig { applicationId 'local.plantstation.kit'; minSdk 26; targetSdk 35; versionCode 1; versionName '1.0'; }
+    signingConfigs {
+        localRelease {
+            if (signingFile.exists()) {
+                storeFile rootProject.file(localSigning.getProperty('storeFile'))
+                storePassword localSigning.getProperty('storePassword')
+                keyAlias localSigning.getProperty('keyAlias')
+                keyPassword localSigning.getProperty('keyPassword')
+            }
+        }
+    }
+    buildTypes {
+        release { minifyEnabled true; shrinkResources true; signingConfig signingConfigs.localRelease; proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro' }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    testOptions { unitTests.returnDefaultValues = false; unitTests.includeAndroidResources = true }
+}
+dependencies {
+    implementation 'com.github.espressif:esp-idf-provisioning-android:lib-2.4.4'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.camera:camera-view:1.5.1'
+    implementation 'androidx.camera:camera-lifecycle:1.5.1'
+    implementation 'androidx.camera:camera-camera2:1.5.1'
+    implementation 'com.google.mlkit:barcode-scanning:17.3.0'
+    implementation 'org.greenrobot:eventbus:3.3.1'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20240303'
+    testImplementation 'org.robolectric:robolectric:4.14.1'
+}
+dependencyLocking { lockAllConfigurations() }

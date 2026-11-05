@@ -1,0 +1,16 @@
+{
+  "utc": "20261105-083610Z",
+  "profile": "heltec_v3_plant_dashboard",
+  "purpose": "Configuration Android via Bluetooth et QR sécurisé",
+  "usb_port": "COM5",
+  "usb_serial": "0001",
+  "chip_expected": "esp32s3",
+  "mac_expected": "3c:0f:02:eb:f5:28",
+  "application_only": true,
+  "offset": 65536,
+  "partition_table_unchanged": true,
+  "sha256": "980f3b2d4d3d08be7863876da97b24360fa0e8da8f6ccaf6c76ec754f1a64c77",
+  "bytes": 1451296,
+  "backup": ".tools\\private\\before-plant-android-20261105-073027Z",
+  "source_base_revision": "417908321bd610b6f82d0fe941eb1805d64cd5ca"
+}

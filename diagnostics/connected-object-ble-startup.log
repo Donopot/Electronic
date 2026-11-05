@@ -1,0 +1,55 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T16:41:06.660327+00:00
+ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xf (SPI_FAST_FLASH_BOOT)
+Saved PC:0x420c7194
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5810,len:0x438
+load:0x403cc710,len:0x90c
+load:0x403ce710,len:0x2624
+entry 0x403cc710
+
+=== EnviroTerminal V1 : BMP180 + LoRa SPI + site local ===
+Alimentation capteur : 3,3 V ; mesures toutes les 2 secondes.
+BMP180 : SDA=GPIO4, SCL=GPIO3, 100 kHz, timeout=50 ms.
+[INFO] LCD desactive.
+[SCAN] Recherche I2C de 0x08 a 0x77...
+[SCAN] Peripherique a 0x77 (adresse BMP180 attendue)
+[SCAN] Termine : 1 peripherique(s), 0 erreur(s) de bus.
+[OK] Capteur compatible BMP180, ID=0x55 ; calibration lue.
+[LoRa] SPI : SCK=GPIO6, MISO=GPIO5, MOSI=GPIO7, NSS=GPIO10, RESET=GPIO0.
+[OK] LoRa : interface SPI SX127x detectee, version=0x12, mode veille verifie.
+[INFO] Version 0x12 partagee par plusieurs SX127x ; modele et bande RF non identifies par ce registre.
+[INFO] Diagnostic SPI uniquement : aucune emission, aucune reception radio configuree.
+[WEB] Connexion au Wi-Fi enregistre (identifiants masques).
+[OK] t=469 ms | Temperature : 23.2 °C | Pression : 1002.43 hPa
+[OK] t=2470 ms | Temperature : 23.1 °C | Pression : 1002.43 hPa
+[OK] t=4471 ms | Temperature : 23.1 °C | Pression : 1002.50 hPa
+[OK] t=6474 ms | Temperature : 23.1 °C | Pression : 1002.45 hPa
+[OK] t=8472 ms | Temperature : 23.1 °C | Pression : 1002.45 hPa
+[LoRa] Controle SPI OK ; module en veille.
+[OK] t=10473 ms | Temperature : 23.1 °C | Pression : 1002.49 hPa
+[OK] t=12474 ms | Temperature : 23.1 °C | Pression : 1002.44 hPa
+[OK] t=14475 ms | Temperature : 23.1 °C | Pression : 1002.38 hPa
+[OK] t=16476 ms | Temperature : 23.1 °C | Pression : 1002.45 hPa
+[OK] t=18477 ms | Temperature : 23.1 °C | Pression : 1002.42 hPa
+[LoRa] Controle SPI OK ; module en veille.
+[OK] t=20478 ms | Temperature : 23.1 °C | Pression : 1002.33 hPa
+[OK] t=22479 ms | Temperature : 23.1 °C | Pression : 1002.37 hPa
+[OK] t=24480 ms | Temperature : 23.1 °C | Pression : 1002.39 hPa
+[OK] t=26480 ms | Temperature : 23.1 °C | Pression : 1002.47 hPa
+[OK] t=28480 ms | Temperature : 23.1 °C | Pression : 1002.41 hPa
+[LoRa] Controle SPI OK ; module en veille.
+[BLE] Appareil=PROV_Enviro_81ca70 ; code=[masque]
+[BLE] Configuration disponible dans ESP BLE Provisioning.
+[OK] t=30514 ms | Temperature : 23.1 °C | Pression : 1002.43 hPa
+[OK] t=32507 ms | Temperature : 23.1 °C | Pression : 1002.38 hPa
+[OK] t=34508 ms | Temperature : 23.1 °C | Pression : 1002.31 hPa
+[OK] t=36509 ms | Temperature : 23.1 °C | Pression : 1002.37 hPa
+[OK] t=38510 ms | Temperature : 23.1 °C | Pression : 1002.43 hPa
+[LoRa] Controle SPI OK ; module en veille.
+[OK] t=40511 ms | Temperature : 23.1 °C | Pression : 1002.44 hPa
+[OK] t=42512 ms | Temperature : 23.1 °C | Pression : 1002.37 hPa
+[OK] t=44513 ms | Temperature : 23.1 °C | Pression : 1002.44 hPa
+BILAN : 23 mesures, 0 erreurs, 45.0 s de capture. Temperature=23.1..23.2 C; pression=1002.31..1002.50 hPa. Intervalles=1993..2034 ms.

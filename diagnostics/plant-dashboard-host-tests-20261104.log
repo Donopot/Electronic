@@ -1,0 +1,8 @@
+PASS shared model: neutral/healthy/dry + independent warnings, battery unknown, stale, reboot, UTF-8 names
+PASS history: 31 simulated days / four nodes / 30-day filter / pagination / gaps / ADC faults / reboot / interrupted writes / unknown data preserved
+PASS full flash: bounded sector ring wraps and reboots without losing newest records
+PASS API validation and PRG face/details/QR, 3-second threshold and release-to-sleep
+PASS installed Arduino-ESP32 SDK: WiFiClient fd public, inherited availableForWrite=0, lwIP MSG_DONTWAIT available; actual serviceHttp uses the tested sender
+PASS production HTTP socket sender: one MSG_DONTWAIT call/tick, complete partial response, EAGAIN/EWOULDBLOCK/EINTR retry, 512-byte bound, close/error handling (SDK syscall simulated)
+PASS actual dashboard main/radio/OLED: shared 4-node model/names, unknown battery, offline, QR layout contract, stale, lux, nonblocking worker-stop gate, PRG sleep (worker and QR encoder simulated)
+PASS actual dashboard main/radio/OLED: shared 4-node model/names, unknown battery, offline, QR layout contract, stale, lux, nonblocking worker-stop gate, PRG sleep (worker and QR encoder simulated)

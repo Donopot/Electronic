@@ -1,4 +1,4 @@
-# SOIL-01 : préparation du premier essai batterie
+# SOIL-01 : alimentation batterie et premier essai
 
 ## Matériel et limites
 
@@ -74,3 +74,59 @@ et des fils isolés. Souder le câble côté carte batterie déconnectée, puis
 raccorder celle-ci après contrôle des soudures.
 Le fonctionnement et la réception sur batterie restent à vérifier après
 ce raccordement. Aucune humidité relative calibrée n'est fournie.
+
+## Premier contrôle après soudure directe
+
+L'utilisateur ne dispose pas de connecteur et a soudé directement les fils
+sur BAT−/BAT+, après les consignes de travail USB débranché, un fil à la
+fois, autre extrémité isolée. Il confirme « soudé ».
+
+- XIAO absent de l'inventaire USB avant et après l'écoute ; Heltec sur COM5.
+- Première ouverture avec DTR actif : appui PRG/BOOT puis mode download du
+  Heltec. Cette capture a été interrompue et **n'est pas une preuve radio**.
+  Journal `xiao-batterie-radio-20261103-165202Z.log`, bilan d'abandon associé.
+- Heltec remis en démarrage normal avec DTR et RTS inactifs, sans flash.
+  Réception 868,1 MHz confirmée par `state=listening`, mesures VEML7700 actives.
+- Seconde écoute **110,047 s : aucune trame SOIL reçue**, aucune erreur de
+  capture. Preuves : `xiao-batterie-radio-20261103-165404Z.log` et `.json`.
+- **Le fonctionnement du XIAO sur batterie n'est donc pas encore validé.**
+  Cette absence ne permet pas d'attribuer la panne à la batterie seule.
+- Contrôles physiques demandés : XIAO bien réemboîtée sur Wio avec antenne ;
+  tension entre 3V3 et GND, batterie raccordée et USB du XIAO débranché.
+  L'utilisateur confirme les cartes assemblées et l'antenne raccordée, puis
+  précise **0,8 V entre 3V3 et GND**. La sortie d'alimentation est anormalement
+  basse ; le diagnostic reste matériel, sans modification du firmware.
+- Contrôle d'échauffement demandé, réponse encore inconnue. Une mauvaise
+  soudure ou un pont d'étain sont des hypothèses, pas des défauts démontrés.
+  Photo des deux soudures et contrôle BAT+/BAT− nécessaires pour distinguer
+  perte de contact, entrée batterie qui s'effondre et problème en aval.
+
+## Contrôle réussi après reprise de soudure
+
+L'utilisateur indique avoir corrigé la soudure et retrouvé « la bonne tension ».
+La valeur exacte de cette nouvelle mesure au multimètre n'est pas précisée.
+Une nouvelle écoute a été lancée, sans modifier ni reflasher les firmwares.
+
+- XIAO absent de l'inventaire USB avant et après ; Heltec sur COM5, lignes
+  DTR/RTS inactives, sans réinitialisation pendant la capture.
+- Capture du 3 novembre 2026 à 18:08:20, heure de Paris, durée **82,406 s**.
+- **Trois mesures valides consécutives**, même session **4236450037**, adresse
+  **0x48**, sans erreur de capture ni défaut ADC signalé.
+
+| Séquence | Temps depuis démarrage XIAO | Brut reçu | Tension de sonde reçue |
+| --- | --- | --- | --- |
+| 5 | 133,392 s | 21189 | 2,648625 V |
+| 6 | 164,031 s | 21174 | 2,646750 V |
+| 7 | 194,669 s | 21162 | 2,645250 V |
+
+Intervalles de réception 30,641 puis 30,640 s. Le Heltec a aussi produit
+81 mesures lux valides pendant cette capture. Le fonctionnement de la
+mesure et de la transmission **sur batterie seule est confirmé à court terme**.
+L'écoute RX seule ne mesure pas un taux de perte global ; elle ne valide ni
+la recharge, ni l'autonomie, ni la température ou la tenue des soudures.
+
+Preuves : `xiao-batterie-apres-soudure-20261103-170819Z.log` et `.json`
+(`accepted: true`). Le P-MOS est toujours absent : il n'est pas nécessaire
+pour ce fonctionnement, mais reste prévu au plan pour couper la sonde entre
+les relevés. L'économie d'énergie complète et les mesures de consommation
+restent à réaliser.

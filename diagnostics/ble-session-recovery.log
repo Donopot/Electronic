@@ -1,0 +1,15 @@
+TEST : relance BLE 1/2 par wifi-setup.
+[BLE] Reinitialisation de la session Bluetooth en cours...
+[OK] t=16615 ms | Temperature : 23.4 °C | Pression : 1001.87 hPa
+[BLE] Session fermee ; preparation d'une nouvelle connexion.
+[BLE] Appareil=PROV_Enviro_81ca70 ; code=[masque]
+[BLE] Configuration disponible dans ESP BLE Provisioning.
+OK : nouvelle session BLE 1/2 demarree.
+TEST : relance BLE 2/2 par wifi-setup.
+[BLE] Reinitialisation de la session Bluetooth en cours...
+[OK] t=18616 ms | Temperature : 23.4 °C | Pression : 1001.88 hPa
+[BLE] Session fermee ; preparation d'une nouvelle connexion.
+[BLE] Appareil=PROV_Enviro_81ca70 ; code=[masque]
+[BLE] Configuration disponible dans ESP BLE Provisioning.
+OK : nouvelle session BLE 2/2 demarree.
+BILAN : deux relances BLE reussies sur la carte ; appairage Android a confirmer.

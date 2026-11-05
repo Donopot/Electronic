@@ -1,0 +1,50 @@
+{
+  "authenticated": false,
+  "tx_count": 2,
+  "rx_count": 2,
+  "matched": [
+    {
+      "session": 4279149232,
+      "seq": 2,
+      "uptime_ms": 31783,
+      "status": "ok",
+      "address": 72,
+      "raw": 21487,
+      "uv": 2685875,
+      "tx_host_s": 18.297,
+      "rx_host_s": 18.297
+    },
+    {
+      "session": 4279149232,
+      "seq": 3,
+      "uptime_ms": 62423,
+      "status": "ok",
+      "address": 72,
+      "raw": 21489,
+      "uv": 2686125,
+      "tx_host_s": 48.937,
+      "rx_host_s": 48.937
+    }
+  ],
+  "comparison_window_s": [
+    1.0,
+    71.07800000000134
+  ],
+  "boundary_margin_s": 1.0,
+  "boundary_pairs": [],
+  "valid_matched_count": 2,
+  "losses": [],
+  "unmatched_rx": [],
+  "mismatches": [],
+  "tx_duplicates": [],
+  "rx_duplicates": [],
+  "errors": [],
+  "accepted": false,
+  "tx_port": "COM8",
+  "rx_port": "COM5",
+  "duration_requested_s": 72.0,
+  "duration_s": 72.07800000000134,
+  "capture_errors": [],
+  "interrupted": false,
+  "completed": true
+}

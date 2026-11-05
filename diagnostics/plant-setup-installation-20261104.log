@@ -1,0 +1,89 @@
+esptool.py v4.9.0
+Serial port COM5
+Connecting....
+Chip is ESP32-S3 (QFN56) (revision v0.2)
+Features: WiFi, BLE, Embedded Flash 8MB (GD)
+Crystal is 40MHz
+MAC: 3c:0f:02:eb:f5:28
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 921600
+Changed.
+Warning: ESP32-S3 has no Chip ID. Reading MAC instead.
+MAC: 3c:0f:02:eb:f5:28
+Hard resetting via RTS pin...
+
+esptool.py v4.9.0
+Serial port COM5
+Connecting....
+Chip is ESP32-S3 (QFN56) (revision v0.2)
+Features: WiFi, BLE, Embedded Flash 8MB (GD)
+Crystal is 40MHz
+MAC: 3c:0f:02:eb:f5:28
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 921600
+Changed.
+Configuring flash size...
+4096 (100 %)
+4096 (100 %)
+Read 4096 bytes at 0x00008000 in 0.1 seconds (586.8 kbit/s)...
+Hard resetting via RTS pin...
+
+esptool.py v4.9.0
+Serial port COM5
+Connecting....
+Chip is ESP32-S3 (QFN56) (revision v0.2)
+Features: WiFi, BLE, Embedded Flash 8MB (GD)
+Crystal is 40MHz
+MAC: 3c:0f:02:eb:f5:28
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 921600
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00010000 to 0x000e7fff...
+Compressed 881504 bytes to 570989...
+Writing at 0x00010000... (2 %)
+Writing at 0x0001b11a... (5 %)
+Writing at 0x00026151... (8 %)
+Writing at 0x0002fc31... (11 %)
+Writing at 0x0003de8f... (14 %)
+Writing at 0x000437e1... (17 %)
+Writing at 0x00048a8d... (20 %)
+Writing at 0x0004e23f... (22 %)
+Writing at 0x0005365c... (25 %)
+Writing at 0x00059380... (28 %)
+Writing at 0x0005ed27... (31 %)
+Writing at 0x000644e0... (34 %)
+Writing at 0x00069607... (37 %)
+Writing at 0x0006e6f8... (40 %)
+Writing at 0x0007352a... (42 %)
+Writing at 0x0007848a... (45 %)
+Writing at 0x0007d36f... (48 %)
+Writing at 0x00082531... (51 %)
+Writing at 0x000873b2... (54 %)
+Writing at 0x0008c683... (57 %)
+Writing at 0x00091647... (60 %)
+Writing at 0x00097022... (62 %)
+Writing at 0x0009c4c3... (65 %)
+Writing at 0x000a1358... (68 %)
+Writing at 0x000a6403... (71 %)
+Writing at 0x000ab529... (74 %)
+Writing at 0x000b07d9... (77 %)
+Writing at 0x000b5dd0... (80 %)
+Writing at 0x000bba62... (82 %)
+Writing at 0x000c0e20... (85 %)
+Writing at 0x000c6cab... (88 %)
+Writing at 0x000d048f... (91 %)
+Writing at 0x000d70b2... (94 %)
+Writing at 0x000dc700... (97 %)
+Writing at 0x000e20e7... (100 %)
+Wrote 881504 bytes (570989 compressed) at 0x00010000 in 7.7 seconds (effective 918.1 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...

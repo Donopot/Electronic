@@ -1,0 +1,50 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T16:26:58.972321+00:00
+ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xf (SPI_FAST_FLASH_BOOT)
+Saved PC:0x4204baaa
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5810,len:0x438
+load:0x403cc710,len:0x90c
+load:0x403ce710,len:0x2624
+entry 0x403cc710
+
+=== EnviroTerminal V1 : BMP180 + LoRa SPI + site local ===
+Alimentation capteur : 3,3 V ; mesures toutes les 2 secondes.
+BMP180 : SDA=GPIO4, SCL=GPIO3, 100 kHz, timeout=50 ms.
+[INFO] LCD desactive.
+[SCAN] Recherche I2C de 0x08 a 0x77...
+[SCAN] Peripherique a 0x77 (adresse BMP180 attendue)
+[SCAN] Termine : 1 peripherique(s), 0 erreur(s) de bus.
+[OK] Capteur compatible BMP180, ID=0x55 ; calibration lue.
+[LoRa] SPI : SCK=GPIO6, MISO=GPIO5, MOSI=GPIO7, NSS=GPIO10, RESET=GPIO0.
+[OK] LoRa : interface SPI SX127x detectee, version=0x12, mode veille verifie.
+[INFO] Version 0x12 partagee par plusieurs SX127x ; modele et bande RF non identifies par ce registre.
+[INFO] Diagnostic SPI uniquement : aucune emission, aucune reception radio configuree.
+[WEB] Connexion au Wi-Fi configure (identifiants masques).
+[OK] t=364 ms | Temperature : 23.5 °C | Pression : 1002.86 hPa
+[OK] t=2365 ms | Temperature : 23.5 °C | Pression : 1002.80 hPa
+[OK] t=4366 ms | Temperature : 23.5 °C | Pression : 1002.84 hPa
+[OK] t=6367 ms | Temperature : 23.5 °C | Pression : 1002.92 hPa
+[OK] t=8367 ms | Temperature : 23.5 °C | Pression : 1002.86 hPa
+[LoRa] Controle SPI OK ; module en veille.
+[OK] t=10367 ms | Temperature : 23.5 °C | Pression : 1002.86 hPa
+[OK] t=12368 ms | Temperature : 23.5 °C | Pression : 1002.86 hPa
+[OK] t=14368 ms | Temperature : 23.5 °C | Pression : 1002.84 hPa
+[OK] t=16369 ms | Temperature : 23.5 °C | Pression : 1002.82 hPa
+[OK] t=18370 ms | Temperature : 23.5 °C | Pression : 1002.83 hPa
+[LoRa] Controle SPI OK ; module en veille.
+[OK] t=20371 ms | Temperature : 23.5 °C | Pression : 1002.86 hPa
+[OK] t=22372 ms | Temperature : 23.5 °C | Pression : 1002.84 hPa
+[OK] t=24373 ms | Temperature : 23.5 °C | Pression : 1002.81 hPa
+[OK] t=26373 ms | Temperature : 23.5 °C | Pression : 1002.83 hPa
+[OK] t=28373 ms | Temperature : 23.5 °C | Pression : 1002.86 hPa
+[LoRa] Controle SPI OK ; module en veille.
+[WEB] Configuration : reseau=EnviroTerminal-CA:70 ; mot de passe=3e2c1ee49238 ; http://192.168.4.1/
+[WEB] Recherche Wi-Fi impossible.
+[OK] t=30648 ms | Temperature : 23.5 °C | Pression : 1002.87 hPa
+[OK] t=32648 ms | Temperature : 23.4 °C | Pression : 1002.83 hPa
+[OK] t=34649 ms | Temperature : 23.5 °C | Pression : 1002.86 hPa
+[OK] t=36649 ms | Temperature : 23.5 °C | Pression : 1002.85 hPa
+BILAN : 19 mesures, 0 erreurs, 38.1 s de capture. Temperature=23.4..23.5 C; pression=1002.80..1002.92 hPa. Intervalles=2000..2275 ms.

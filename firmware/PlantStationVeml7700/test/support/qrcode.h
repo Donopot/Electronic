@@ -4,7 +4,11 @@
 using esp_qrcode_handle_t = const unsigned char*;
 struct esp_qrcode_config_t {void (*display_func)(esp_qrcode_handle_t);int max_qrcode_version;int qrcode_ecc_level;};
 #define ESP_QRCODE_CONFIG_DEFAULT() esp_qrcode_config_t{nullptr,10,0}
-namespace host { inline std::string& qrPayload(){static std::string value;return value;} }
-inline int esp_qrcode_get_size(esp_qrcode_handle_t){return 21;}
+namespace host {
+inline std::string& qrPayload(){static std::string value;return value;}
+inline int& qrSide(){static int n=21;return n;}
+inline int& forceQrSide(){static int n=0;return n;}
+}
+inline int esp_qrcode_get_size(esp_qrcode_handle_t){return host::qrSide();}
 inline bool esp_qrcode_get_module(esp_qrcode_handle_t,int x,int y){return (x+y)%2==0;}
-inline int esp_qrcode_generate(esp_qrcode_config_t* config,const char* text){host::qrPayload()=text;config->display_func(nullptr);return 0;}
+inline int esp_qrcode_generate(esp_qrcode_config_t* config,const char* text){host::qrPayload()=text;host::qrSide()=host::forceQrSide()?host::forceQrSide():host::qrPayload().find("WIFI:")==0?29:21;config->display_func(nullptr);return 0;}

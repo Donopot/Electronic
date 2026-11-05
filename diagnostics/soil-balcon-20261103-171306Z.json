@@ -1,0 +1,67 @@
+{
+  "kind": "soil_rx_balcony_battery",
+  "authenticated": false,
+  "started_utc": "2026-11-03T17:13:06.414964+00:00",
+  "location_confirmed_by_user": "balcon, electronique au sec ; Heltec interieur USB ; porte/fenetre position habituelle selon consigne",
+  "rx_port": "COM5",
+  "xiao_usb_present_before": false,
+  "xiao_usb_present_after": false,
+  "duration_s": 102.40600000000268,
+  "packets": [
+    {
+      "session": 4236450037,
+      "seq": 14,
+      "uptime_ms": 409140,
+      "status": "ok",
+      "address": 72,
+      "raw": 21071,
+      "uv": 2633875,
+      "host_elapsed_s": 10.484
+    },
+    {
+      "session": 4236450037,
+      "seq": 15,
+      "uptime_ms": 439779,
+      "status": "ok",
+      "address": 72,
+      "raw": 21065,
+      "uv": 2633125,
+      "host_elapsed_s": 41.109
+    },
+    {
+      "session": 4236450037,
+      "seq": 16,
+      "uptime_ms": 470417,
+      "status": "ok",
+      "address": 72,
+      "raw": 21052,
+      "uv": 2631500,
+      "host_elapsed_s": 71.75
+    },
+    {
+      "session": 4236450037,
+      "seq": 17,
+      "uptime_ms": 501056,
+      "status": "ok",
+      "address": 72,
+      "raw": 21051,
+      "uv": 2631375,
+      "host_elapsed_s": 102.406
+    }
+  ],
+  "valid_count": 4,
+  "consecutive_same_session": true,
+  "rx_intervals_s": [
+    30.625,
+    30.641,
+    30.656
+  ],
+  "lux_samples_ok": 102,
+  "errors": [],
+  "tx_capture_available": false,
+  "loss_rate_measured": false,
+  "rssi_measured": false,
+  "log": "diagnostics\\soil-balcon-20261103-171306Z.log",
+  "accepted": true,
+  "probe_position_confirmed_by_user": "air"
+}

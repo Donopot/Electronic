@@ -1,0 +1,36 @@
+Heltec COM5 115200 baud, UTC=2026-10-28T08:43:59.891124+00:00
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x1 (POWERON),boot:0x8 (SPI_FAST_FLASH_BOOT)
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce3808,len:0x4bc
+load:0x403c9700,len:0xbd8
+load:0x403cc700,len:0x2a0c
+entry 0x403c98d0
+[PlantStation VEML7700 v1.0.0] uptime_ms=103 evenement=demarrage statut=conversion_en_cours raw=null lux=null adresse=globale Heltec V3 cible; puce ESP32-S3 revision 0 flash 8388608 octets; UART0 CP2102; SDA=4 SCL=5; sous-revision V3.x non determinee
+[PlantStation VEML7700 v1.0.0] uptime_ms=125 evenement=scan_ack statut=ok raw=null lux=null adresse=0x10 ACK recu; identite du composant non garantie
+[PlantStation VEML7700 v1.0.0] uptime_ms=149 evenement=scan_fin statut=conversion_en_cours raw=null lux=null adresse=globale Fin du scanner I2C
+[PlantStation VEML7700 v1.0.0] uptime_ms=166 evenement=configuration statut=conversion_en_cours raw=null lux=null adresse=0x10 Configuration verifiee : gain 1/8, integration 100 ms, economie desactivee
+[PlantStation VEML7700 v1.0.0] uptime_ms=1151 evenement=mesure statut=ok raw=165 lux=88.7040 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=2151 evenement=mesure statut=ok raw=165 lux=88.7040 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=3151 evenement=mesure statut=ok raw=163 lux=87.6288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=4151 evenement=mesure statut=ok raw=163 lux=87.6288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=5151 evenement=mesure statut=ok raw=168 lux=90.3168 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=6151 evenement=mesure statut=ok raw=163 lux=87.6288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=7151 evenement=mesure statut=ok raw=164 lux=88.1664 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=8151 evenement=mesure statut=ok raw=167 lux=89.7792 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=9151 evenement=mesure statut=ok raw=163 lux=87.6288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=10151 evenement=mesure statut=ok raw=162 lux=87.0912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=11151 evenement=mesure statut=ok raw=164 lux=88.1664 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=12151 evenement=mesure statut=ok raw=164 lux=88.1664 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=13151 evenement=mesure statut=ok raw=162 lux=87.0912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=14151 evenement=mesure statut=ok raw=163 lux=87.6288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=15151 evenement=mesure statut=ok raw=167 lux=89.7792 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=16151 evenement=mesure statut=ok raw=162 lux=87.0912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=17151 evenement=mesure statut=ok raw=162 lux=87.0912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=18151 evenement=mesure statut=ok raw=167 lux=89.7792 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=19151 evenement=mesure statut=ok raw=163 lux=87.6288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=20151 evenement=mesure statut=ok raw=162 lux=87.0912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.0.0] uptime_ms=21151 evenement=mesure statut=ok raw=164 lux=88.1664 adresse=0x10 Luminosite ambiante
+SUMMARY {"port": "COM5", "readings": [{"uptime_ms": 1151, "raw": 165, "lux": 88.704}, {"uptime_ms": 2151, "raw": 165, "lux": 88.704}, {"uptime_ms": 3151, "raw": 163, "lux": 87.6288}, {"uptime_ms": 4151, "raw": 163, "lux": 87.6288}, {"uptime_ms": 5151, "raw": 168, "lux": 90.3168}, {"uptime_ms": 6151, "raw": 163, "lux": 87.6288}, {"uptime_ms": 7151, "raw": 164, "lux": 88.1664}, {"uptime_ms": 8151, "raw": 167, "lux": 89.7792}, {"uptime_ms": 9151, "raw": 163, "lux": 87.6288}, {"uptime_ms": 10151, "raw": 162, "lux": 87.0912}, {"uptime_ms": 11151, "raw": 164, "lux": 88.1664}, {"uptime_ms": 12151, "raw": 164, "lux": 88.1664}, {"uptime_ms": 13151, "raw": 162, "lux": 87.0912}, {"uptime_ms": 14151, "raw": 163, "lux": 87.6288}, {"uptime_ms": 15151, "raw": 167, "lux": 89.7792}, {"uptime_ms": 16151, "raw": 162, "lux": 87.0912}, {"uptime_ms": 17151, "raw": 162, "lux": 87.0912}, {"uptime_ms": 18151, "raw": 167, "lux": 89.7792}, {"uptime_ms": 19151, "raw": 163, "lux": 87.6288}, {"uptime_ms": 20151, "raw": 162, "lux": 87.0912}, {"uptime_ms": 21151, "raw": 164, "lux": 88.1664}], "errors": [], "boot_observed": true, "ack_0x10": true}

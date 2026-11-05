@@ -1,0 +1,8 @@
+{
+  "utc": "2026-11-04T17:38:04.738490+00:00",
+  "ssid": "PLANT-EBF528",
+  "ssid_observed": true,
+  "wpa2_observed": true,
+  "scan": "Windows WlanScan explicit succeeded; netsh refreshed cache",
+  "pc_network_changed": false
+}

@@ -1,0 +1,13 @@
+PASS bounded temporary cleanup: FormFields valid/early-failure copies explicitly erased; HTTP reply/error and incomplete-client close erase request
+PASS production setup: protected AP, outage/reopen recovery, late cancel, durable commit despite RAM-selection failure and next-candidate guard, LAN Host/origin restrictions, invalid UTF8 scan filtering, timeout/rollback, SSID32/PSK64, DHCP/log, no secrets, bounded close
+PASS production HTTP/queues/storage/Preferences: complete Content-Length bytes through partial sends+EAGAIN, routing validation, exactly-once ingestion/all fields, durable clock reboot, names pending/failure/save/load/shutdown
+PASS bounded temporary cleanup: FormFields valid/early-failure copies explicitly erased; HTTP reply/error and incomplete-client close erase request
+PASS scheduled production worker: bounded real task iterations, HTTP candidate -> RAM test -> injected GOT_IP -> durable FLASH commit, queued ingestion exactly once, HTTP name save and real worker reload after reboot (no manual serviceNetwork)
+PASS bounded temporary cleanup: FormFields valid/early-failure copies explicitly erased; HTTP reply/error and incomplete-client close erase request
+PASS real scheduled worker + production protocomm adapter (SDK authentication simulated): Security1/PoP binding, unauthorized/invalid/oversized refusal, queue full, HTTP/BLE contention, correlation, timeout->old FLASH preserved->correct retry->GOT_IP->commit, no secrets, stop/reopen/failure
+PASS bounded temporary cleanup: FormFields valid/early-failure copies explicitly erased; HTTP reply/error and incomplete-client close erase request
+PASS real worker: AP start failure retains BLE; BLE commit succeeds and closes at its own deadline without AP provisioning
+PASS bounded temporary cleanup: FormFields valid/early-failure copies explicitly erased; HTTP reply/error and incomplete-client close erase request
+PASS real worker: failed BLE attempt followed by HTTP commit cannot be attributed to prior BLE id before its next poll
+PASS bounded temporary cleanup: FormFields valid/early-failure copies explicitly erased; HTTP reply/error and incomplete-client close erase request
+PASS real worker saved recovery: five-minute close/PRG reopen and saved reboot produce read-only connected id0; current password/SSID mismatch, unsaved config and active HTTP candidate excluded; no SDK config polling with BLE inactive; form/OLED unchanged

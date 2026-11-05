@@ -1,0 +1,1 @@
+PASS setup browser desktop/mobile: async scan, escaped/special SSIDs, manual entry, wrong-password retry, password cleared, SSID32/PSK64, success LAN handoff, explicit close, cancellation, hung-fetch deadline/retry, keyboard-native fields, no JS errors/external resources (simulated APIs only)

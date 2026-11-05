@@ -1,0 +1,185 @@
+{
+  "utc": "2026-11-05T08:32:04.652770+00:00",
+  "phase": "parent full verification after review fixes",
+  "baseline_commit": "417908321bd610b6f82d0fe941eb1805d64cd5ca",
+  "checks": {
+    "builds": {
+      "command": [
+        "C:/Users/Anwender/AppData/Local/Programs/Python/Python312/python.exe",
+        "-m",
+        "platformio",
+        "run",
+        "-d",
+        "firmware/PlantStationVeml7700",
+        "-e",
+        "heltec_v3_text",
+        "-e",
+        "heltec_v3_json",
+        "-e",
+        "heltec_v3_soil_lora",
+        "-e",
+        "heltec_v3_plant_dashboard"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-android-parent-builds-20261105.log",
+      "sha256": "e8630470aa3acdc6a2002416e83c286ec5bf920aca6ead0bac75efdc92684ce2"
+    },
+    "android": {
+      "command": [
+        "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\.tools\\android-bootstrap\\gradle\\gradle-8.11.1\\bin\\gradle.bat",
+        "-p",
+        "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\android\\PlantStation",
+        "--no-daemon",
+        ":app:testDebugUnitTest",
+        ":app:lintDebug",
+        ":app:assembleRelease"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-android-parent-android-20261105.log",
+      "sha256": "81189be811932650190c6bb6742676ce6ce8b7f9abf1fdb4ddb4ee166b55fff8"
+    },
+    "apk-audit": {
+      "command": [
+        "C:/Users/Anwender/AppData/Local/Programs/Python/Python312/python.exe",
+        "tools/verify_plant_android_apk.py",
+        "--expected-cert",
+        "3ff44e455caaf5a2e4a24d50a33dd150f9ca2d919567ff29f0e6e81a32c337ce"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-android-parent-apk-audit-20261105.log",
+      "sha256": "b21b8575cb2f9ddf90a894a5d61d910840e45b790ee8709560a781cad75f8e87"
+    },
+    "dashboard": {
+      "command": [
+        "C:/Users/Anwender/AppData/Local/Programs/Python/Python312/python.exe",
+        "tools/run_plant_dashboard_tests.py"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-android-parent-dashboard-20261105.log",
+      "sha256": "9d3199bc1723a6022c070fa62af1d936ab69b5d4f974c0218dc0e5eda513b7bd"
+    },
+    "soil": {
+      "command": [
+        "C:/Users/Anwender/AppData/Local/Programs/Python/Python312/python.exe",
+        "tools/run_soil_lora_host_tests.py"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-android-parent-soil-20261105.log",
+      "sha256": "d5f623cc82e743f0423e184aaf330a1e973abe55670ec5e0247d016d20ba088e"
+    },
+    "lux": {
+      "command": [
+        "C:/Users/Anwender/AppData/Local/Programs/Python/Python312/python.exe",
+        "firmware/PlantStationVeml7700/test/run_host_tests.py"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-android-parent-lux-20261105.log",
+      "sha256": "cf5fcdfe91af9e68645fa0445625c9bd46aa72bd5983a53cfd91508689a7073d"
+    },
+    "browser-dashboard": {
+      "command": [
+        "node",
+        "tests/plant_dashboard_browser_test.cjs"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-android-parent-browser-dashboard-20261105.log",
+      "sha256": "3b28e806cc180c5c195d72657b65bac4023280f3ef6aac9071cb7ff5d3b9f676"
+    },
+    "browser-setup": {
+      "command": [
+        "node",
+        "tests/plant_setup_browser_test.cjs"
+      ],
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "diagnostics\\plant-android-parent-browser-setup-20261105.log",
+      "sha256": "60139c6ffeb286a69fbe0589b9ef185cdfb9374cd0f88f57aec2b2dd1d205771"
+    }
+  },
+  "source_sha256": {
+    "android/PlantStation/.gitignore": "838655f2e91bf2cc39b78e25f41b3706543530eeaca3c710e323d9c7fa5619ca",
+    "android/PlantStation/README.md": "0864c2699543cdfdc9f2617be79c45cee10c01ce43e0c289544f3e98f78c289e",
+    "android/PlantStation/app/build.gradle": "f549a302bffd1d784dc73e022255a029dba8e3e816da85e601a473dba5c32ed2",
+    "android/PlantStation/app/gradle.lockfile": "2a0fa4afaa1ebe6362bca606d21bc9753d6a4eedbd4741991b2fd2796df7170e",
+    "android/PlantStation/app/proguard-rules.pro": "fef9ad3dfc6bb926d8d95968573ccc207164cb90525b962a42c0c5a66642673a",
+    "android/PlantStation/app/src/main/AndroidManifest.xml": "eb7a82f0480007c278b3630856298d32b4cce6c4aca0f4a2db4f115c968e3188",
+    "android/PlantStation/app/src/main/java/local/plantstation/kit/MainActivity.java": "64486943310358b2f39263801ca3dd82042bd82f3ca2563dd992386b4c4d61de",
+    "android/PlantStation/app/src/main/java/local/plantstation/kit/SetupContract.java": "5cb8f97af678436cfd2078f0383bc0469325f45007759358e24320c25f12debf",
+    "android/PlantStation/app/src/main/res/values/styles.xml": "314262e73da455b3cdabaa7066fc7263f4f3075db2074e97ceb394068f1af98a",
+    "android/PlantStation/app/src/test/java/local/plantstation/kit/MainActivityTest.java": "d38a29a8755dd32dd2191fccdb899d4098889ac24b027b681aa875ec9e6aaa4c",
+    "android/PlantStation/app/src/test/java/local/plantstation/kit/SetupContractTest.java": "26e4c0ebcc4ed878ec531eb4c5f5211b08e82360dd64be3704b8ccf7d3274363",
+    "android/PlantStation/build.gradle": "048ecfefe09971849fc8c9326de9d0e8af7e50e371aed980e2e1617124bb969f",
+    "android/PlantStation/gradle.properties": "0dee56bf861b5b72669b20a690db2ffd496047f92b408558f7c47a72f50164b9",
+    "android/PlantStation/gradle/verification-metadata.xml": "6e12aa6927bb97a0a4649bb800a5c7a67e6a37e3f967396ddaaa206615dfb1bf",
+    "android/PlantStation/gradle/wrapper/gradle-wrapper.jar": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046",
+    "android/PlantStation/gradle/wrapper/gradle-wrapper.properties": "fe90ff0d9944879f591a8c37b6dbaf5046d1051ccbb6b26b22081692c321f432",
+    "android/PlantStation/gradlew": "a3648413b47ef77af21d5ebc36c687c7d103aaef3e17f33de7d4f080a6f300a3",
+    "android/PlantStation/gradlew.bat": "57931b17dd228e5c24dac90e815d0bf82477e831a4618dfab4136f5446b42a9f",
+    "android/PlantStation/settings.gradle": "d16aa00cb4d493ad9e1a62876be3a701638aa71c8a8f075a996c8f930f8e3040",
+    "firmware/PlantStationVeml7700/include/config.h": "f890ef40b477f25d1ae46f2de52977ff2f7c8cd515f3fb83debeb6b8e13e1fc0",
+    "firmware/PlantStationVeml7700/platformio.ini": "d554f362b8a50d711b2fce225b6679c75314a1eeed662c59e88204c34cc5146e",
+    "firmware/PlantStationVeml7700/src/display/OledDisplay.cpp": "a5e104076b7e8baf12816e78ef2ce4a054990809bf0e8b8a38b1816c4d9b15f6",
+    "firmware/PlantStationVeml7700/src/display/OledDisplay.h": "19fe242b6410ffef05163dd4bd9f546d35d23bfd64ee75d46f2fef4ebae0c388",
+    "firmware/PlantStationVeml7700/src/main.cpp": "df4dcd7ccbb5f26ee7bb73c2874f928ad3588d88b821639033d9b3802b08d948",
+    "firmware/PlantStationVeml7700/src/power/PrgButton.h": "65b6cb86158b85ecbcbe0656de6649948530903bbea280087b8027c6a9a11ca3",
+    "firmware/PlantStationVeml7700/src/storage/PlantHistory.cpp": "d39a49fe07c44fd698cb5529fed92fd2fa28c299849e94492bf7d69c2427bbdf",
+    "firmware/PlantStationVeml7700/src/storage/PlantHistory.h": "29b7001a86d082cd6cac26f274fbc1118b5df264d3e6cedc30100052b32f6b1b",
+    "firmware/PlantStationVeml7700/src/ui/PlantView.cpp": "e61ad1c06596cd225df7279040152546f52e9f72d7d1d05c808f63bf12e1240d",
+    "firmware/PlantStationVeml7700/src/ui/PlantView.h": "ba653239b052f5c0310314e17a327ff8d191b3885dee0f03e964440976fde736",
+    "firmware/PlantStationVeml7700/src/web/CaptiveDns.h": "05b17824c44c85a5542d0f2d045884410de80a0305ae6fd0507c01e54b18c328",
+    "firmware/PlantStationVeml7700/src/web/NonBlockingHttp.h": "0f82a5cae3e0523e159084ec4435e2a989bfe408b1ac52e7d1b60b1731a079a4",
+    "firmware/PlantStationVeml7700/src/web/PlantBleSetup.cpp": "221851808889c7e64ea43ee6b031d58c6a5570f6e0c3364edfc02d994cfab9a5",
+    "firmware/PlantStationVeml7700/src/web/PlantBleSetup.h": "2c94114fbcc24d2c852fc1826614707471654dcc8ddaf1b57ca7bd87dbcd2c65",
+    "firmware/PlantStationVeml7700/src/web/PlantDashboard.cpp": "31d4de7df253ea71d923e0bbfee39ac359ae09f40e99209d25fab4be19de2079",
+    "firmware/PlantStationVeml7700/src/web/PlantDashboard.h": "078cce177de9f60a2a0bed4e6114e61ce094f9a3f99f901958512e0bb55499ac",
+    "firmware/PlantStationVeml7700/src/web/PlantDashboardApi.h": "4f330c16738fd5f05f00019a4ced11003a7ff1a13efd1c41cb5f7b635dbbc804",
+    "firmware/PlantStationVeml7700/src/web/PlantDashboardPage.h": "8f65b8094f7d05667bf45a9502dd1b1ed147380d689e672d5323e3f757544ed3",
+    "firmware/PlantStationVeml7700/src/web/PlantSetupPage.h": "94630758fa1ccbe8f8b2085968194b555bd5fb20f45b439b525dc7dfc1fd06f3",
+    "firmware/PlantStationVeml7700/test/dashboard-support/Arduino.h": "3f1ad5f2235fd6290caf276e94a5bfcd42bb01afa0a735957ee6261183d7bd64",
+    "firmware/PlantStationVeml7700/test/dashboard-support/DashboardSdk.h": "4052b19a8f6225ae6ee0bed2fc3fa01d6c300b7503a3f88cdb4249e5fb9e0a60",
+    "firmware/PlantStationVeml7700/test/dashboard-support/ESPmDNS.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/Preferences.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/WiFi.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/WiFiClient.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/WiFiUdp.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/esp_partition.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/esp_wifi.h": "f356cab9c87ecd61907712ace9a9680fb138f93cd15808c072e7e3d8528bb46b",
+    "firmware/PlantStationVeml7700/test/dashboard-support/freertos/FreeRTOS.h": "da88c43a8e3b9924533284c7f37c908a64be91e7eb3d1c55a5affcc7a1b56e58",
+    "firmware/PlantStationVeml7700/test/dashboard-support/freertos/queue.h": "f2f85c6f4b87b1f4ebd69c58af2e08dcf046cb0eca3b5dee9a3a0782362bd20a",
+    "firmware/PlantStationVeml7700/test/dashboard-support/freertos/task.h": "e72a3bd02b036a6dccc0c0b8c0c0e169a0c08e4eb9172e0bd84333458bfc8571",
+    "firmware/PlantStationVeml7700/test/dashboard-support/protocomm.h": "1780a58abafb741169e4e4bdb3dbf073173c91aacef05aea1e2abeedea206e35",
+    "firmware/PlantStationVeml7700/test/dashboard-support/protocomm_ble.h": "cbf3d1562d3e5df56ce06f7f5d0886d9f28e5aa6baaacceebe92c85bdc83e570",
+    "firmware/PlantStationVeml7700/test/dashboard-support/protocomm_security1.h": "fd8c4b875d2fbcb517d98d961ffa1b99cde55b0e2aaaede2bd4c27e73b40d387",
+    "firmware/PlantStationVeml7700/test/support/Adafruit_SSD1306.h": "6b6e75edabe78eb1b68b7bdb87ed8260a13ad2716080ec6b1c77698c9e068a1d",
+    "firmware/PlantStationVeml7700/test/support/Arduino.h": "f7e080005312822968b15f737de51080ec69c16ef64891a71cd82f3f65ddc6a9",
+    "firmware/PlantStationVeml7700/test/support/lwip/sockets.h": "15610d072dbdbb1686c5ce13801b632d6264126d16baddabef705a7a47d2a14a",
+    "firmware/PlantStationVeml7700/test/support/qrcode.h": "6401590154c047f1f7accff1947c283ea9363b546b45688852a8d1127bb596e7",
+    "firmware/PlantStationVeml7700/test/test_dashboard.cpp": "eb1eb4bce6697eb0e3cc813098f0d8f74363fa77474e2353bf0b2b3a2e1bef08",
+    "firmware/PlantStationVeml7700/test/test_dashboard_orchestration.cpp": "dc6e16e4467fedd6135cebe21129463c69a9713ea29a867c9713d909e9d3e843",
+    "firmware/PlantStationVeml7700/test/test_dashboard_worker.cpp": "df79ad8482122d7fbbd5b0e3158b9020d99d2d57b5b0574c8ade48af2f6f27d5",
+    "firmware/PlantStationVeml7700/test/test_http_transport.cpp": "468721e0d0ba1d399abdeece9635420f34fd6705c0ad24d6a12ad02a14ef4992",
+    "tests/plant_dashboard_browser_test.cjs": "8d4fa2354d9083f1b516a926eeb11af3f24867991fcc91b37953b180ac618543",
+    "tests/plant_setup_browser_test.cjs": "0c5963549a0882681b9bbf8aee7de05c08432c5978a5b6ff92a21673db8a9e6d",
+    "tools/build_plant_android.ps1": "829e5f9ced12b1bd1938ef63c67d6869473e818ded8fe4b717429884531b5739",
+    "tools/run_plant_dashboard_tests.py": "a15d89de43289e20417047653a7432b255e79d5b35aa63b7787a63eeea180ad7",
+    "tools/verify_plant_android_apk.py": "b5abef63007b452d9f36b482417da8de4b16e07cd6361354023656bd81dfad3e"
+  },
+  "firmware": {
+    "path": "firmware/PlantStationVeml7700/.pio/build/heltec_v3_plant_dashboard/firmware.bin",
+    "bytes": 1451296,
+    "sha256": "980f3b2d4d3d08be7863876da97b24360fa0e8da8f6ccaf6c76ec754f1a64c77"
+  },
+  "apk": {
+    "path": "android/PlantStation/app/build/outputs/apk/release/app-release.apk",
+    "bytes": 23165724,
+    "sha256": "dd84f14f44295b6b8ee2b64b1312c46a925b2f6062076342f27e06fddf7276bc"
+  },
+  "all_passed": true
+}

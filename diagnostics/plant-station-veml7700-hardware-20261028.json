@@ -1,0 +1,113 @@
+{
+  "port": "COM5",
+  "readings": [
+    {
+      "uptime_ms": 1151,
+      "raw": 165,
+      "lux": 88.704
+    },
+    {
+      "uptime_ms": 2151,
+      "raw": 165,
+      "lux": 88.704
+    },
+    {
+      "uptime_ms": 3151,
+      "raw": 163,
+      "lux": 87.6288
+    },
+    {
+      "uptime_ms": 4151,
+      "raw": 163,
+      "lux": 87.6288
+    },
+    {
+      "uptime_ms": 5151,
+      "raw": 168,
+      "lux": 90.3168
+    },
+    {
+      "uptime_ms": 6151,
+      "raw": 163,
+      "lux": 87.6288
+    },
+    {
+      "uptime_ms": 7151,
+      "raw": 164,
+      "lux": 88.1664
+    },
+    {
+      "uptime_ms": 8151,
+      "raw": 167,
+      "lux": 89.7792
+    },
+    {
+      "uptime_ms": 9151,
+      "raw": 163,
+      "lux": 87.6288
+    },
+    {
+      "uptime_ms": 10151,
+      "raw": 162,
+      "lux": 87.0912
+    },
+    {
+      "uptime_ms": 11151,
+      "raw": 164,
+      "lux": 88.1664
+    },
+    {
+      "uptime_ms": 12151,
+      "raw": 164,
+      "lux": 88.1664
+    },
+    {
+      "uptime_ms": 13151,
+      "raw": 162,
+      "lux": 87.0912
+    },
+    {
+      "uptime_ms": 14151,
+      "raw": 163,
+      "lux": 87.6288
+    },
+    {
+      "uptime_ms": 15151,
+      "raw": 167,
+      "lux": 89.7792
+    },
+    {
+      "uptime_ms": 16151,
+      "raw": 162,
+      "lux": 87.0912
+    },
+    {
+      "uptime_ms": 17151,
+      "raw": 162,
+      "lux": 87.0912
+    },
+    {
+      "uptime_ms": 18151,
+      "raw": 167,
+      "lux": 89.7792
+    },
+    {
+      "uptime_ms": 19151,
+      "raw": 163,
+      "lux": 87.6288
+    },
+    {
+      "uptime_ms": 20151,
+      "raw": 162,
+      "lux": 87.0912
+    },
+    {
+      "uptime_ms": 21151,
+      "raw": 164,
+      "lux": 88.1664
+    }
+  ],
+  "errors": [],
+  "boot_observed": true,
+  "ack_0x10": true
+}

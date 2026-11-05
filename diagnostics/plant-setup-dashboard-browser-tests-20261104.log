@@ -1,0 +1,1 @@
+PASS browser desktop/mobile: cursor-dependent 3 pages and final plotted point, slow 6.6s history survives status polls, hung fetch deadline/retry, bounded clock retry + hub reboot, names pending/failure/durability, supplementary Unicode+23ASCII, 60min gap, states/empty/offline/keyboard/axes/no external resources (simulated APIs only)

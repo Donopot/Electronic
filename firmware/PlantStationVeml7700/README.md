@@ -1,7 +1,7 @@
 # Plant Station — diagnostic VEML7700 / Heltec V3
 
 Le nouveau profil **`heltec_v3_plant_dashboard`** prépare le robot OLED, les quatre
-plantes, leur batterie non communiquée, le Wi-Fi domestique avec provisioning BLE
+plantes, leur batterie non communiquée, le Wi-Fi domestique avec assistant local sans application
 et un historique local de trente jours. Voir le [tableau de bord local](../../docs/plant-dashboard.md)
 pour l’utilisation, l’API, le stockage et les limites de vérification.
 

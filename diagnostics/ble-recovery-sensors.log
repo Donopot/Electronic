@@ -1,0 +1,10 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T16:59:54.573754+00:00
+[LoRa] Controle SPI OK ; module en veille.
+[OK] t=60636 ms | Temperature : 23.3 °C | Pression : 1001.91 hPa
+[OK] t=62637 ms | Temperature : 23.3 °C | Pression : 1001.90 hPa
+[OK] t=64638 ms | Temperature : 23.3 °C | Pression : 1001.88 hPa
+[OK] t=66639 ms | Temperature : 23.3 °C | Pression : 1001.83 hPa
+[OK] t=68640 ms | Temperature : 23.3 °C | Pression : 1001.84 hPa
+[LoRa] Controle SPI OK ; module en veille.
+[OK] t=70641 ms | Temperature : 23.3 °C | Pression : 1001.93 hPa
+BILAN : 6 mesures, 0 erreurs, 12.1 s de capture. Temperature=23.3..23.3 C; pression=1001.83..1001.93 hPa. Intervalles=2001..2001 ms.

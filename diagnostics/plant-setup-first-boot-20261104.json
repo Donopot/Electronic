@@ -1,0 +1,11 @@
+{
+  "utc": "2026-11-04T17:33:21.112293+00:00",
+  "port": "COM5",
+  "reset": "RTS with DTR=false",
+  "valid_lux_count": 24,
+  "history_ready": true,
+  "fatal_errors": [],
+  "radio_count": 0,
+  "physical_qr_scanning": "pending phone test",
+  "accepted": true
+}

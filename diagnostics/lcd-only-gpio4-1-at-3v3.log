@@ -1,0 +1,17 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T13:40:23.279766+00:00
+ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xf (SPI_FAST_FLASH_BOOT)
+Saved PC:0x42013c3e
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5810,len:0x438
+load:0x403cc710,len:0x90c
+load:0x403ce710,len:0x2624
+entry 0x403cc710
+
+Test LCD seul : SDA=GPIO4, SCL=GPIO1, LiquidCrystal_I2C.
+[LCD TEST] Adresse 0x3F : NACK (code 2).
+[LCD TEST] Adresse 0x27 : NACK (code 2).
+[ERREUR] Aucun ACK a 0x3F / 0x27. Initialisation LCD abandonnee.
+BILAN : 0 mesures, 1 erreurs, 10.3 s de capture.

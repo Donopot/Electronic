@@ -1,0 +1,46 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T13:57:42.589241+00:00
+ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xf (SPI_FAST_FLASH_BOOT)
+Saved PC:0x42014af0
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5810,len:0x438
+load:0x403cc710,len:0x90c
+load:0x403ce710,len:0x2624
+entry 0x403cc710
+
+=== EnviroTerminal V1 : BMP180 + LCD 16x2 ===
+Alimentation capteur : 3,3 V ; mesures toutes les 2 secondes.
+BMP180 : SDA=GPIO4, SCL=GPIO3, 100 kHz, timeout=50 ms.
+[INFO] Variante capteur seul : LCD desactive.
+[SCAN] Recherche I2C de 0x08 a 0x77...
+[SCAN] Termine : 0 peripherique(s), 0 erreur(s) de bus.
+[ERREUR] Aucun capteur a 0x77. Verifier 3,3 V, GND, SDA=4 et SCL=3.
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : NACK : adresse non acquittee (capteur absent/debranche ?) (code 2).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : NACK : adresse non acquittee (capteur absent/debranche ?) (code 2).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : NACK : adresse non acquittee (capteur absent/debranche ?) (code 2).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : NACK : adresse non acquittee (capteur absent/debranche ?) (code 2).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : NACK : adresse non acquittee (capteur absent/debranche ?) (code 2).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : NACK : adresse non acquittee (capteur absent/debranche ?) (code 2).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : NACK : adresse non acquittee (capteur absent/debranche ?) (code 2).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : NACK : adresse non acquittee (capteur absent/debranche ?) (code 2).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : NACK : adresse non acquittee (capteur absent/debranche ?) (code 2).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : NACK : adresse non acquittee (capteur absent/debranche ?) (code 2).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : NACK : adresse non acquittee (capteur absent/debranche ?) (code 2).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : NACK : adresse non acquittee (capteur absent/debranche ?) (code 2).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : NACK : adresse non acquittee (capteur absent/debranche ?) (code 2).
+BILAN : 0 mesures, 14 erreurs, 25.0 s de capture.

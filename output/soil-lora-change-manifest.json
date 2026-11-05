@@ -1,0 +1,194 @@
+[
+  {
+    "path": "firmware/XiaoSoilDiagnostic/platformio.ini",
+    "new": false,
+    "sha256": "6535cdb553c0b47b97b0e250aac8cc28ccfc3a95b731f7cde38e70ad61682da9",
+    "baseline": "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\.tools\\private\\before-soil-lora-20261103\\XiaoSoilDiagnostic-source\\platformio.ini"
+  },
+  {
+    "path": "firmware/XiaoSoilDiagnostic/README.md",
+    "new": false,
+    "sha256": "e530bcc7ce85d95a8e9632206efaeaa34dd2ae4d98be5df9e1da87f1e3cbeff7",
+    "baseline": "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\.tools\\private\\before-soil-lora-20261103\\XiaoSoilDiagnostic-source\\README.md"
+  },
+  {
+    "path": "firmware/XiaoSoilDiagnostic/src/BoundedUsbLog.h",
+    "new": true,
+    "sha256": "e5f82bc01f240d7936e1970d449cc142c8d8c1b6f7387aaccae825b9cd32a0a6",
+    "baseline": null
+  },
+  {
+    "path": "firmware/XiaoSoilDiagnostic/src/main.cpp",
+    "new": false,
+    "sha256": "0bb2f3259fa37ffb7ae9d58e102caa780dc7eeb53c5a5cb3ae6d5fc2f5a06ddf",
+    "baseline": "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\.tools\\private\\before-soil-lora-20261103\\XiaoSoilDiagnostic-source\\src\\main.cpp"
+  },
+  {
+    "path": "firmware/XiaoSoilDiagnostic/test/support/Adafruit_TinyUSB.h",
+    "new": true,
+    "sha256": "15bfe781e8eed340020f3e9ed956843b7dde9c14a6080b01c9742d7534ae392f",
+    "baseline": null
+  },
+  {
+    "path": "firmware/XiaoSoilDiagnostic/test/support/Arduino.h",
+    "new": true,
+    "sha256": "7c972f9adc40a108852c831e7e27caadd39d3f9681acac0ddc3d51611d2d690b",
+    "baseline": null
+  },
+  {
+    "path": "firmware/XiaoSoilDiagnostic/test/support/RadioLib.h",
+    "new": true,
+    "sha256": "6b2348fe128b2d225e1ae1e505c4b44959ff963bd9ece06ddecfb96c23159765",
+    "baseline": null
+  },
+  {
+    "path": "firmware/XiaoSoilDiagnostic/test/support/SPI.h",
+    "new": true,
+    "sha256": "e8e3b2a70e8769d9c0033524e921360fe677c75bd8e7bbfdf0fbde6c5ec695e5",
+    "baseline": null
+  },
+  {
+    "path": "firmware/XiaoSoilDiagnostic/test/test_tx.cpp",
+    "new": true,
+    "sha256": "3259e591816f1923a36077d4a1bbe0caa32fa88f7237d3a8bb603059ee61da4b",
+    "baseline": null
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/include/config.h",
+    "new": false,
+    "sha256": "76277ba604e973ac4d49f418b8d0928134b2158bfbc4749f8bc93be82aa102aa",
+    "baseline": "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\.tools\\private\\before-soil-lora-20261103\\PlantStationVeml7700-source\\include\\config.h"
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/platformio.ini",
+    "new": false,
+    "sha256": "ce7bca1d503a9bf4599d3ce773f40124b9933f34c6ba142e343020b02fe9ad4c",
+    "baseline": "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\.tools\\private\\before-soil-lora-20261103\\PlantStationVeml7700-source\\platformio.ini"
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/README.md",
+    "new": false,
+    "sha256": "d901f4c25032adceb689a62e524900ab8ca92c8c7fef56a50a4e7689c57aebc5",
+    "baseline": "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\.tools\\private\\before-soil-lora-20261103\\PlantStationVeml7700-source\\README.md"
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/src/display/OledDisplay.cpp",
+    "new": false,
+    "sha256": "bbad39eadd3a5e6eedb4e1881950f8fc04fe5cdb68019ed5a342385da984463a",
+    "baseline": "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\.tools\\private\\before-soil-lora-20261103\\PlantStationVeml7700-source\\src\\display\\OledDisplay.cpp"
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/src/display/OledDisplay.h",
+    "new": false,
+    "sha256": "b746a2fc6c9a27af7d4db89e5e2f5eb68535076a12f64baa5c7e3405cceeb3a2",
+    "baseline": "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\.tools\\private\\before-soil-lora-20261103\\PlantStationVeml7700-source\\src\\display\\OledDisplay.h"
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/src/main.cpp",
+    "new": false,
+    "sha256": "e9f3b41be098d28a7d7a7009d5ea9936b8810bf2ddd65587553af2927f4fad31",
+    "baseline": "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\.tools\\private\\before-soil-lora-20261103\\PlantStationVeml7700-source\\src\\main.cpp"
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/src/power/SleepPower.cpp",
+    "new": false,
+    "sha256": "ad0ed4f1b64ea614ff00e213bdd8fdcca6d1d26598f8470ba613aad4938b69fe",
+    "baseline": "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\.tools\\private\\before-soil-lora-20261103\\PlantStationVeml7700-source\\src\\power\\SleepPower.cpp"
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/src/power/SleepPower.h",
+    "new": false,
+    "sha256": "0e14775ad8639c4e364dd4cbacdb00d9a9f2a5260326eee695f2943398a34f7f",
+    "baseline": "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\.tools\\private\\before-soil-lora-20261103\\PlantStationVeml7700-source\\src\\power\\SleepPower.h"
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/src/radio/SoilRadio.cpp",
+    "new": true,
+    "sha256": "ecf97849fabeaa518b49023b3d34c4fc0a294a372b7ee2a56beadeab4b6b68ae",
+    "baseline": null
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/src/radio/SoilRadio.h",
+    "new": true,
+    "sha256": "b6ef671be20c94893357ae562621701d2d86f8dca13050dc36d03a6d8f7adead",
+    "baseline": null
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/test/run_host_tests.py",
+    "new": false,
+    "sha256": "9addf304f92536ae9013127a9a3bda7a616dde8649c80d8cd6a89043ab8eb0dc",
+    "baseline": "C:\\Users\\Anwender\\Documents\\ChatGPT\\Electronic\\.tools\\private\\before-soil-lora-20261103\\PlantStationVeml7700-source\\test\\run_host_tests.py"
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/test/support/freertos/FreeRTOS.h",
+    "new": true,
+    "sha256": "3f986bed1d7dbe7ae88e9615cd71d937d6d1eb036166db4498ab9abec55ce968",
+    "baseline": null
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/test/support/freertos/task.h",
+    "new": true,
+    "sha256": "3d9691abd9c39288f59e338fef025144842575238eb5482b5eafea6addc9d20a",
+    "baseline": null
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/test/support/RadioLib.h",
+    "new": true,
+    "sha256": "b6b0899ac4f7f795da6e04742f2f2df1d51419732f7e5adea51e9038082f0271",
+    "baseline": null
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/test/support/SPI.h",
+    "new": true,
+    "sha256": "c16b2f5a2f6d82c4cc482f117507829d1ed72b5e6e7351a3d1227d6ad6796d4a",
+    "baseline": null
+  },
+  {
+    "path": "firmware/PlantStationVeml7700/test/test_soil_radio.cpp",
+    "new": true,
+    "sha256": "61bfb94b2316df034649da8e001607c92a88100256adec83ab840fbde9075651",
+    "baseline": null
+  },
+  {
+    "path": "docs/soil-lora.md",
+    "new": true,
+    "sha256": "fe4577599badb7cfebeeed7023c57c8778c2cf0cb7ee342a20d8e6c1edf0d422",
+    "baseline": null
+  },
+  {
+    "path": "lib/PlantSoilProtocol/library.json",
+    "new": true,
+    "sha256": "b52286fa4ed9e40779536b1b9b83770fcd333bcf3893e369b323a7fe6a43af39",
+    "baseline": null
+  },
+  {
+    "path": "lib/PlantSoilProtocol/src/PlantSoilProtocol.h",
+    "new": true,
+    "sha256": "a324a46f3bc63dff47832ed841733b69130166b704e5203553ee907e1f3229a3",
+    "baseline": null
+  },
+  {
+    "path": "lib/PlantSoilProtocol/test/test_protocol.cpp",
+    "new": true,
+    "sha256": "0dbbabff7f0a8337b263cbc262a4b597920fb7de8a22c7c29e568d8bce096811",
+    "baseline": null
+  },
+  {
+    "path": "tests/test_capture_soil_lora.py",
+    "new": true,
+    "sha256": "bce2d93a1f608da231829cba37c55d28e3ea6f2d98f309f91ed38b545bc512ed",
+    "baseline": null
+  },
+  {
+    "path": "tools/capture_soil_lora.py",
+    "new": true,
+    "sha256": "8d8e910625210b8fd36b8cb5670ec37d724938dead4c31aaec2903f9fbfb0ca5",
+    "baseline": null
+  },
+  {
+    "path": "tools/run_soil_lora_host_tests.py",
+    "new": true,
+    "sha256": "d6da3992e224309f1423f1d9b3efb89b90e8671a298b9a08d45e71fb24e20c04",
+    "baseline": null
+  }
+]

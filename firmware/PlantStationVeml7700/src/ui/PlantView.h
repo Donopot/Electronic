@@ -6,7 +6,7 @@
 namespace plant {
 enum class PlantState : uint8_t { Waiting, Uncalibrated, Healthy, Dry, AdcFault, Stale };
 enum class Mood : uint8_t { Neutral, Happy, Sad, Worried };
-enum class Screen : uint8_t { Face, Details, Qr };
+enum class Screen : uint8_t { Face, Details, Qr, PortalUrl, WifiQr };
 inline Screen nextScreen(Screen value) { return static_cast<Screen>((static_cast<unsigned>(value) + 1) % 3); }
 struct PlantConfig {
     char name[49] = {}; // 24 Unicode characters, at most 48 UTF-8 bytes.

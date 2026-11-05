@@ -1,0 +1,7 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T08:14:47.751871+00:00
+ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x5 (DOWNLOAD(USB/UART0/1))
+Saved PC:0x400462e2
+waiting for download
+BILAN : 0 mesures, 0 erreurs, 15.2 s de capture.

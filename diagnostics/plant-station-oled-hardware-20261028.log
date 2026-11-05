@@ -1,0 +1,30 @@
+OLED verification COM5 UTC=2026-10-28T08:56:21.412070+00:00
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x1 (POWERON),boot:0x28 (SPI_FAST_FLASH_BOOT)
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce3808,len:0x4bc
+load:0x403c9700,len:0xbd8
+load:0x403cc700,len:0x2a0c
+entry 0x403c98d0
+[PlantStation VEML7700 v1.1.0] uptime_ms=106 evenement=demarrage statut=conversion_en_cours raw=null lux=null adresse=globale Heltec V3 cible; puce ESP32-S3 revision 0 flash 8388608 octets; UART0 CP2102; SDA=4 SCL=5; sous-revision V3.x non determinee
+[PlantStation VEML7700 v1.1.0] uptime_ms=359 evenement=oled statut=ok raw=null lux=null adresse=0x3C OLED initialise sur I2C1 GPIO17/18
+[PlantStation VEML7700 v1.1.0] uptime_ms=371 evenement=scan_ack statut=ok raw=null lux=null adresse=0x10 ACK recu; identite du composant non garantie
+[PlantStation VEML7700 v1.1.0] uptime_ms=395 evenement=scan_fin statut=conversion_en_cours raw=null lux=null adresse=globale Fin du scanner I2C
+[PlantStation VEML7700 v1.1.0] uptime_ms=412 evenement=configuration statut=conversion_en_cours raw=null lux=null adresse=0x10 Configuration verifiee : gain 1/8, integration 100 ms, economie desactivee
+[PlantStation VEML7700 v1.1.0] uptime_ms=1397 evenement=mesure statut=ok raw=145 lux=77.9520 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.1.0] uptime_ms=2397 evenement=mesure statut=ok raw=150 lux=80.6400 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.1.0] uptime_ms=3397 evenement=mesure statut=ok raw=144 lux=77.4144 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.1.0] uptime_ms=4397 evenement=mesure statut=ok raw=144 lux=77.4144 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.1.0] uptime_ms=5397 evenement=mesure statut=ok raw=148 lux=79.5648 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.1.0] uptime_ms=6397 evenement=mesure statut=ok raw=144 lux=77.4144 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.1.0] uptime_ms=7397 evenement=mesure statut=ok raw=142 lux=76.3392 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.1.0] uptime_ms=8397 evenement=mesure statut=ok raw=145 lux=77.9520 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.1.0] uptime_ms=9397 evenement=mesure statut=ok raw=146 lux=78.4896 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.1.0] uptime_ms=10397 evenement=mesure statut=ok raw=106 lux=56.9856 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.1.0] uptime_ms=11397 evenement=mesure statut=ok raw=761 lux=409.1136 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.1.0] uptime_ms=12397 evenement=mesure statut=ok raw=939 lux=504.8064 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.1.0] uptime_ms=13397 evenement=mesure statut=ok raw=924 lux=496.7424 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.1.0] uptime_ms=14397 evenement=mesure statut=ok raw=818 lux=439.7568 adresse=0x10 Luminosite ambiante
+SUMMARY {"oled_initialized": true, "readings": [{"uptime_ms": 1397, "lux": 77.952}, {"uptime_ms": 2397, "lux": 80.64}, {"uptime_ms": 3397, "lux": 77.4144}, {"uptime_ms": 4397, "lux": 77.4144}, {"uptime_ms": 5397, "lux": 79.5648}, {"uptime_ms": 6397, "lux": 77.4144}, {"uptime_ms": 7397, "lux": 76.3392}, {"uptime_ms": 8397, "lux": 77.952}, {"uptime_ms": 9397, "lux": 78.4896}, {"uptime_ms": 10397, "lux": 56.9856}, {"uptime_ms": 11397, "lux": 409.1136}, {"uptime_ms": 12397, "lux": 504.8064}, {"uptime_ms": 13397, "lux": 496.7424}, {"uptime_ms": 14397, "lux": 439.7568}], "errors": []}

@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-03",
+  "conditions_confirmed_by_user": true,
+  "port": "COM8",
+  "address": "0x49",
+  "stages": [
+    {
+      "condition": "terre humide",
+      "source": "diagnostics\\humidite-reessai-humide-20261103-155306.json",
+      "sample_count": 30,
+      "median_V": 1.910625,
+      "min_V": 1.90925,
+      "max_V": 1.912625,
+      "early5_median_V": 1.9095,
+      "late5_median_V": 1.91175,
+      "errors": 0,
+      "coverage_ok": true
+    },
+    {
+      "condition": "air",
+      "source": "diagnostics\\humidite-reessai-air-20261103-155428.json",
+      "sample_count": 29,
+      "median_V": 1.91525,
+      "min_V": 1.914625,
+      "max_V": 1.916375,
+      "early5_median_V": 1.915625,
+      "late5_median_V": 1.915625,
+      "errors": 0,
+      "coverage_ok": true
+    }
+  ],
+  "total_samples": 59,
+  "total_errors": 0,
+  "air_minus_wet_median_V": 0.004624999999999879,
+  "humidity_function_validated": false,
+  "conclusion": "Petit ecart observe, insuffisant pour confirmer une reponse reproductible compte tenu des variations entre releves humides du premier essai."
+}

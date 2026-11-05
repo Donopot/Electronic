@@ -1,0 +1,149 @@
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src\sfTk\sfDevVEML7700.cpp:25:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src\sfTk/sfDevVEML7700.h:30:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkII2C.h:16:
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  445 |         uint16_t data16[length];
+      |                         ^~~~~~
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: note: function parameter 'length' with unknown value cannot be used in a constant expression
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:438:85: note: declared here
+  438 |     virtual sfTkError_t writeRegister(uint16_t devReg, const uint16_t *data, size_t length)
+      |                                                                                     ^
+1 warning generated.
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src\sfTk\sfDevVEML7700.cpp:25:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src\sfTk/sfDevVEML7700.h:30:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkII2C.h:16:
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  445 |         uint16_t data16[length];
+      |                         ^~~~~~
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: note: function parameter 'length' with unknown value cannot be used in a constant expression
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:438:85: note: declared here
+  438 |     virtual sfTkError_t writeRegister(uint16_t devReg, const uint16_t *data, size_t length)
+      |                                                                                     ^
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\src\main.cpp:5:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\src/sensors/StrictWireTransport.h:4:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src/sfTk/sfDevVEML7700.h:30:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkII2C.h:16:
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  445 |         uint16_t data16[length];
+      |                         ^~~~~~
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: note: function parameter 'length' with unknown value cannot be used in a constant expression
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:438:85: note: declared here
+  438 |     virtual sfTkError_t writeRegister(uint16_t devReg, const uint16_t *data, size_t length)
+      |                                                                                     ^
+1 warning generated.
+1 warning generated.
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src\sfTk\sfDevVEML7700.cpp:25:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src\sfTk/sfDevVEML7700.h:30:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkII2C.h:16:
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  445 |         uint16_t data16[length];
+      |                         ^~~~~~
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: note: function parameter 'length' with unknown value cannot be used in a constant expression
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:438:85: note: declared here
+  438 |     virtual sfTkError_t writeRegister(uint16_t devReg, const uint16_t *data, size_t length)
+      |                                                                                     ^
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\src\main.cpp:5:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\src/sensors/StrictWireTransport.h:4:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src/sfTk/sfDevVEML7700.h:30:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkII2C.h:16:
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  445 |         uint16_t data16[length];
+      |                         ^~~~~~
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: note: function parameter 'length' with unknown value cannot be used in a constant expression
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:438:85: note: declared here
+  438 |     virtual sfTkError_t writeRegister(uint16_t devReg, const uint16_t *data, size_t length)
+      |                                                                                     ^
+1 warning generated.
+1 warning generated.
+PASS conversion, obscurite, delai, correction, borne, saturation reversible
+PASS NACK, lecture courte, bus defaillant, config/perte alimentation, reprise et attente conversion
+PASS transport reel avec faux Wire : requete unique, read=-1, ecriture courte, timeout, NACK, begin refuse
+PASS cadence, uptime et reprises au debordement millis, tentatives periodiques bornees
+PASS attente de conversion mesuree apres fin des transactions de configuration
+PASS scanner reel : 112 adresses non reservees, ACK, desactivation et arret erreur bus
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294967316,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"test \"guillemet\"\\ et\u000acontrole"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294967316,"status":"conversion_en_cours","raw":null,"lux":null,"address":16,"message":"test \"guillemet\"\\ et\u000acontrole"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294967316,"status":"i2c_nack","raw":null,"lux":null,"address":16,"message":"test \"guillemet\"\\ et\u000acontrole"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294967316,"status":"lecture_courte","raw":null,"lux":null,"address":16,"message":"test \"guillemet\"\\ et\u000acontrole"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294967316,"status":"erreur_bus","raw":null,"lux":null,"address":16,"message":"test \"guillemet\"\\ et\u000acontrole"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294967316,"status":"configuration_perdue","raw":null,"lux":null,"address":16,"message":"test \"guillemet\"\\ et\u000acontrole"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294967316,"status":"saturation","raw":65535,"lux":null,"address":16,"message":"test \"guillemet\"\\ et\u000acontrole"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":1,"status":"erreur_bus","raw":null,"lux":null,"address":-1,"message":""}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":1,"status":"erreur_bus","raw":null,"lux":null,"address":-1,"message":""}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":1,"status":"erreur_bus","raw":null,"lux":null,"address":-1,"message":""}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"scan_ack","version":"1.1.0","uptime_ms":0,"status":"ok","raw":null,"lux":null,"address":16,"message":"ACK sans preuve d'identite"}
+PASS serialisation reelle : schema, erreur, saturation, nombres invalides, echappement et tampon court
+PASS tous les tests C++ executes
+PASS Python json.loads : 11 lignes reelles, schema identique, lux nombre/null, uptime entier, echappement
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"demarrage","version":"1.1.0","uptime_ms":0,"status":"conversion_en_cours","raw":null,"lux":null,"address":-1,"message":"Heltec V3 cible; puce ESP32-S3 revision 2 flash 8388608 octets; UART0 CP2102; SDA=4 SCL=5; sous-revision V3.x non determinee"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"oled","version":"1.1.0","uptime_ms":0,"status":"ok","raw":null,"lux":null,"address":60,"message":"OLED initialise sur I2C1 GPIO17/18"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"scan_ack","version":"1.1.0","uptime_ms":0,"status":"ok","raw":null,"lux":null,"address":16,"message":"ACK recu; identite du composant non garantie"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"scan_fin","version":"1.1.0","uptime_ms":0,"status":"conversion_en_cours","raw":null,"lux":null,"address":-1,"message":"Fin du scanner I2C"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"configuration","version":"1.1.0","uptime_ms":0,"status":"conversion_en_cours","raw":null,"lux":null,"address":16,"message":"Configuration verifiee : gain 1/8, integration 100 ms, economie desactivee"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":1000,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":5500,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":6500,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":7500,"status":"i2c_nack","raw":null,"lux":null,"address":16,"message":"Aucun ACK : verifier VIN=3V3, GND, SDA=4 et SCL=5; reprise automatique"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":8500,"status":"i2c_nack","raw":null,"lux":null,"address":16,"message":"Aucun ACK : verifier VIN=3V3, GND, SDA=4 et SCL=5; reprise automatique"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":9500,"status":"i2c_nack","raw":null,"lux":null,"address":16,"message":"Aucun ACK : verifier VIN=3V3, GND, SDA=4 et SCL=5; reprise automatique"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":10500,"status":"conversion_en_cours","raw":null,"lux":null,"address":16,"message":"Attendre la nouvelle conversion apres configuration"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":11500,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+PASS vrai setup/loop : scan, echeances, boucles repetees, pause, wrap et reprise sans ancienne mesure
+PASS Python vrai setup/loop (normal) : evenements, statuts exacts, cadence et uptime
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"demarrage","version":"1.1.0","uptime_ms":4294966795,"status":"conversion_en_cours","raw":null,"lux":null,"address":-1,"message":"Heltec V3 cible; puce ESP32-S3 revision 2 flash 8388608 octets; UART0 CP2102; SDA=4 SCL=5; sous-revision V3.x non determinee"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"oled","version":"1.1.0","uptime_ms":4294966795,"status":"ok","raw":null,"lux":null,"address":60,"message":"OLED initialise sur I2C1 GPIO17/18"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"scan_ack","version":"1.1.0","uptime_ms":4294966795,"status":"ok","raw":null,"lux":null,"address":16,"message":"ACK recu; identite du composant non garantie"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"scan_fin","version":"1.1.0","uptime_ms":4294966795,"status":"conversion_en_cours","raw":null,"lux":null,"address":-1,"message":"Fin du scanner I2C"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"configuration","version":"1.1.0","uptime_ms":4294966795,"status":"conversion_en_cours","raw":null,"lux":null,"address":16,"message":"Configuration verifiee : gain 1/8, integration 100 ms, economie desactivee"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294967795,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294972295,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294973295,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294974295,"status":"i2c_nack","raw":null,"lux":null,"address":16,"message":"Aucun ACK : verifier VIN=3V3, GND, SDA=4 et SCL=5; reprise automatique"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294975295,"status":"i2c_nack","raw":null,"lux":null,"address":16,"message":"Aucun ACK : verifier VIN=3V3, GND, SDA=4 et SCL=5; reprise automatique"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294976295,"status":"i2c_nack","raw":null,"lux":null,"address":16,"message":"Aucun ACK : verifier VIN=3V3, GND, SDA=4 et SCL=5; reprise automatique"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294977295,"status":"conversion_en_cours","raw":null,"lux":null,"address":16,"message":"Attendre la nouvelle conversion apres configuration"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":4294978295,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+PASS vrai setup/loop : scan, echeances, boucles repetees, pause, wrap et reprise sans ancienne mesure
+PASS short_paths reel : include relatif meme lecteur, absolu autre lecteur
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src\sfTk\sfDevVEML7700.cpp:25:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src\sfTk/sfDevVEML7700.h:30:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkII2C.h:16:
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  445 |         uint16_t data16[length];
+      |                         ^~~~~~
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: note: function parameter 'length' with unknown value cannot be used in a constant expression
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:438:85: note: declared here
+  438 |     virtual sfTkError_t writeRegister(uint16_t devReg, const uint16_t *data, size_t length)
+      |                                                                                     ^
+1 warning generated.
+PASS OLED reel : alimentation/reset, lux, uptime 64 bits, panne/reprise bornee et absence de valeur perimee
+PASS Python vrai setup/loop (wrap) : evenements, statuts exacts, cadence et uptime
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"demarrage","version":"1.1.0","uptime_ms":0,"status":"conversion_en_cours","raw":null,"lux":null,"address":-1,"message":"Heltec V3 cible; puce ESP32-S3 revision 2 flash 8388608 octets; UART0 CP2102; SDA=4 SCL=5; sous-revision V3.x non determinee"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"oled","version":"1.1.0","uptime_ms":0,"status":"erreur_bus","raw":null,"lux":null,"address":60,"message":"OLED indisponible; acquisition conservee"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"scan_ack","version":"1.1.0","uptime_ms":0,"status":"ok","raw":null,"lux":null,"address":16,"message":"ACK recu; identite du composant non garantie"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"scan_fin","version":"1.1.0","uptime_ms":0,"status":"conversion_en_cours","raw":null,"lux":null,"address":-1,"message":"Fin du scanner I2C"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"configuration","version":"1.1.0","uptime_ms":0,"status":"conversion_en_cours","raw":null,"lux":null,"address":16,"message":"Configuration verifiee : gain 1/8, integration 100 ms, economie desactivee"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":1000,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":5500,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":6500,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":7500,"status":"i2c_nack","raw":null,"lux":null,"address":16,"message":"Aucun ACK : verifier VIN=3V3, GND, SDA=4 et SCL=5; reprise automatique"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":8500,"status":"i2c_nack","raw":null,"lux":null,"address":16,"message":"Aucun ACK : verifier VIN=3V3, GND, SDA=4 et SCL=5; reprise automatique"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":9500,"status":"i2c_nack","raw":null,"lux":null,"address":16,"message":"Aucun ACK : verifier VIN=3V3, GND, SDA=4 et SCL=5; reprise automatique"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":10500,"status":"conversion_en_cours","raw":null,"lux":null,"address":16,"message":"Attendre la nouvelle conversion apres configuration"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":11500,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+PASS vrai setup/loop : scan, echeances, boucles repetees, pause, wrap et reprise sans ancienne mesure
+PASS Python vrai setup/loop (no_oled) : evenements, statuts exacts, cadence et uptime
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"demarrage","version":"1.1.0","uptime_ms":0,"status":"conversion_en_cours","raw":null,"lux":null,"address":-1,"message":"Heltec V3 cible; puce ESP32-S3 revision 2 flash 8388608 octets; UART0 CP2102; SDA=4 SCL=5; sous-revision V3.x non determinee"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"scan_ack","version":"1.1.0","uptime_ms":0,"status":"ok","raw":null,"lux":null,"address":16,"message":"ACK recu; identite du composant non garantie"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"scan_fin","version":"1.1.0","uptime_ms":0,"status":"conversion_en_cours","raw":null,"lux":null,"address":-1,"message":"Fin du scanner I2C"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"configuration","version":"1.1.0","uptime_ms":0,"status":"conversion_en_cours","raw":null,"lux":null,"address":16,"message":"Configuration verifiee : gain 1/8, integration 100 ms, economie desactivee"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":1000,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":5500,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":6500,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":7500,"status":"i2c_nack","raw":null,"lux":null,"address":16,"message":"Aucun ACK : verifier VIN=3V3, GND, SDA=4 et SCL=5; reprise automatique"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":8500,"status":"i2c_nack","raw":null,"lux":null,"address":16,"message":"Aucun ACK : verifier VIN=3V3, GND, SDA=4 et SCL=5; reprise automatique"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":9500,"status":"i2c_nack","raw":null,"lux":null,"address":16,"message":"Aucun ACK : verifier VIN=3V3, GND, SDA=4 et SCL=5; reprise automatique"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":10500,"status":"conversion_en_cours","raw":null,"lux":null,"address":16,"message":"Attendre la nouvelle conversion apres configuration"}
+{"type":"plant_station_veml7700","sensor":"VEML7700","event":"mesure","version":"1.1.0","uptime_ms":11500,"status":"ok","raw":1000,"lux":537.6000,"address":16,"message":"Luminosite ambiante"}
+PASS vrai setup/loop : scan, echeances, boucles repetees, pause, wrap et reprise sans ancienne mesure
+PASS Python vrai setup/loop (headless) : evenements, statuts exacts, cadence et uptime

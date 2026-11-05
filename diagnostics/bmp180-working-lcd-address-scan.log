@@ -1,0 +1,24 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T13:03:52.250028+00:00
+[ERREUR] LCD : aucun adaptateur aux adresses 0x20..0x27 / 0x38..0x3F.
+[INFO] LCD indisponible ; nouvelle tentative dans 10 s. Lecture BMP180 maintenue.
+[OK] t=2218 ms | Temperature : 24.5 °C | Pression : 1006.80 hPa
+[OK] t=4218 ms | Temperature : 24.6 °C | Pression : 1006.76 hPa
+[OK] t=6218 ms | Temperature : 25.1 °C | Pression : 1006.76 hPa
+[OK] t=8218 ms | Temperature : 25.4 °C | Pression : 1006.85 hPa
+[OK] t=10218 ms | Temperature : 25.5 °C | Pression : 1006.84 hPa
+[OK] t=12218 ms | Temperature : 25.6 °C | Pression : 1006.82 hPa
+[LCD] Test cible a 0x3F : SDA=GPIO3, SCL=GPIO2.
+[LCD] Aucun ACK a 0x3F ; recherche 0x20..0x27 et 0x38..0x3E.
+[ERREUR] LCD : aucun adaptateur aux adresses 0x20..0x27 / 0x38..0x3F.
+[INFO] LCD indisponible ; nouvelle tentative dans 10 s. Lecture BMP180 maintenue.
+[OK] t=14218 ms | Temperature : 25.8 °C | Pression : 1006.83 hPa
+[OK] t=16218 ms | Temperature : 25.9 °C | Pression : 1006.86 hPa
+[OK] t=18218 ms | Temperature : 25.9 °C | Pression : 1006.96 hPa
+[OK] t=20218 ms | Temperature : 25.6 °C | Pression : 1006.89 hPa
+[OK] t=22218 ms | Temperature : 25.4 °C | Pression : 1006.94 hPa
+[OK] t=24218 ms | Temperature : 25.2 °C | Pression : 1006.85 hPa
+[LCD] Test cible a 0x3F : SDA=GPIO3, SCL=GPIO2.
+[LCD] Aucun ACK a 0x3F ; recherche 0x20..0x27 et 0x38..0x3E.
+[ERREUR] LCD : aucun adaptateur aux adresses 0x20..0x27 / 0x38..0x3F.
+[INFO] LCD indisponible ; nouvelle tentative dans 10 s. Lecture BMP180 maintenue.
+BILAN : 12 mesures, 3 erreurs, 25.1 s de capture. Temperature=24.5..25.9 C; pression=1006.76..1006.96 hPa. Intervalles=2000..2000 ms.

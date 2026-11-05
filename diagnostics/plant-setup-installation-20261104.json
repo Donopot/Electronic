@@ -1,0 +1,16 @@
+{
+  "utc": "20261104-173213Z",
+  "profile": "heltec_v3_plant_dashboard",
+  "purpose": "Assistant local sans application et QR Wi-Fi",
+  "usb_port": "COM5",
+  "usb_serial": "0001",
+  "chip_expected": "esp32s3",
+  "mac_expected": "3c:0f:02:eb:f5:28",
+  "application_only": true,
+  "offset": 65536,
+  "partition_table_unchanged": true,
+  "sha256": "4c2277e00206dda021399c745a636c615170c1bb2ba1e693b123bccbe2bd6a5d",
+  "bytes": 881504,
+  "backup": ".tools\\private\\before-plant-setup-20261104-162525Z",
+  "source_base_revision": "417908321bd610b6f82d0fe941eb1805d64cd5ca"
+}

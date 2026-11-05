@@ -1,0 +1,9 @@
+{
+  "kind": "soil_rx_battery_only",
+  "accepted": false,
+  "completed": false,
+  "reason": "Capture interrompue : DTR actif a maintenu le bouton/BOOT du Heltec ; reception reinitialisee ensuite avec DTR et RTS inactifs.",
+  "log": "diagnostics\\xiao-batterie-radio-20261103-165202Z.log",
+  "valid_count": 0,
+  "battery_functioning_demonstrated": false
+}

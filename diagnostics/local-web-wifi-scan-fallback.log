@@ -1,0 +1,14 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T16:26:28.463097+00:00
+[OK] t=34748 ms | Temperature : 23.5 °C | Pression : 1002.92 hPa
+[OK] t=36748 ms | Temperature : 23.5 °C | Pression : 1002.88 hPa
+[OK] t=38748 ms | Temperature : 23.5 °C | Pression : 1002.84 hPa
+[LoRa] Controle SPI OK ; module en veille.
+[OK] t=40748 ms | Temperature : 23.5 °C | Pression : 1002.91 hPa
+[OK] t=42749 ms | Temperature : 23.5 °C | Pression : 1002.85 hPa
+[OK] t=44749 ms | Temperature : 23.5 °C | Pression : 1002.90 hPa
+[OK] t=46749 ms | Temperature : 23.5 °C | Pression : 1002.88 hPa
+[OK] t=48750 ms | Temperature : 23.5 °C | Pression : 1002.88 hPa
+[LoRa] Controle SPI OK ; module en veille.
+[OK] t=50750 ms | Temperature : 23.5 °C | Pression : 1002.92 hPa
+[OK] t=52750 ms | Temperature : 23.5 °C | Pression : 1002.88 hPa
+BILAN : 10 mesures, 0 erreurs, 20.1 s de capture. Temperature=23.5..23.5 C; pression=1002.84..1002.92 hPa. Intervalles=2000..2001 ms.

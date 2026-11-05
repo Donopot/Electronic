@@ -1,0 +1,9 @@
+{
+  "utc": "20261105-073027Z",
+  "path": ".tools\\private\\before-plant-android-20261105-073027Z\\flash-8MB.bin",
+  "bytes": 8388608,
+  "sha256": "36683eef01431ffe916cd11748a77e3aa1929cb0034fc298d6e57bc5f7242aee",
+  "usb_port": "COM5",
+  "expected_mac": "3c:0f:02:eb:f5:28",
+  "purpose": "Sauvegarde avant ajout Android Bluetooth ; conserver NVS et historique"
+}

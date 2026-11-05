@@ -1,0 +1,104 @@
+{
+  "type": "software_and_simulated_io_only",
+  "created": "2026-11-05",
+  "spec": "_bmad-output/implementation-artifacts/spec-plant-android-setup.md",
+  "apk": {
+    "path": "output/plant-android/PlantStation-1.0.apk",
+    "bytes": 23165724,
+    "sha256": "28b310f4fba01347d8ed290031785819e7a0cb9cebf39e28ed727edfbfbbbdb3"
+  },
+  "firmware": {
+    "path": "output/plant-android/heltec-v3-plant-dashboard-android.bin",
+    "bytes": 1450512,
+    "sha256": "7da6fa07a583a1b9c3652d0785eca0c3a7ea417d72f52243b0d394c16ce4667b"
+  },
+  "four_profiles": {
+    "heltec_v3_text": {
+      "path": "firmware/PlantStationVeml7700/.pio/build/heltec_v3_text/firmware.bin",
+      "bytes": 314704,
+      "sha256": "13e8bd7cab085e57ebc5ef5408f9df70704fb3de74d03f0e26a4efd9e1a7f927"
+    },
+    "heltec_v3_json": {
+      "path": "firmware/PlantStationVeml7700/.pio/build/heltec_v3_json/firmware.bin",
+      "bytes": 314704,
+      "sha256": "d4b1c818760cc7c42cd2bac7b1d91b219abec134dea058e86afdcb8421d63459"
+    },
+    "heltec_v3_soil_lora": {
+      "path": "firmware/PlantStationVeml7700/.pio/build/heltec_v3_soil_lora/firmware.bin",
+      "bytes": 352160,
+      "sha256": "ed5981a70240b3fadc677723952b08cd591477df1e29397861729c6b6dc41a35"
+    },
+    "heltec_v3_plant_dashboard": {
+      "path": "firmware/PlantStationVeml7700/.pio/build/heltec_v3_plant_dashboard/firmware.bin",
+      "bytes": 1450512,
+      "sha256": "7da6fa07a583a1b9c3652d0785eca0c3a7ea417d72f52243b0d394c16ce4667b"
+    }
+  },
+  "android_tests": [
+    {
+      "name": "local.plantstation.kit.MainActivityTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "local.plantstation.kit.SetupContractTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "android_lint": {
+    "errors": 0,
+    "warnings": 24
+  },
+  "release_audit": {
+    "apk": "android\\PlantStation\\app\\build\\outputs\\apk\\release\\app-release.apk",
+    "sha256": "28b310f4fba01347d8ed290031785819e7a0cb9cebf39e28ed727edfbfbbbdb3",
+    "bytes": 23165724,
+    "signature_verified": true,
+    "certificate_sha256": "3ff44e455caaf5a2e4a24d50a33dd150f9ca2d919567ff29f0e6e81a32c337ce",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "internet_permission": false,
+    "espressif_log_invocations": 0,
+    "espressif_stacktrace_invocations": 0,
+    "android_log_writes": 0,
+    "physical_android_test": "not performed by this audit"
+  },
+  "checks": {
+    "four_heltec_builds": "PASS",
+    "android_release_signed": "PASS",
+    "android_unit_and_activity_simulation": "PASS",
+    "android_lint": "PASS",
+    "dashboard_real_worker_sdk_io_simulated": "PASS",
+    "ble_real_adapter_authentication_sdk_simulated": "PASS",
+    "radio_host_regression": "PASS",
+    "lux_sleep_host_regression": "PASS",
+    "dashboard_browser_simulated_api": "PASS",
+    "setup_browser_simulated_api": "PASS",
+    "diff_whitespace": "PASS"
+  },
+  "logs": [
+    "diagnostics/plant-android-four-builds.log",
+    "diagnostics/plant-android-app-build.log",
+    "diagnostics/plant-android-host-tests.log",
+    "diagnostics/plant-android-soil-tests.log",
+    "diagnostics/plant-android-lux-tests.log",
+    "diagnostics/plant-android-dashboard-browser.log",
+    "diagnostics/plant-android-setup-browser.log"
+  ],
+  "physical": {
+    "performed_by_implementer": false,
+    "flash_or_serial_by_implementer": false,
+    "remaining": [
+      "parent review",
+      "parent installation of reviewed firmware/APK",
+      "real Android permissions and QR/manual pairing",
+      "real wrong-password then correct retry and telephone Wi-Fi unchanged",
+      "LAN browser, persistence across RST, PRG8/sleep, radio/lux coexistence"
+    ]
+  }
+}

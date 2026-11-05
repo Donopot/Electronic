@@ -1,0 +1,363 @@
+Processing xiao_soil_diagnostic (platform: https://github.com/Seeed-Studio/platform-seeedboards.git#a6fd41debbbcda13b5340fff50c9092ed3289194; board: seeed-xiao-afruitnrf52-nrf52840; framework: arduino)
+--------------------------------------------------------------------------------
+Tool Manager: Installing platformio/tool-scons @ ~4.41101.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-scons@4.41101.0 has been installed!
+Tool Manager: Removing tool-scons @ 4.40801.0
+Tool Manager: tool-scons@4.40801.0 has been removed!
+Verbose mode can be enabled via `-v, --verbose` option
+board id is nrf,will call board_build/nrf/nrf_build.py
+CONFIGURATION: https://docs.platformio.org/page/boards/SeeedStudio/seeed-xiao-afruitnrf52-nrf52840.html
+PLATFORM: Seeed Studio Xiao Series (1.1.1+sha.a6fd41d) > Seeed Studio XIAO nRF52840
+HARDWARE: NRF52840 64MHz, 232KB RAM, 792KB Flash
+DEBUG: Current (blackmagic) External (blackmagic, cmsis-dap, jlink)
+PACKAGES: 
+ - framework-arduinoadafruitnrf52 @ 1.10101.0 (1.1.1) 
+ - framework-cmsis @ 2.50700.210515 (5.7.0) 
+ - tool-adafruit-nrfutil @ 1.503.0 (5.3) 
+ - tool-esp_install @ 5.3.4 
+ - tool-sreccat @ 1.164.0 (1.64) 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+board id is 52840,will call ../board_build/nrf/nrf_arduino.py
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 13 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- Adafruit TinyUSB Library
+|-- SPI @ 1.0
+Building in release mode
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\arduino\Adafruit_TinyUSB_API.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\arduino\Adafruit_USBD_CDC.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\arduino\Adafruit_USBD_Device.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\arduino\hid\Adafruit_USBD_HID.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\arduino\midi\Adafruit_USBD_MIDI.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\arduino\msc\Adafruit_USBD_MSC.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\arduino\ports\esp32\Adafruit_TinyUSB_esp32.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\arduino\ports\nrf\Adafruit_TinyUSB_nrf.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\arduino\ports\rp2040\Adafruit_TinyUSB_rp2040.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\arduino\ports\samd\Adafruit_TinyUSB_samd.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\arduino\webusb\Adafruit_USBD_WebUSB.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\class\audio\audio_device.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\class\bth\bth_device.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\class\cdc\cdc_device.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\class\dfu\dfu_device.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\class\dfu\dfu_rt_device.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\class\hid\hid_device.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\class\midi\midi_device.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\class\msc\msc_device.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\class\net\ecm_rndis_device.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\class\net\ncm_device.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\class\usbtmc\usbtmc_device.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\class\vendor\vendor_device.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\common\tusb_fifo.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\device\usbd.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\device\usbd_control.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\portable\espressif\esp32sx\dcd_esp32sx.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\portable\microchip\samd\dcd_samd.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\portable\nordic\nrf5x\dcd_nrf5x.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\portable\nxp\transdimension\dcd_transdimension.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\portable\raspberrypi\rp2040\dcd_rp2040.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\portable\raspberrypi\rp2040\hcd_rp2040.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\portable\raspberrypi\rp2040\rp2040_usb.c.o
+Compiling .pio\build\xiao_soil_diagnostic\lib6e9\Adafruit_TinyUSB_Arduino\tusb.c.o
+Compiling .pio\build\xiao_soil_diagnostic\src\main.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\lib913\SPI\SPI.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\lib913\SPI\SPI_nrf52832.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduinoVariant\variant.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\HardwarePWM.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\IPAddress.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\Print.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\RingBuffer.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\Stream.cpp.o
+Archiving .pio\build\xiao_soil_diagnostic\libFrameworkArduinoVariant.a
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\Tone.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\Uart.cpp.o
+Archiving .pio\build\xiao_soil_diagnostic\lib913\libSPI.a
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\WInterrupts.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\WMath.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\WString.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\abi.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\avr\dtostrf.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\delay.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\freertos\Source\croutine.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\freertos\Source\event_groups.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\freertos\Source\list.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\freertos\Source\portable\MemMang\heap_3.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\freertos\Source\queue.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\freertos\Source\stream_buffer.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\freertos\Source\tasks.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\freertos\Source\timers.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\freertos\portable\CMSIS\nrf52\port_cmsis.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\freertos\portable\CMSIS\nrf52\port_cmsis_systick.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\freertos\portable\GCC\nrf52\port.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\hooks.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\itoa.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\linker\gcc_startup_nrf52.S.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\linker\gcc_startup_nrf52840.S.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\main.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\new.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_gpiote.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_power.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_pwm.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_qspi.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_spim.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_timer.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\nordic\nrfx\mdk\system_nrf52.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\nordic\nrfx\mdk\system_nrf52840.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\pulse.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\pulse_asm.S.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\rtos.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\sysview\Config\SEGGER_SYSVIEW_Config_FreeRTOS.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\sysview\SEGGER\SEGGER_RTT.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\sysview\SEGGER\SEGGER_RTT_ASM_ARMv7M.S.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\sysview\SEGGER\SEGGER_RTT_printf.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\sysview\SEGGER\SEGGER_SYSVIEW.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\sysview\SEGGER_SYSVIEW_FreeRTOS.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\utility\AdaCallback.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\utility\SoftwareTimer.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\utility\adafruit_fifo.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\utility\debug.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\utility\utilities.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\wiring.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\wiring_analog.cpp.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\wiring_analog_nRF52.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\wiring_digital.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\wiring_private.c.o
+Compiling .pio\build\xiao_soil_diagnostic\FrameworkArduino\wiring_shift.c.o
+Archiving .pio\build\xiao_soil_diagnostic\libFrameworkArduino.a
+Linking .pio\build\xiao_soil_diagnostic\firmware.elf
+Checking size .pio\build\xiao_soil_diagnostic\firmware.elf
+Building .pio\build\xiao_soil_diagnostic\firmware.hex
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [          ]   3.0% (used 7148 bytes from 237568 bytes)
+Flash: [=         ]   6.9% (used 55684 bytes from 811008 bytes)
+Building .pio\build\xiao_soil_diagnostic\firmware.zip
+Zip created at .pio\build\xiao_soil_diagnostic\firmware.zip
+========================= [SUCCESS] Took 8.93 seconds =========================
+
+Processing xiao_soil_lora_tx (platform: https://github.com/Seeed-Studio/platform-seeedboards.git#a6fd41debbbcda13b5340fff50c9092ed3289194; board: seeed-xiao-afruitnrf52-nrf52840; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+board id is nrf,will call board_build/nrf/nrf_build.py
+CONFIGURATION: https://docs.platformio.org/page/boards/SeeedStudio/seeed-xiao-afruitnrf52-nrf52840.html
+PLATFORM: Seeed Studio Xiao Series (1.1.1+sha.a6fd41d) > Seeed Studio XIAO nRF52840
+HARDWARE: NRF52840 64MHz, 232KB RAM, 792KB Flash
+DEBUG: Current (blackmagic) External (blackmagic, cmsis-dap, jlink)
+PACKAGES: 
+ - framework-arduinoadafruitnrf52 @ 1.10101.0 (1.1.1) 
+ - framework-cmsis @ 2.50700.210515 (5.7.0) 
+ - tool-adafruit-nrfutil @ 1.503.0 (5.3) 
+ - tool-esp_install @ 5.3.4 
+ - tool-sreccat @ 1.164.0 (1.64) 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+board id is 52840,will call ../board_build/nrf/nrf_arduino.py
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 16 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- RadioLib @ 7.8.1
+|-- Adafruit TinyUSB Library
+|-- PlantSoilProtocol @ 1.0.0
+|-- SPI @ 1.0
+Building in release mode
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\arduino\Adafruit_TinyUSB_API.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\arduino\Adafruit_USBD_CDC.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\arduino\Adafruit_USBD_Device.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\arduino\hid\Adafruit_USBD_HID.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\arduino\midi\Adafruit_USBD_MIDI.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\arduino\msc\Adafruit_USBD_MSC.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\arduino\ports\esp32\Adafruit_TinyUSB_esp32.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\arduino\ports\nrf\Adafruit_TinyUSB_nrf.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\arduino\ports\rp2040\Adafruit_TinyUSB_rp2040.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\arduino\ports\samd\Adafruit_TinyUSB_samd.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\arduino\webusb\Adafruit_USBD_WebUSB.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\class\audio\audio_device.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\class\bth\bth_device.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\class\cdc\cdc_device.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\class\dfu\dfu_device.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\class\dfu\dfu_rt_device.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\class\hid\hid_device.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\class\midi\midi_device.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\class\msc\msc_device.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\class\net\ecm_rndis_device.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\class\net\ncm_device.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\class\usbtmc\usbtmc_device.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\class\vendor\vendor_device.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\common\tusb_fifo.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\device\usbd.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\device\usbd_control.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\portable\espressif\esp32sx\dcd_esp32sx.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\portable\microchip\samd\dcd_samd.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\portable\nordic\nrf5x\dcd_nrf5x.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\portable\nxp\transdimension\dcd_transdimension.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\portable\raspberrypi\rp2040\dcd_rp2040.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\portable\raspberrypi\rp2040\hcd_rp2040.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\portable\raspberrypi\rp2040\rp2040_usb.c.o
+Compiling .pio\build\xiao_soil_lora_tx\lib6e9\Adafruit_TinyUSB_Arduino\tusb.c.o
+Compiling .pio\build\xiao_soil_lora_tx\src\main.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib913\SPI\SPI.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib913\SPI\SPI_nrf52832.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\Hal.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\Module.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\hal\Arduino\ArduinoHal.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\hal\ESP-IDF\EspHal.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\hal\RPiPico\PicoHal.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\hal\Stm32duino\Stm32wlHal.cpp.o
+In file included from src\main.cpp:8:0:
+.pio\libdeps\xiao_soil_lora_tx\RadioLib\src/RadioLib.h:69:4: warning: #warning "Use of USB CDC for debug output is not recommended (might stop on first sleep). Use hardware UART instead." [-Wcpp]
+   #warning "Use of USB CDC for debug output is not recommended (might stop on first sleep). Use hardware UART instead."
+    ^~~~~~~
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\CC1101\CC1101.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LLCC68\LLCC68.cpp.o
+Archiving .pio\build\xiao_soil_lora_tx\lib913\libSPI.a
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR11x0\LR1110.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR11x0\LR1120.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR11x0\LR1121.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR11x0\LR11x0.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR11x0\LR11x0_commands.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR11x0\LR11x0_crypto.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR11x0\LR11x0_gnss.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR11x0\LR11x0_wifi.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR11x0\LR_common.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR2021\LR2021.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR2021\LR2021_cmds_chip_control.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR2021\LR2021_cmds_flrc.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR2021\LR2021_cmds_gfsk.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR2021\LR2021_cmds_lora.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR2021\LR2021_cmds_misc.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR2021\LR2021_cmds_ook.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR2021\LR2021_cmds_oqpsk.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR2021\LR2021_cmds_radio.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR2021\LR2021_cmds_ranging.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\LR2021\LR2021_config.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\RF69\RF69.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX123x\SX1231.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX123x\SX1233.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX126x\STM32WLx.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX126x\SX1261.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX126x\SX1262.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX126x\SX1268.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX126x\SX126x.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX126x\SX126x_LR_FHSS.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX126x\SX126x_commands.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX126x\SX126x_config.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX127x\SX1272.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX127x\SX1273.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX127x\SX1276.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX127x\SX1277.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX127x\SX1278.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX127x\SX1279.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX127x\SX127x.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX128x\SX1280.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX128x\SX1281.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX128x\SX1282.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\SX128x\SX128x.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\Si443x\Si4430.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\Si443x\Si4431.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\Si443x\Si4432.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\Si443x\Si443x.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\modules\nRF24\nRF24.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\ADSB\ADSB.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\AFSK\AFSK.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\APRS\APRS.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\AX25\AX25.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\BellModem\BellModem.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\ExternalRadio\ExternalRadio.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\FSK4\FSK4.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\Hellschreiber\Hellschreiber.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\LoRaWAN\LoRaWAN.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\LoRaWAN\LoRaWANBands.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\LoRaWAN\LoRaWANPacMan.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\LoRaWAN\LoRaWANPackageTS003.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\LoRaWAN\LoRaWANPackageTS009.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\Morse\Morse.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\Pager\Pager.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\PhysicalLayer\PhysicalLayer.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\Print\ITA2String.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\Print\Print.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\RTTY\RTTY.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\protocols\SSTV\SSTV.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\utils\BCH.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\utils\CRC.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\utils\ConvCode.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\utils\Cryptography.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\lib0ca\RadioLib\utils\Utils.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduinoVariant\variant.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\HardwarePWM.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\IPAddress.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\Print.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\RingBuffer.cpp.o
+Archiving .pio\build\xiao_soil_lora_tx\libFrameworkArduinoVariant.a
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\Stream.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\Tone.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\Uart.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\WInterrupts.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\WMath.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\WString.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\abi.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\avr\dtostrf.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\delay.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\freertos\Source\croutine.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\freertos\Source\event_groups.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\freertos\Source\list.c.o
+Archiving .pio\build\xiao_soil_lora_tx\lib0ca\libRadioLib.a
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\freertos\Source\portable\MemMang\heap_3.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\freertos\Source\queue.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\freertos\Source\stream_buffer.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\freertos\Source\tasks.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\freertos\Source\timers.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\freertos\portable\CMSIS\nrf52\port_cmsis.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\freertos\portable\CMSIS\nrf52\port_cmsis_systick.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\freertos\portable\GCC\nrf52\port.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\hooks.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\itoa.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\linker\gcc_startup_nrf52.S.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\linker\gcc_startup_nrf52840.S.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\main.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\new.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_gpiote.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_power.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_pwm.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_qspi.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_spim.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\nordic\nrfx\drivers\src\nrfx_timer.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\nordic\nrfx\mdk\system_nrf52.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\nordic\nrfx\mdk\system_nrf52840.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\pulse.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\pulse_asm.S.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\rtos.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\sysview\Config\SEGGER_SYSVIEW_Config_FreeRTOS.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\sysview\SEGGER\SEGGER_RTT.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\sysview\SEGGER\SEGGER_RTT_ASM_ARMv7M.S.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\sysview\SEGGER\SEGGER_RTT_printf.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\sysview\SEGGER\SEGGER_SYSVIEW.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\sysview\SEGGER_SYSVIEW_FreeRTOS.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\utility\AdaCallback.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\utility\SoftwareTimer.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\utility\adafruit_fifo.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\utility\debug.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\utility\utilities.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\wiring.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\wiring_analog.cpp.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\wiring_analog_nRF52.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\wiring_digital.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\wiring_private.c.o
+Compiling .pio\build\xiao_soil_lora_tx\FrameworkArduino\wiring_shift.c.o
+Archiving .pio\build\xiao_soil_lora_tx\libFrameworkArduino.a
+Linking .pio\build\xiao_soil_lora_tx\firmware.elf
+Checking size .pio\build\xiao_soil_lora_tx\firmware.elf
+Building .pio\build\xiao_soil_lora_tx\firmware.hex
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [          ]   3.6% (used 8448 bytes from 237568 bytes)
+Flash: [=         ]  11.1% (used 89744 bytes from 811008 bytes)
+Building .pio\build\xiao_soil_lora_tx\firmware.zip
+Zip created at .pio\build\xiao_soil_lora_tx\firmware.zip
+========================= [SUCCESS] Took 12.31 seconds =========================
+
+Environment           Status    Duration
+--------------------  --------  ------------
+xiao_soil_diagnostic  SUCCESS   00:00:08.925
+xiao_soil_lora_tx     SUCCESS   00:00:12.307
+========================= 2 succeeded in 00:00:21.232 =========================

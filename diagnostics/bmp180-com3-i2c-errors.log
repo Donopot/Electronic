@@ -1,0 +1,17 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T08:17:57.133996+00:00
+[ERREUR] Scan 0x3E : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x3F : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x40 : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x41 : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x42 : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x43 : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x44 : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x45 : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x46 : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x47 : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x48 : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x49 : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x4A : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x4B : delai I2C depasse (bus bloque ?) (code 5).
+[
+BILAN : 0 mesures, 14 erreurs, 15.0 s de capture.

@@ -1,0 +1,15 @@
+{
+  "utc": "2026-11-04T15:57:31.143236+00:00",
+  "profile": "heltec_v3_plant_dashboard",
+  "usb_port": "COM5",
+  "usb_serial": "0001",
+  "chip_expected": "esp32s3",
+  "mac_expected": "3c:0f:02:eb:f5:28",
+  "application_only": true,
+  "offset": 65536,
+  "partition_table_unchanged": true,
+  "sha256": "929022739474ba02f256987f7d1a541d0d5de9347152202ee937a6f9a2696f07",
+  "bytes": 1444192,
+  "source_base_revision": "417908321bd610b6f82d0fe941eb1805d64cd5ca",
+  "review": "three scoped confirmations, no remaining initial findings"
+}

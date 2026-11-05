@@ -1,0 +1,2110 @@
+--- a/firmware/XiaoSoilDiagnostic/platformio.ini
++++ b/firmware/XiaoSoilDiagnostic/platformio.ini
+@@ -1,9 +1,16 @@
+ [platformio]
+ default_envs = xiao_soil_diagnostic
+ 
+-[env:xiao_soil_diagnostic]
++[env]
+ platform = https://github.com/Seeed-Studio/platform-seeedboards.git#a6fd41debbbcda13b5340fff50c9092ed3289194
+ board = seeed-xiao-afruitnrf52-nrf52840
+ framework = arduino
+ monitor_speed = 115200
+ build_flags = -DUSE_TINYUSB
++
++[env:xiao_soil_diagnostic]
++
++[env:xiao_soil_lora_tx]
++lib_extra_dirs = ../../lib
++lib_deps = jgromes/RadioLib@7.8.1
++build_flags = ${env.build_flags} -DSOIL_LORA_TX=1
+--- a/firmware/XiaoSoilDiagnostic/README.md
++++ b/firmware/XiaoSoilDiagnostic/README.md
+@@ -1,4 +1,9 @@
+ # Diagnostic USB XIAO et ADS1115
++
++Le profil optionnel `xiao_soil_lora_tx` ajoute maintenant le transport SOIL-01
++vers le Heltec, sans changer les lignes `[MESURE]` du diagnostic ci-dessous.
++Voir [profils, protocole, branchements et capture LoRa](../../docs/soil-lora.md).
++Le profil par defaut `xiao_soil_diagnostic` conserve le fonctionnement USB seul.
+ 
+ Projet autonome pour XIAO nRF52840 et sonde capacitive analogique. Le kit
+ Wio-SX1262 peut rester assemble, mais ce diagnostic n'initialise pas la radio.
+--- /dev/null
++++ b/firmware/XiaoSoilDiagnostic/src/BoundedUsbLog.h
+@@ -0,0 +1,50 @@
++#pragma once
++#include <Arduino.h>
++#include <Adafruit_TinyUSB.h>
++#include <stdio.h>
++
++// Un seul producteur du CDC0 : ne jamais appeler Serial.write(), dont la
++// boucle attend sans limite si DTR reste actif devant un hote bloque.
++class BoundedUsbLog : public Print {
++public:
++  size_t write(uint8_t value) override {
++    if (value == '\n') {
++      if (!tud_cdc_n_connected(0)) { length_ = 0; overflow_ = false; return 1; }
++      if (overflow_) ++dropped_;
++      else {
++        if (dropped_) {
++          char marker[80];
++          const int count = snprintf(marker, sizeof(marker), "[SOIL_LOG] dropped_lines=%lu\r\n", static_cast<unsigned long>(dropped_));
++          if (send(reinterpret_cast<const uint8_t*>(marker), static_cast<size_t>(count))) dropped_ = 0;
++        }
++        line_[length_++] = '\n';
++        if (!send(line_, length_)) ++dropped_;
++      }
++      length_ = 0; overflow_ = false;
++    } else if (length_ < sizeof(line_) - 1) line_[length_++] = value;
++    else overflow_ = true;
++    return 1;
++  }
++  size_t write(const uint8_t* data, size_t length) override {
++    for (size_t i = 0; i < length; ++i) write(data[i]);
++    return length;
++  }
++private:
++  static bool send(const uint8_t* data, size_t length) {
++    const uint32_t started = millis();
++    while (tud_cdc_n_connected(0)) {
++      if (tud_cdc_n_write_available(0) >= length) {
++        const bool complete = tud_cdc_n_write(0, data, length) == length;
++        tud_cdc_n_write_flush(0);
++        return complete;
++      }
++      if (static_cast<uint32_t>(millis() - started) >= 4) return false;
++      yield();
++    }
++    return false;
++  }
++  uint8_t line_[256];
++  size_t length_ = 0;
++  uint32_t dropped_ = 0;
++  bool overflow_ = false;
++};
+--- a/firmware/XiaoSoilDiagnostic/src/main.cpp
++++ b/firmware/XiaoSoilDiagnostic/src/main.cpp
+@@ -1,5 +1,21 @@
+ #include <Arduino.h>
+ #include <Adafruit_TinyUSB.h>
++#ifndef SOIL_LORA_TX
++#define SOIL_LORA_TX 0
++#endif
++#if SOIL_LORA_TX
++#include <SPI.h>
++#include <RadioLib.h>
++#include <PlantSoilProtocol.h>
++#include "BoundedUsbLog.h"
++#endif
++
++#if SOIL_LORA_TX
++BoundedUsbLog diagnosticLog;
++#define SOIL_LOG diagnosticLog
++#else
++#define SOIL_LOG Serial
++#endif
+ 
+ namespace {
+ constexpr uint8_t kSda = 6, kScl = 7;
+@@ -129,15 +145,93 @@
+ bool usbWasConnected = false;
+ uint32_t attempts = 0, readings = 0, errors = 0;
+ uint8_t adsAddress = 0;
++#if SOIL_LORA_TX
++SX1262 radio(new Module(4, 1, 2, 3, SPI, SPISettings(2000000, MSBFIRST, SPI_MODE0)));
++bool radioReady = false, sessionReady = false, transmitted = false;
++uint32_t radioAttempt = 0, lastTransmit = 0;
++plantsoil::Packet current;
++
++bool makeSession(uint32_t& session) {
++  session = 0;
++  NRF_RNG->CONFIG = RNG_CONFIG_DERCEN_Enabled << RNG_CONFIG_DERCEN_Pos;
++  NRF_RNG->EVENTS_VALRDY = 0;
++  NRF_RNG->TASKS_START = 1;
++  const uint32_t started = millis();
++  uint8_t bytes = 0;
++  while (bytes < 4 && static_cast<uint32_t>(millis() - started) < 25) {
++    if (NRF_RNG->EVENTS_VALRDY) {
++      const uint8_t value = NRF_RNG->VALUE;
++      NRF_RNG->EVENTS_VALRDY = 0;
++      session |= static_cast<uint32_t>(value) << (8 * bytes++);
++    }
++    yield();
++  }
++  NRF_RNG->TASKS_STOP = 1;
++  return bytes == 4 && session != 0;
++}
++void initializeRadio() {
++  radioAttempt = millis();
++  radioReady = false;
++  if (!sessionReady) sessionReady = makeSession(current.session);
++  if (!sessionReady) {
++    SOIL_LOG.println(F("[SOIL_RADIO] error=session_rng_timeout authenticated=no"));
++    return;
++  }
++  // SPI explicite : le coeur ne touche pas SS/D7, deja occupee par SCL ADS.
++  SPI.begin();
++  radio.setRfSwitchPins(5, RADIOLIB_NC);
++  int16_t code = radio.begin(868.1f, 125.0f, 7, 5,
++      RADIOLIB_SX126X_SYNC_WORD_PRIVATE, 0, 8, 1.8f, false);
++  if (code == RADIOLIB_ERR_NONE) code = radio.setDio2AsRfSwitch(true);
++  if (code == RADIOLIB_ERR_NONE) code = radio.setCRC(2);
++  // RadioLib renvoie des microsecondes : refuser plus de 1 % sur 30 s.
++  if (code == RADIOLIB_ERR_NONE && radio.getTimeOnAir(plantsoil::kPacketSize) > 300000) {
++    SOIL_LOG.println(F("[SOIL_RADIO] error=airtime_exceeds_1_percent authenticated=no"));
++    return;
++  }
++  radioReady = code == RADIOLIB_ERR_NONE;
++  SOIL_LOG.print(F("[SOIL_RADIO] role=TX authenticated=no code=")); SOIL_LOG.println(code);
++}
++void serviceTransmit(bool valid, int16_t raw) {
++  const uint32_t now = millis();
++  if (!radioReady && static_cast<uint32_t>(now - radioAttempt) >= 10000) initializeRadio();
++  if (transmitted && static_cast<uint32_t>(now - lastTransmit) < plantsoil::kTransmitMs) return;
++  lastTransmit = now; transmitted = true; // aucun rattrapage ni renvoi immediat apres erreur
++  ++current.sequence;
++  current.uptimeMs = now;
++  current.address = adsAddress;
++  current.status = !adsAddress ? plantsoil::AdcStatus::Unavailable :
++      !valid ? plantsoil::AdcStatus::ReadError :
++      raw < -8 || raw > 26400 ? plantsoil::AdcStatus::RangeError : plantsoil::AdcStatus::Ok;
++  current.raw = current.status == plantsoil::AdcStatus::Ok ? raw : 0;
++  if (!radioReady) {
++    SOIL_LOG.println(F("[SOIL_TX_ERROR] radio_unavailable authenticated=no"));
++    return;
++  }
++  uint8_t bytes[plantsoil::kPacketSize];
++  if (plantsoil::encode(current, bytes, sizeof(bytes)) != plantsoil::Result::Accepted) {
++    SOIL_LOG.println(F("[SOIL_TX_ERROR] invalid_packet authenticated=no"));
++    return;
++  }
++  const int16_t code = radio.transmit(bytes, sizeof(bytes));
++  char line[240];
++  if (code == RADIOLIB_ERR_NONE) {
++    if (plantsoil::formatPacket(line, sizeof(line), "TX", current)) SOIL_LOG.println(line);
++  } else {
++    SOIL_LOG.print(F("[SOIL_TX_ERROR] code=")); SOIL_LOG.println(code);
++    radioReady = false; radioAttempt = millis();
++  }
++}
++#endif
+ 
+ void scanBus() {
+   adsAddress = 0;
+   bus.release();
+   delay(1);
+-  Serial.print(F("[BUS] SDA=")); Serial.print(digitalRead(kSda));
+-  Serial.print(F(" SCL=")); Serial.println(digitalRead(kScl));
++  SOIL_LOG.print(F("[BUS] SDA=")); SOIL_LOG.print(digitalRead(kSda));
++  SOIL_LOG.print(F(" SCL=")); SOIL_LOG.println(digitalRead(kScl));
+   if (digitalRead(kSda) == LOW || digitalRead(kScl) == LOW) {
+-    Serial.println(F("[ERREUR] Ligne I2C maintenue basse : verifier cablage et alimentation."));
++    SOIL_LOG.println(F("[ERREUR] Ligne I2C maintenue basse : verifier cablage et alimentation."));
+     return;
+   }
+   uint8_t found = 0;
+@@ -145,30 +239,30 @@
+   for (uint8_t address = 0x08; address <= 0x77; ++address) {
+     if (bus.probe(address)) {
+       ++found;
+-      Serial.print(F("[I2C] ACK adresse=0x")); Serial.println(address, HEX);
++      SOIL_LOG.print(F("[I2C] ACK adresse=0x")); SOIL_LOG.println(address, HEX);
+       if (address >= 0x48 && address <= 0x4B) {
+         ++candidates;
+         candidate = address;
+       }
+     }
+   }
+-  Serial.print(F("[SCAN] peripheriques=")); Serial.println(found);
+-  Serial.println(F("[INFO] Un ACK seul ne permet pas d'identifier la puce."));
++  SOIL_LOG.print(F("[SCAN] peripheriques=")); SOIL_LOG.println(found);
++  SOIL_LOG.println(F("[INFO] Un ACK seul ne permet pas d'identifier la puce."));
+   if (candidates == 1) {
+     adsAddress = candidate;
+-    Serial.print(F("[ADC] adresse_selectionnee=0x")); Serial.println(adsAddress, HEX);
++    SOIL_LOG.print(F("[ADC] adresse_selectionnee=0x")); SOIL_LOG.println(adsAddress, HEX);
+     if (adsAddress != 0x48) {
+-      Serial.println(F("[INFO] Adresse differente de 0x48 : verifier le strap ADDR hors tension."));
++      SOIL_LOG.println(F("[INFO] Adresse differente de 0x48 : verifier le strap ADDR hors tension."));
+     }
+   } else {
+-    Serial.println(F("[ERREUR] Aucun candidat ADS unique entre 0x48 et 0x4B ; aucune configuration envoyee."));
++    SOIL_LOG.println(F("[ERREUR] Aucun candidat ADS unique entre 0x48 et 0x4B ; aucune configuration envoyee."));
+   }
+ }
+ 
+ bool readA0(int16_t& raw) {
+   if (!adsAddress) return false;
+   if (!bus.writeRegister(adsAddress, 1, kConfig)) {
+-    Serial.println(F("[ERREUR] Ecriture configuration ADC : NACK ou bus bloque."));
++    SOIL_LOG.println(F("[ERREUR] Ecriture configuration ADC : NACK ou bus bloque."));
+     return false;
+   }
+   const uint32_t started = millis();
+@@ -176,32 +270,36 @@
+     delay(2);
+     uint16_t config = 0;
+     if (!bus.readRegister(adsAddress, 1, config)) {
+-      Serial.println(F("[ERREUR] Lecture configuration interrompue."));
++      SOIL_LOG.println(F("[ERREUR] Lecture configuration interrompue."));
+       return false;
+     }
+     if ((config & 0x7FFF) != (kConfig & 0x7FFF)) {
+-      Serial.println(F("[ERREUR] Configuration relue incompatible avec le diagnostic ADS1115."));
++      SOIL_LOG.println(F("[ERREUR] Configuration relue incompatible avec le diagnostic ADS1115."));
+       return false;
+     }
+     if (config & 0x8000) {
+       uint16_t conversion = 0;
+       if (!bus.readRegister(adsAddress, 0, conversion)) {
+-        Serial.println(F("[ERREUR] Lecture conversion A0 interrompue."));
++        SOIL_LOG.println(F("[ERREUR] Lecture conversion A0 interrompue."));
+         return false;
+       }
+       raw = static_cast<int16_t>(conversion);
+       return true;
+     }
+   }
+-  Serial.println(F("[ERREUR] Conversion non terminee apres 40 ms."));
++  SOIL_LOG.println(F("[ERREUR] Conversion non terminee apres 40 ms."));
+   return false;
+ }
+ void announce() {
+-  Serial.println(F("\n[XIAO-SOIL-DIAG] v1 / USB / D6=P1.11 SDA / D7=P1.12 SCL"));
+-  Serial.println(F("[CONFIG] ADS1115 attendu 0x48, selection unique 0x48..0x4B, A0/GND, +/-4.096 V, 128 SPS."));
+-  Serial.println(F("[INFO] D0 relachee ; radio non initialisee ; aucun pourcentage sans etalonnage."));
++  SOIL_LOG.println(F("\n[XIAO-SOIL-DIAG] v1 / USB / D6=P1.11 SDA / D7=P1.12 SCL"));
++  SOIL_LOG.println(F("[CONFIG] ADS1115 attendu 0x48, selection unique 0x48..0x4B, A0/GND, +/-4.096 V, 128 SPS."));
++#if SOIL_LORA_TX
++  SOIL_LOG.println(F("[INFO] D0 relachee ; SOIL-01 LoRa 868.1 MHz / 0 dBm / 30 s ; diagnostic non authentifie ; aucun pourcentage."));
++#else
++  SOIL_LOG.println(F("[INFO] D0 relachee ; radio non initialisee ; aucun pourcentage sans etalonnage."));
++#endif
+   if (!correctPinMap) {
+-    Serial.println(F("[ERREUR] Variante Arduino incompatible : test GPIO interdit."));
++    SOIL_LOG.println(F("[ERREUR] Variante Arduino incompatible : test GPIO interdit."));
+   }
+ }
+ }  // namespace
+@@ -212,39 +310,53 @@
+   correctPinMap = g_ADigitalPinMap[kSda] == 43 && g_ADigitalPinMap[kScl] == 44;
+   if (correctPinMap) bus.release();
+   Serial.begin(115200);
++#if SOIL_LORA_TX
++  initializeRadio();
++#endif
+ }
+ 
+ void loop() {
+   delay(1000);
+   if (!Serial) {
+     usbWasConnected = false;
+-    return;
+-  }
+-  if (!usbWasConnected) {
++#if !SOIL_LORA_TX
++    return;
++#endif
++  }
++  if (Serial && !usbWasConnected) {
+     announce();
+     usbWasConnected = true;
+     if (correctPinMap) scanBus();
+   }
+-  if (!correctPinMap) return;
++  if (!correctPinMap) {
++#if SOIL_LORA_TX
++    serviceTransmit(false, 0);
++#endif
++    return;
++  }
+   ++attempts;
+   if (attempts == 1 || attempts % 10 == 0) scanBus();
+   int16_t raw = 0;
+-  if (readA0(raw)) {
++  const bool valid = readA0(raw);
++  if (valid) {
+     ++readings;
+     const float volts = raw * 0.000125f;
+-    Serial.print(F("[MESURE] t_ms=")); Serial.print(millis());
+-    Serial.print(F(" adresse=0x")); Serial.print(adsAddress, HEX);
+-    Serial.print(F(" A0_brut=")); Serial.print(raw);
+-    Serial.print(F(" A0_V=")); Serial.print(volts, 6);
+-    Serial.print(F(" etat="));
++    SOIL_LOG.print(F("[MESURE] t_ms=")); SOIL_LOG.print(millis());
++    SOIL_LOG.print(F(" adresse=0x")); SOIL_LOG.print(adsAddress, HEX);
++    SOIL_LOG.print(F(" A0_brut=")); SOIL_LOG.print(raw);
++    SOIL_LOG.print(F(" A0_V=")); SOIL_LOG.print(volts, 6);
++    SOIL_LOG.print(F(" etat="));
+     // Quelques codes negatifs peuvent venir de l'offset, meme avec A0 a GND.
+-    if (raw < -8 || volts > 3.3f) Serial.println(F("HORS_PLAGE_NOMINALE"));
+-    else if (raw < 0) Serial.println(F("PROCHE_ZERO_OFFSET_POSSIBLE"));
+-    else Serial.println(F("DANS_PLAGE_NOMINALE"));
++    if (raw < -8 || volts > 3.3f) SOIL_LOG.println(F("HORS_PLAGE_NOMINALE"));
++    else if (raw < 0) SOIL_LOG.println(F("PROCHE_ZERO_OFFSET_POSSIBLE"));
++    else SOIL_LOG.println(F("DANS_PLAGE_NOMINALE"));
+   } else {
+     ++errors;
+   }
+-  Serial.print(F("[BILAN] essais=")); Serial.print(attempts);
+-  Serial.print(F(" mesures=")); Serial.print(readings);
+-  Serial.print(F(" erreurs=")); Serial.println(errors);
+-}
++  SOIL_LOG.print(F("[BILAN] essais=")); SOIL_LOG.print(attempts);
++  SOIL_LOG.print(F(" mesures=")); SOIL_LOG.print(readings);
++  SOIL_LOG.print(F(" erreurs=")); SOIL_LOG.println(errors);
++#if SOIL_LORA_TX
++  serviceTransmit(valid, raw);
++#endif
++}
+--- /dev/null
++++ b/firmware/XiaoSoilDiagnostic/test/support/Adafruit_TinyUSB.h
+@@ -0,0 +1,9 @@
++#pragma once
++#include <Arduino.h>
++inline bool tud_cdc_n_connected(uint8_t instance) { assert(instance == 0); return host::connected(); }
++inline uint32_t tud_cdc_n_write_available(uint8_t instance) { assert(instance == 0); return host::stalled() ? 0 : 256; }
++inline uint32_t tud_cdc_n_write(uint8_t instance, const void* data, uint32_t length) {
++  assert(instance == 0 && length <= tud_cdc_n_write_available(0));
++  host::usb().append(static_cast<const char*>(data), length); return length;
++}
++inline uint32_t tud_cdc_n_write_flush(uint8_t instance) { assert(instance == 0); return 0; }
+--- /dev/null
++++ b/firmware/XiaoSoilDiagnostic/test/support/Arduino.h
+@@ -0,0 +1,56 @@
++#pragma once
++#include <stdint.h>
++#include <stddef.h>
++#include <stdio.h>
++#include <string.h>
++#include <string>
++#include <vector>
++#include <assert.h>
++#define F(value) value
++constexpr int INPUT = 0, OUTPUT = 1, INPUT_PULLUP = 2, LOW = 0, HIGH = 1, HEX = 16;
++namespace host {
++inline uint64_t& clockUs() { static uint64_t clock = 0; return clock; }
++inline bool& connected() { static bool value = true; return value; }
++inline bool& stalled() { static bool value = false; return value; }
++inline bool& rngReady() { static bool value = true; return value; }
++inline std::string& usb() { static std::string value; return value; }
++inline void setNow(uint32_t now) { clockUs() = static_cast<uint64_t>(now) * 1000; }
++inline std::vector<std::string>& pins() { static std::vector<std::string> value; return value; }
++}
++struct FakeRng { uint32_t CONFIG = 0, EVENTS_VALRDY = 0, TASKS_START = 0, TASKS_STOP = 0, VALUE = 17; };
++inline FakeRng& fakeRng() { static FakeRng value; return value; }
++#define NRF_RNG (&fakeRng())
++constexpr int RNG_CONFIG_DERCEN_Enabled = 1, RNG_CONFIG_DERCEN_Pos = 0;
++inline uint32_t millis() { return static_cast<uint32_t>(host::clockUs() / 1000); }
++inline uint32_t micros() { return static_cast<uint32_t>(host::clockUs()); }
++inline void yield() {
++  host::clockUs() += 1000;
++  if (host::rngReady() && NRF_RNG->TASKS_START) { NRF_RNG->EVENTS_VALRDY = 1; NRF_RNG->VALUE++; }
++}
++inline void delay(unsigned long value) { host::clockUs() += value * 1000ULL; }
++inline void delayMicroseconds(unsigned value) { host::clockUs() += value; }
++inline void pinMode(int pin, int mode) { host::pins().push_back(std::to_string(pin) + ":" + std::to_string(mode)); }
++inline void digitalWrite(int, int) {}
++inline int digitalRead(int) { return HIGH; } // bus libre sans peripherique : NACK borne
++static const uint32_t g_ADigitalPinMap[] = {0, 0, 0, 0, 0, 0, 43, 44};
++class Print {
++public:
++  virtual ~Print() {}
++  virtual size_t write(uint8_t value) = 0;
++  virtual size_t write(const uint8_t* values, size_t length) { for (size_t i=0;i<length;++i) write(values[i]); return length; }
++  void print(const char* text) { write(reinterpret_cast<const uint8_t*>(text), strlen(text)); }
++  void print(long value, int base = 10) { char out[40]; snprintf(out, sizeof(out), base == HEX ? "%lX" : "%ld", value); print(out); }
++  void print(unsigned long value, int base = 10) { char out[40]; snprintf(out, sizeof(out), base == HEX ? "%lX" : "%lu", value); print(out); }
++  void print(int value, int base = 10) { print(static_cast<long>(value), base); }
++  void print(unsigned value, int base = 10) { print(static_cast<unsigned long>(value), base); }
++  void print(float value, int digits) { char out[40]; snprintf(out, sizeof(out), "%.*f", digits, static_cast<double>(value)); print(out); }
++  void println() { print("\r\n"); }
++  template<class T> void println(T value) { print(value); println(); }
++  template<class T> void println(T value, int base) { print(value, base); println(); }
++};
++struct FakeSerial : Print {
++  void begin(unsigned long value) { assert(value == 115200); }
++  explicit operator bool() const { return host::connected(); }
++  size_t write(uint8_t) override { assert(false && "Serial.write interdit pour le profil TX"); return 0; }
++};
++extern FakeSerial Serial;
+--- /dev/null
++++ b/firmware/XiaoSoilDiagnostic/test/support/RadioLib.h
+@@ -0,0 +1,29 @@
++#pragma once
++#include <Arduino.h>
++#include <SPI.h>
++#include <PlantSoilProtocol.h>
++constexpr int RADIOLIB_ERR_NONE = 0, RADIOLIB_NC = -1, RADIOLIB_SX126X_SYNC_WORD_PRIVATE = 0x12;
++namespace host {
++struct Transmission { uint32_t time; plantsoil::Packet packet; int16_t result; };
++struct Radio { int16_t beginCode = 0, transmitCode = 0; unsigned begins = 0; std::vector<Transmission> transmissions; };
++inline Radio& radio() { static Radio value; return value; }
++}
++class Module {
++public:
++  Module(int nss, int dio1, int reset, int busy, FakeSpi&, SPISettings) { assert(nss == 4 && dio1 == 1 && reset == 2 && busy == 3); }
++};
++class SX1262 {
++public:
++  explicit SX1262(Module*) {}
++  void setRfSwitchPins(int rx, int tx) { assert(rx == 5 && tx == RADIOLIB_NC); }
++  int16_t begin(float, float, int, int, int, int power, int, float, bool) { assert(power == 0); ++host::radio().begins; return host::radio().beginCode; }
++  int16_t setDio2AsRfSwitch(bool value) { assert(value); return 0; }
++  int16_t setCRC(int value) { assert(value == 2); return 0; }
++  uint32_t getTimeOnAir(size_t size) { assert(size == 20); return 56576; }
++  int16_t transmit(const uint8_t* data, size_t size) {
++    plantsoil::Packet packet;
++    assert(plantsoil::decode(data, size, packet) == plantsoil::Result::Accepted);
++    host::radio().transmissions.push_back({millis(), packet, host::radio().transmitCode});
++    return host::radio().transmitCode;
++  }
++};
+--- /dev/null
++++ b/firmware/XiaoSoilDiagnostic/test/support/SPI.h
+@@ -0,0 +1,5 @@
++#pragma once
++constexpr int MSBFIRST = 1, SPI_MODE0 = 0;
++struct SPISettings { SPISettings(int, int, int) {} };
++struct FakeSpi { void begin() {} };
++extern FakeSpi SPI;
+--- /dev/null
++++ b/firmware/XiaoSoilDiagnostic/test/test_tx.cpp
+@@ -0,0 +1,59 @@
++#include <Arduino.h>
++#include <SPI.h>
++FakeSerial Serial;
++FakeSpi SPI;
++// Inclure le vrai code permet d'exercer ses fonctions privees sans API de test.
++#include "../src/main.cpp"
++
++static const host::Transmission& latest() { return host::radio().transmissions.back(); }
++int main(int argc, char** argv) {
++  const std::string scenario = argc > 1 ? argv[1] : "cadence";
++  if (scenario == "rng") {
++    host::rngReady() = false;
++    setup(); assert(!sessionReady && millis() >= 25 && millis() < 40);
++    serviceTransmit(false, 0); assert(current.sequence == 1 && host::radio().transmissions.empty());
++    host::setNow(10000); host::rngReady() = true;
++    serviceTransmit(false, 0); assert(sessionReady && host::radio().transmissions.empty());
++    host::setNow(30025); serviceTransmit(false, 0);
++    assert(latest().packet.session != 0 && latest().packet.sequence == 2);
++  } else if (scenario == "usb" || scenario == "disconnected") {
++    host::connected() = scenario == "usb";
++    host::stalled() = scenario == "usb";
++    setup();
++    const uint32_t start = millis();
++    for (unsigned i=0; i<70; ++i) {
++      const uint32_t before = millis(); loop();
++      assert(static_cast<uint32_t>(millis() - before) < 1500);
++    }
++    assert(host::radio().transmissions.size() >= 3);
++    for (size_t i=1; i<host::radio().transmissions.size(); ++i)
++      assert(static_cast<uint32_t>(host::radio().transmissions[i].time - host::radio().transmissions[i-1].time) >= 30000);
++    assert(static_cast<uint32_t>(millis() - start) < 100000);
++    host::connected() = true; host::stalled() = false;
++    loop();
++    assert((host::usb().find("[SOIL_LOG] dropped_lines=") != std::string::npos) == (scenario == "usb"));
++    assert(host::pins()[0] == "0:0");
++  } else {
++    setup(); adsAddress = 0x48;
++    const uint32_t base = scenario == "wrap" ? 0xFFFFF000U : 100U;
++    host::setNow(base); serviceTransmit(true, 21565);
++    assert(latest().packet.raw == 21565 && latest().packet.sequence == 1);
++    host::setNow(base + 29999); serviceTransmit(true, 8000); assert(host::radio().transmissions.size() == 1);
++    host::setNow(base + 30000); serviceTransmit(false, 0);
++    assert(latest().packet.status == plantsoil::AdcStatus::ReadError && latest().packet.raw == 0);
++    host::setNow(base + 200000); serviceTransmit(true, 26401);
++    assert(latest().packet.status == plantsoil::AdcStatus::RangeError);
++    for (int i=0;i<20;++i) serviceTransmit(true, 8000);
++    assert(host::radio().transmissions.size() == 3); // pas de rattrapage
++    host::setNow(base + 230000); adsAddress = 0; serviceTransmit(false, 0);
++    assert(latest().packet.status == plantsoil::AdcStatus::Unavailable && latest().packet.address == 0);
++    host::setNow(base + 260000); adsAddress = 0x49; host::radio().transmitCode = -2; serviceTransmit(true, -8);
++    assert(current.sequence == 5 && latest().packet.raw == -8);
++    host::radio().transmitCode = 0;
++    host::setNow(base + 270000); serviceTransmit(true, 1000); assert(current.sequence == 5);
++    host::setNow(base + 289999); serviceTransmit(true, 1000); assert(current.sequence == 5);
++    host::setNow(base + 290000); serviceTransmit(true, 1000);
++    assert(current.sequence == 6 && latest().packet.sequence == 6);
++  }
++  puts("PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites");
++}
+--- a/firmware/PlantStationVeml7700/include/config.h
++++ b/firmware/PlantStationVeml7700/include/config.h
+@@ -3,6 +3,9 @@
+ 
+ #ifndef PLANT_JSON
+ #define PLANT_JSON 0
++#endif
++#ifndef PLANT_SOIL_LORA
++#define PLANT_SOIL_LORA 0
+ #endif
+ #ifndef PLANT_OLED
+ #define PLANT_OLED 1
+@@ -37,6 +40,7 @@
+ constexpr bool kJson = PLANT_JSON;
+ constexpr bool kScan = PLANT_SCAN;
+ static_assert(PLANT_JSON == 0 || PLANT_JSON == 1, "PLANT_JSON doit valoir 0 ou 1");
++static_assert(PLANT_SOIL_LORA == 0 || PLANT_SOIL_LORA == 1, "PLANT_SOIL_LORA doit valoir 0 ou 1");
+ static_assert(PLANT_OLED == 0 || PLANT_OLED == 1, "PLANT_OLED doit valoir 0 ou 1");
+ static_assert(PLANT_SCAN == 0 || PLANT_SCAN == 1, "PLANT_SCAN doit valoir 0 ou 1");
+ static_assert(PLANT_INTERVAL_MS >= 150 && PLANT_INTERVAL_MS < 0x80000000ULL,
+--- a/firmware/PlantStationVeml7700/platformio.ini
++++ b/firmware/PlantStationVeml7700/platformio.ini
+@@ -25,3 +25,10 @@
+ 
+ [env:heltec_v3_json]
+ build_flags = ${env.build_flags} -DPLANT_JSON=1
++
++[env:heltec_v3_soil_lora]
++lib_extra_dirs = ../../lib
++lib_deps =
++    ${env.lib_deps}
++    jgromes/RadioLib@7.8.1
++build_flags = ${env.build_flags} -DPLANT_JSON=0 -DPLANT_SOIL_LORA=1
+--- a/firmware/PlantStationVeml7700/README.md
++++ b/firmware/PlantStationVeml7700/README.md
+@@ -1,4 +1,10 @@
+ # Plant Station — diagnostic VEML7700 / Heltec V3
++
++Le profil optionnel `heltec_v3_soil_lora` ajoute la reception SOIL-01 du XIAO
++et son affichage brut/volts/age sur l'OLED tout en conservant lux et PRG.
++Voir [profils, protocole, branchements et capture LoRa](../../docs/soil-lora.md).
++Les descriptions sans radio ci-dessous concernent les profils historiques
++`heltec_v3_text` et `heltec_v3_json`, dont le schema JSON reste identique.
+ 
+ Firmware autonome pour valider la luminosité du futur hub Plant Station. Il lit un VEML7700 en I2C, affiche les lux sur l'OLED du Heltec et publie les mesures sur l'UART0 à 115200 bauds via le pont USB CP2102. Wi-Fi et LoRa ne sont pas initialisés. Le diagnostic RX [PlantHubDiagnostic](../PlantHubDiagnostic/README.md) et les projets météo ESP32-C3 restent distincts.
+ 
+--- a/firmware/PlantStationVeml7700/src/display/OledDisplay.cpp
++++ b/firmware/PlantStationVeml7700/src/display/OledDisplay.cpp
+@@ -81,6 +81,42 @@
+     display_.print("RST pour reprendre");
+     display_.display();
+ }
++#if PLANT_SOIL_LORA
++void OledDisplay::showSoil(const Measurement& lux, const plantsoil::Receiver& soil, bool radioReady, uint32_t now) {
++    // Meme politique bornee de presence/reprise OLED que l'affichage lux seul.
++    if (!ready_ && elapsed(millis(), lastAttempt_, 10000)) begin();
++    if (!ready_) return;
++    wire_.beginTransmission(0x3C);
++    if (wire_.endTransmission(true) != 0) { ready_ = false; lastAttempt_ = millis(); return; }
++    display_.clearDisplay();
++    display_.setTextColor(SSD1306_WHITE);
++    display_.setTextSize(1);
++    char line[32];
++    display_.setCursor(0, 0); display_.print("PLANT STATION  PRG3s");
++    display_.setCursor(0, 9);
++    if (lux.status == Status::Ok && isfinite(lux.lux) && lux.lux >= 0 && lux.lux <= kMaxLux)
++        snprintf(line, sizeof(line), "Lux %.1f", lux.lux);
++    else snprintf(line, sizeof(line), "Lux %s", lux.status == Status::WarmingUp ? "EN COURS" : "ERREUR CAPTEUR");
++    display_.print(line);
++    display_.setCursor(0, 18); display_.print("SOIL-01 NON AUTH");
++    display_.setCursor(0, 27);
++    const auto state = soil.state(now);
++    if (state == plantsoil::Freshness::Current) {
++        snprintf(line, sizeof(line), "Brut %d", soil.packet().raw); display_.print(line);
++        display_.setCursor(0, 36);
++        snprintf(line, sizeof(line), "%.6f V", plantsoil::microvolts(soil.packet().raw) / 1000000.0); display_.print(line);
++    } else {
++        display_.print(state == plantsoil::Freshness::Waiting ? "ATTENTE SONDE" :
++                       state == plantsoil::Freshness::Stale ? "MESURE PERIMEE" : "DEFAUT ADS");
++        display_.setCursor(0, 36); display_.print("Valeur indisponible");
++    }
++    display_.setCursor(0, 45);
++    if (state == plantsoil::Freshness::Waiting) display_.print("Age --");
++    else { snprintf(line, sizeof(line), "Age %lu s", static_cast<unsigned long>(soil.age(now) / 1000)); display_.print(line); }
++    display_.setCursor(0, 54); display_.print(radioReady ? "RADIO ECOUTE" : "ERREUR RADIO");
++    display_.display();
++}
++#endif
+ void OledDisplay::sleep() {
+     if (ready_) display_.ssd1306_command(SSD1306_DISPLAYOFF);
+     wire_.end();
+--- a/firmware/PlantStationVeml7700/src/display/OledDisplay.h
++++ b/firmware/PlantStationVeml7700/src/display/OledDisplay.h
+@@ -1,6 +1,9 @@
+ #pragma once
+ #include "config.h"
+ #include "sensors/VEML7700Sensor.h"
++#if PLANT_SOIL_LORA
++#include <PlantSoilProtocol.h>
++#endif
+ #if PLANT_OLED
+ #include <Wire.h>
+ #include <Adafruit_SSD1306.h>
+@@ -12,6 +15,9 @@
+ #if PLANT_OLED
+     bool begin();
+     void show(const Measurement& value, uint64_t uptime);
++#if PLANT_SOIL_LORA
++    void showSoil(const Measurement& lux, const plantsoil::Receiver& soil, bool radioReady, uint32_t now);
++#endif
+     void showSleepPrompt();
+     void sleep();
+ private:
+@@ -23,6 +29,9 @@
+ #else
+     bool begin() { return false; }
+     void show(const Measurement&, uint64_t) {}
++#if PLANT_SOIL_LORA
++    void showSoil(const Measurement&, const plantsoil::Receiver&, bool, uint32_t) {}
++#endif
+     void showSleepPrompt() {}
+     void sleep() {}
+ #endif
+--- a/firmware/PlantStationVeml7700/src/main.cpp
++++ b/firmware/PlantStationVeml7700/src/main.cpp
+@@ -7,6 +7,7 @@
+ #include "display/OledDisplay.h"
+ #include "power/PrgButton.h"
+ #include "power/SleepPower.h"
++#include "radio/SoilRadio.h"
+ 
+ namespace {
+ uint32_t readClock() { return millis(); }
+@@ -15,7 +16,28 @@
+ plant::Uptime uptime;
+ plant::OledDisplay oled;
+ plant::PrgButton button;
++#if PLANT_SOIL_LORA
++plant::SoilRadio soilRadio;
++plant::Measurement lastLux;
++plantsoil::Freshness displayedSoil = plantsoil::Freshness::Waiting;
++uint32_t displayedSession = 0, displayedSequence = 0;
++bool displayedRadioReady = false;
++void refreshSoil(uint32_t now, bool force = false) {
++    const auto& readings = soilRadio.readings();
++    const auto state = readings.state(now);
++    const auto& packet = readings.packet();
++    if (force || state != displayedSoil || packet.session != displayedSession ||
++        packet.sequence != displayedSequence || soilRadio.ready() != displayedRadioReady) {
++        oled.showSoil(lastLux, readings, soilRadio.ready(), now);
++        displayedSoil = state;
++        displayedSession = packet.session;
++        displayedSequence = packet.sequence;
++        displayedRadioReady = soilRadio.ready();
++    }
++}
++#endif
+ bool sleepRequested = false;
++bool sleepReleased = false;
+ uint32_t lastSample = 0;
+ plant::I2cScanner<plant::StrictWireTransport<TwoWire>> scanner(plant::kScan);
+ bool started = false;
+@@ -58,6 +80,9 @@
+         startSensor(millis());
+     }
+     if (!plant::kScan && !started) startSensor(millis());
++#if PLANT_SOIL_LORA
++    soilRadio.begin();
++#endif
+ }
+ void loop() {
+     const uint32_t now = millis();
+@@ -70,17 +95,32 @@
+         oled.showSleepPrompt();
+     }
+     if (buttonEvent == plant::ButtonEvent::ReleasedForSleep) {
++        sleepReleased = true;
++    }
++    if (sleepReleased) {
++#if PLANT_SOIL_LORA
++        soilRadio.service(now);
++        if (soilRadio.initializing()) { yield(); return; }
++#endif
+         plant::Measurement state;
+         state.status = transport.shutdown();
+         emit("capteur_veille", state, state.status == plant::Status::Ok ? "VEML7700 en sommeil confirme" : "Sommeil capteur non confirme ; poursuite de la veille", plant::kAddress);
+         oled.sleep();
+         Wire.end();
++#if PLANT_SOIL_LORA
++        plant::SleepPower::prepare(soilRadio.sleep());
++#else
+         plant::SleepPower::prepare();
++#endif
+         emit("veille", state, "Entree en veille profonde ; RST pour redemarrer");
+         plant::SleepPower::enter();
+         return;
+     }
+     if (sleepRequested) { yield(); return; }
++#if PLANT_SOIL_LORA
++    soilRadio.service(now);
++    refreshSoil(now);
++#endif
+     if (!started && !scanner.done()) {
+         const auto step = scanner.step(transport);
+         plant::Measurement state;
+@@ -101,7 +141,12 @@
+             lastSample = now; // pas de rafale de rattrapage apres une pause
+             const auto value = sensor.measure(now);
+             emit("mesure", value, plant::diagnosticMessage(value.status), plant::kAddress);
++#if PLANT_SOIL_LORA
++            lastLux = value;
++            refreshSoil(millis(), true);
++#else
+             oled.show(value, uptime.update(millis()));
++#endif
+         }
+     }
+     yield();
+--- a/firmware/PlantStationVeml7700/src/power/SleepPower.cpp
++++ b/firmware/PlantStationVeml7700/src/power/SleepPower.cpp
+@@ -14,13 +14,13 @@
+     pinMode(35, OUTPUT);
+     digitalWrite(35, LOW);
+ }
+-void SleepPower::prepare() {
++void SleepPower::prepare(bool radioAsleep) {
+     pinMode(4, INPUT);
+     pinMode(5, INPUT);
+     pinMode(8, OUTPUT);
+     digitalWrite(8, HIGH); // SX1262 non selectionne.
+     pinMode(12, OUTPUT);
+-    digitalWrite(12, LOW); // Radio maintenue en reset, sans initialisation inutile.
++    digitalWrite(12, radioAsleep ? HIGH : LOW); // Reset de secours si sommeil radio non confirme.
+     pinMode(21, OUTPUT);
+     digitalWrite(21, LOW);
+     pinMode(35, OUTPUT);
+--- a/firmware/PlantStationVeml7700/src/power/SleepPower.h
++++ b/firmware/PlantStationVeml7700/src/power/SleepPower.h
+@@ -4,7 +4,7 @@
+ class SleepPower {
+ public:
+     static void restore();
+-    static void prepare();
++    static void prepare(bool radioAsleep = false);
+     static void enter();
+ };
+ }
+--- /dev/null
++++ b/firmware/PlantStationVeml7700/src/radio/SoilRadio.cpp
+@@ -0,0 +1,116 @@
++#include "SoilRadio.h"
++#if PLANT_SOIL_LORA
++#include <Arduino.h>
++#include <stdio.h>
++#include <freertos/FreeRTOS.h>
++#include <freertos/task.h>
++namespace plant {
++namespace {
++volatile bool pending = false;
++void IRAM_ATTR received() { pending = true; }
++}
++void SoilRadio::fail(const char* operation, int16_t code) {
++    ready_ = false;
++    lastAttempt_ = millis();
++    char line[160];
++    snprintf(line, sizeof(line), "[SOIL_RADIO] state=error operation=%s code=%d authenticated=no", operation, code);
++    Serial.println(line);
++}
++void SoilRadio::begin() {
++    SPI.begin(9, 11, 10, 8);
++    initialize();
++}
++void SoilRadio::initialize() {
++    lastAttempt_ = millis();
++    pending = false;
++    ready_ = false;
++    initialization_.store(Initialization::Running, std::memory_order_release);
++    // begin/findChip peut attendre plus de dix secondes : seul ce travailleur
++    // possede alors SPI/radio ; la boucle continue lux et PRG sans attendre.
++    if (xTaskCreate(initializeTask, "soil-init", 6144, this, 1, nullptr) != pdPASS) {
++        initialization_.store(Initialization::Idle, std::memory_order_release);
++        fail("task", -1);
++    }
++}
++void SoilRadio::initializeTask(void* context) {
++    auto& self = *static_cast<SoilRadio*>(context);
++    int16_t code = self.radio_.begin(868.1f, 125.0f, 7, 5, RADIOLIB_SX126X_SYNC_WORD_PRIVATE, 0, 8, 1.8f, false);
++    if (code == RADIOLIB_ERR_NONE) code = self.radio_.setDio2AsRfSwitch(true);
++    if (code == RADIOLIB_ERR_NONE) code = self.radio_.setCRC(2);
++    if (code == RADIOLIB_ERR_NONE) {
++        self.radio_.setDio1Action(received);
++        code = self.radio_.startReceive();
++    }
++    self.initializationCode_ = code;
++    // Aucun acces radio/SPI apres cette publication acquire/release.
++    self.initialization_.store(Initialization::Finished, std::memory_order_release);
++    vTaskDelete(nullptr);
++}
++void SoilRadio::service(uint32_t now) {
++    readings_.state(now); // acquerir la peremption meme si l'OLED est absent
++    const auto initialization = initialization_.load(std::memory_order_acquire);
++    if (initialization == Initialization::Running) return;
++    if (initialization == Initialization::Finished) {
++        initialization_.store(Initialization::Idle, std::memory_order_release);
++        if (initializationCode_ != RADIOLIB_ERR_NONE) { fail("begin", initializationCode_); return; }
++        ready_ = true;
++        Serial.println("[SOIL_RADIO] state=listening node=SOIL-01 authenticated=no frequency=868100000");
++    }
++    if (!ready_) {
++        if (elapsed(now, lastAttempt_, 10000)) initialize();
++        return;
++    }
++    if (!pending) return;
++    pending = false;
++    uint8_t bytes[255];
++    // Figer RX avant toute lecture de longueur, en-tete ou charge utile.
++    int16_t code = radio_.standby();
++    bool hasCrc = false;
++    const char* rejected = "standby";
++    size_t length = 0;
++    if (code == RADIOLIB_ERR_NONE) {
++        length = radio_.getPacketLength();
++        rejected = "length";
++        if (length > sizeof(bytes)) code = RADIOLIB_ERR_PACKET_TOO_LONG;
++    }
++    if (code == RADIOLIB_ERR_NONE) {
++        code = radio_.getLoRaRxHeaderInfo(nullptr, &hasCrc);
++        rejected = "header_crc";
++    }
++    if (code == RADIOLIB_ERR_NONE && hasCrc) {
++        code = radio_.readData(bytes, length);
++        rejected = "radio_read";
++    }
++    if (code == RADIOLIB_ERR_NONE && hasCrc) {
++        const auto result = readings_.accept(bytes, length, now);
++        char line[240];
++        if (result == plantsoil::Result::Accepted) {
++            if (plantsoil::formatPacket(line, sizeof(line), "RX", readings_.packet())) Serial.println(line);
++        } else {
++            snprintf(line, sizeof(line), "[SOIL_REJECT] reason=%s authenticated=no", plantsoil::resultName(result));
++            Serial.println(line);
++        }
++    } else {
++        char line[120];
++        snprintf(line, sizeof(line), "[SOIL_REJECT] reason=%s code=%d authenticated=no", rejected, code);
++        Serial.println(line);
++    }
++    const int16_t restart = radio_.startReceive();
++    if (restart != RADIOLIB_ERR_NONE) fail("restart", restart);
++}
++bool SoilRadio::sleep() {
++    // La boucle attend la fin du proprietaire prive avant de preparer les GPIO.
++    if (initializing()) return false;
++    radio_.clearDio1Action();
++    pending = false;
++    const int16_t code = radio_.sleep(false);
++    ready_ = false;
++    SPI.end();
++    char line[120];
++    snprintf(line, sizeof(line), "[SOIL_RADIO] state=sleep code=%d reset_fallback=%s", code,
++             code == RADIOLIB_ERR_NONE ? "no" : "yes");
++    Serial.println(line);
++    return code == RADIOLIB_ERR_NONE;
++}
++}
++#endif
+--- /dev/null
++++ b/firmware/PlantStationVeml7700/src/radio/SoilRadio.h
+@@ -0,0 +1,30 @@
++#pragma once
++#include "config.h"
++#if PLANT_SOIL_LORA
++#include <PlantSoilProtocol.h>
++#include <RadioLib.h>
++#include <SPI.h>
++#include <atomic>
++namespace plant {
++class SoilRadio {
++public:
++    void begin();
++    void service(uint32_t now);
++    bool sleep();
++    bool initializing() const { return initialization_.load(std::memory_order_acquire) != Initialization::Idle; }
++    bool ready() const { return ready_; }
++    const plantsoil::Receiver& readings() const { return readings_; }
++private:
++    enum class Initialization { Idle, Running, Finished };
++    void initialize();
++    static void initializeTask(void* context);
++    void fail(const char* operation, int16_t code);
++    SX1262 radio_{new Module(8, 14, 12, 13, SPI, SPISettings(2000000, MSBFIRST, SPI_MODE0))};
++    plantsoil::Receiver readings_;
++    bool ready_ = false;
++    uint32_t lastAttempt_ = 0;
++    std::atomic<Initialization> initialization_{Initialization::Idle};
++    int16_t initializationCode_ = 0;
++};
++}
++#endif
+--- a/firmware/PlantStationVeml7700/test/run_host_tests.py
++++ b/firmware/PlantStationVeml7700/test/run_host_tests.py
+@@ -6,6 +6,7 @@
+ import sys
+ 
+ project = Path(__file__).resolve().parents[1]
++protocol = project.parents[1] / "lib/PlantSoilProtocol"
+ libraries = project / ".pio/libdeps/heltec_v3_text"
+ sensor = libraries / "SparkFun VEML7700 Arduino Library/src"
+ toolkit = libraries / "SparkFun Toolkit/src"
+@@ -17,7 +18,7 @@
+ command = ["uv", "run", "--with", "ziglang==0.13.0", "python", "-m", "ziglang", "c++",
+            "-std=c++11", "-O0", "-g", "-Wall", "-Wextra", "-Werror=return-type",
+            "-I" + str(project / "include"), "-I" + str(project / "src"),
+-           "-I" + str(project / "test/support"), "-I" + str(sensor), "-I" + str(toolkit),
++           "-I" + str(project / "test/support"), "-I" + str(protocol / "src"), "-I" + str(sensor), "-I" + str(toolkit),
+            str(project / "test/test_main.cpp"), str(project / "src/sensors/VEML7700Sensor.cpp"),
+            str(project / "src/diagnostics/Diagnostics.cpp"), str(sensor / "sfTk/sfDevVEML7700.cpp"),
+            str(toolkit / "sfTk/sfToolkit.cpp"), "-o", str(executable)]
+@@ -101,3 +102,19 @@
+ subprocess.run([str(sleep_test)], check=True)
+ for scenario in ["sensor_absent", "absent_boot", "bus_start_failed", "readback_clear", "short_read", "request_failed"]:
+     subprocess.run([str(sleep_test), scenario], check=True)
++
++# Codec et etat portables, puis les vrais modules optionnels radio/main/OLED.
++protocol_test = build / ("soil_protocol.exe" if os.name == "nt" else "soil_protocol")
++protocol_command = command[:command.index(str(project / "test/test_main.cpp"))] + [
++    str(protocol / "test/test_protocol.cpp"), "-o", str(protocol_test)]
++if os.name == "nt":
++    protocol_command.extend(["-target", "x86_64-windows-gnu"])
++subprocess.run(protocol_command, check=True)
++subprocess.run([str(protocol_test)], check=True)
++soil_test = build / ("soil_radio.exe" if os.name == "nt" else "soil_radio")
++soil_command = [str(project / "test/test_soil_radio.cpp") if item == str(project / "test/test_orchestration.cpp")
++                else str(soil_test) if item == str(orchestration) else item for item in main_command if item != "-DPLANT_JSON=1"]
++soil_command.extend([str(project / "src/radio/SoilRadio.cpp"), "-DPLANT_SOIL_LORA=1"])
++subprocess.run(soil_command, check=True)
++for scenario in ["normal", "radio_failed", "sleep_failed", "pending_init"]:
++    subprocess.run([str(soil_test), scenario], check=True)
+--- /dev/null
++++ b/firmware/PlantStationVeml7700/test/support/freertos/FreeRTOS.h
+@@ -0,0 +1,2 @@
++#pragma once
++constexpr int pdPASS = 1;
+--- /dev/null
++++ b/firmware/PlantStationVeml7700/test/support/freertos/task.h
+@@ -0,0 +1,16 @@
++#pragma once
++#include <assert.h>
++namespace host {
++struct Task { void (*function)(void*) = nullptr; void* context = nullptr; };
++inline Task& task() { static Task pending; return pending; }
++inline void finishInitialization() {
++    assert(task().function);
++    const auto work = task(); task() = Task{};
++    work.function(work.context);
++}
++}
++inline int xTaskCreate(void (*function)(void*), const char*, unsigned, void* context, unsigned, void*) {
++    assert(!host::task().function); host::task().function = function; host::task().context = context;
++    return 1;
++}
++inline void vTaskDelete(void*) {}
+--- /dev/null
++++ b/firmware/PlantStationVeml7700/test/support/RadioLib.h
+@@ -0,0 +1,48 @@
++#pragma once
++#include <Arduino.h>
++#include <SPI.h>
++#include <assert.h>
++#include <string.h>
++#define IRAM_ATTR
++constexpr int RADIOLIB_ERR_NONE = 0, RADIOLIB_ERR_PACKET_TOO_LONG = -4;
++constexpr int RADIOLIB_ERR_CRC_MISMATCH = -7, RADIOLIB_SX126X_SYNC_WORD_PRIVATE = 0x12;
++namespace host {
++struct Radio {
++    int16_t beginCode = 0, readCode = 0, receiveCode = 0, sleepCode = 0, standbyCode = 0, headerCode = 0;
++    bool frozen = false, hasCrc = true;
++    unsigned begins = 0, receives = 0;
++    void (*callback)() = nullptr;
++    std::vector<uint8_t> packet;
++};
++inline Radio& radio() { static Radio state; return state; }
++inline void inject(const uint8_t* data, size_t len) {
++    radio().packet.assign(data, data + len);
++    assert(radio().callback); radio().callback();
++}
++}
++class Module {
++public:
++    Module(int nss, int dio1, int reset, int busy, FakeSpi&, SPISettings) {
++        assert(nss == 8 && dio1 == 14 && reset == 12 && busy == 13);
++    }
++};
++class SX1262 {
++public:
++    explicit SX1262(Module*) {}
++    int16_t begin(float freq, float bandwidth, int sf, int cr, int sync, int power, int preamble, float tcxo, bool regulator) {
++        assert(freq == 868.1f && bandwidth == 125.0f && sf == 7 && cr == 5 && sync == 0x12);
++        assert(power == 0 && preamble == 8 && tcxo == 1.8f && !regulator);
++        ++host::radio().begins;
++        return host::radio().beginCode;
++    }
++    int16_t setDio2AsRfSwitch(bool value) { assert(value); return 0; }
++    int16_t setCRC(int count) { assert(count == 2); return 0; }
++    void setDio1Action(void (*callback)()) { host::radio().callback = callback; }
++    void clearDio1Action() { host::radio().callback = nullptr; }
++    int16_t startReceive() { ++host::radio().receives; host::radio().frozen = false; return host::radio().receiveCode; }
++    int16_t standby() { host::radio().frozen = host::radio().standbyCode == 0; return host::radio().standbyCode; }
++    size_t getPacketLength() { assert(host::radio().frozen); return host::radio().packet.size(); }
++    int16_t getLoRaRxHeaderInfo(uint8_t*, bool* crc) { assert(host::radio().frozen); *crc = host::radio().hasCrc; return host::radio().headerCode; }
++    int16_t readData(uint8_t* data, size_t length) { assert(host::radio().frozen); memcpy(data, host::radio().packet.data(), length); return host::radio().readCode; }
++    int16_t sleep(bool retain) { assert(!retain); host::gpioCalls().push_back("radio_sleep"); return host::radio().sleepCode; }
++};
+--- /dev/null
++++ b/firmware/PlantStationVeml7700/test/support/SPI.h
+@@ -0,0 +1,12 @@
++#pragma once
++#include <Arduino.h>
++constexpr int MSBFIRST = 1, SPI_MODE0 = 0;
++struct SPISettings { SPISettings(int, int, int) {} };
++struct FakeSpi {
++    void begin(int sck, int miso, int mosi, int nss) {
++        if (sck != 9 || miso != 11 || mosi != 10 || nss != 8) throw "Broches SPI incorrectes";
++        host::gpioCalls().push_back("spi_begin");
++    }
++    void end() { host::gpioCalls().push_back("spi_end"); }
++};
++extern FakeSpi SPI;
+--- /dev/null
++++ b/firmware/PlantStationVeml7700/test/test_soil_radio.cpp
+@@ -0,0 +1,122 @@
++#include <Arduino.h>
++#include <Wire.h>
++#include <Adafruit_SSD1306.h>
++#include <SPI.h>
++#include <RadioLib.h>
++#include <PlantSoilProtocol.h>
++#include <esp_sleep.h>
++#include <freertos/task.h>
++#include "radio/SoilRadio.h"
++#include <assert.h>
++#include <algorithm>
++#include <string>
++namespace host { uint32_t now = 0; }
++FakeSerial Serial;
++FakeEsp ESP;
++TwoWire Wire;
++FakeSpi SPI;
++void setup();
++void loop();
++static bool hasLine(const std::string& text) {
++    for (const auto& line : Serial.lines) if (line.find(text) != std::string::npos) return true;
++    return false;
++}
++static void frame(const char* expected, const char* absent = "unused") {
++    assert(host::oledFrames().back().find(expected) != std::string::npos);
++    assert(host::oledFrames().back().find(absent) == std::string::npos);
++}
++int main(int argc, char** argv) {
++    const std::string scenario = argc > 1 ? argv[1] : "normal";
++    if (scenario == "radio_failed") host::radio().beginCode = -2;
++    if (scenario == "sleep_failed") host::radio().sleepCode = -2;
++    setup();
++    if (scenario == "pending_init") {
++        const auto initialClock = host::now;
++        for (int i = 0; i < 113; ++i) loop();
++        assert(host::now == initialClock && host::radio().begins == 0);
++        host::now = 1000; loop(); frame("Lux 537.6");
++        host::now = 11000; loop(); frame("Lux 537.6");
++        assert(host::radio().begins == 0); // aucune attente de begin dans setup/loop
++        host::buttonPressed() = true;
++        host::now = 11100; loop(); host::now = 11140; loop();
++        host::now = 14140; loop(); frame("Relacher PRG");
++        host::buttonPressed() = false;
++        host::now = 14200; loop(); host::now = 14240; loop();
++        assert(host::radio().begins == 0 && !Serial.flushed);
++        assert(std::find(host::gpioCalls().begin(), host::gpioCalls().end(), "spi_end") == host::gpioCalls().end());
++        host::radio().beginCode = -2;
++        host::finishInitialization();
++        try { loop(); assert(false); } catch (const SleepEntered&) {}
++        assert(Serial.flushed && host::radio().begins == 1);
++        puts("PASS initialisation differee : lux/PRG apres 14s, boucle sans attente, sommeil attend le proprietaire SPI");
++        return 0;
++    }
++    host::finishInitialization();
++    for (int i = 0; i < 113; ++i) loop();
++    host::now = 1000; loop();
++    frame("Lux 537.6"); frame("ATTENTE SONDE");
++    if (scenario == "radio_failed") {
++        frame("ERREUR RADIO");
++        assert(host::radio().begins == 1);
++        host::now = 9999; loop(); assert(host::radio().begins == 1);
++        host::radio().beginCode = 0;
++        host::now = 10000; loop(); assert(host::radio().begins == 1);
++        host::finishInitialization();
++        loop(); assert(host::radio().begins == 2);
++        host::now = 11000; loop(); frame("RADIO ECOUTE"); frame("Lux 537.6");
++    }
++    plantsoil::Packet packet;
++    packet.session = 1234; packet.sequence = 1; packet.address = 0x48;
++    packet.status = plantsoil::AdcStatus::Ok; packet.raw = 21565;
++    uint8_t bytes[plantsoil::kPacketSize];
++    assert(plantsoil::encode(packet, bytes, sizeof(bytes)) == plantsoil::Result::Accepted);
++    host::now = 12000; host::inject(bytes, sizeof(bytes)); loop();
++    assert(hasLine("[SOIL_RX] authenticated=no node=SOIL-01 session=1234 seq=1"));
++    frame("Brut 21565"); frame("2.695625 V"); frame("Lux 537.6");
++    host::now = 60000; host::inject(bytes, sizeof(bytes)); loop();
++    assert(hasLine("reason=duplicate")); frame("Age 48 s");
++    bytes[2] = 2;
++    host::now = 90000; host::inject(bytes, sizeof(bytes)); loop();
++    assert(hasLine("reason=header")); frame("Age 78 s");
++    host::now = 101999; loop(); frame("2.695625 V");
++    host::now = 102000; loop(); frame("MESURE PERIMEE", "2.695625 V"); frame("Lux 537.6");
++    packet.session = 5678; packet.sequence = 0; packet.status = plantsoil::AdcStatus::ReadError; packet.raw = 0;
++    plantsoil::encode(packet, bytes, sizeof(bytes));
++    host::now = 104000; host::inject(bytes, sizeof(bytes)); loop();
++    frame("DEFAUT ADS", "21565"); frame("Valeur indisponible");
++    packet.sequence++; packet.status = plantsoil::AdcStatus::Ok; packet.raw = 8000;
++    plantsoil::encode(packet, bytes, sizeof(bytes));
++    host::now = 105000; host::inject(bytes, sizeof(bytes)); loop(); frame("1.000000 V");
++    host::radio().readCode = RADIOLIB_ERR_CRC_MISMATCH;
++    packet.sequence++; packet.raw = 16000;
++    plantsoil::encode(packet, bytes, sizeof(bytes));
++    host::now = 106000; host::inject(bytes, sizeof(bytes)); loop(); frame("Age 1 s");
++    frame("1.000000 V", "2.000000 V");
++    host::radio().readCode = 0;
++    host::radio().hasCrc = false;
++    host::now = 106100; host::inject(bytes, sizeof(bytes)); loop();
++    frame("1.000000 V", "2.000000 V");
++    assert(hasLine("reason=header_crc"));
++    host::now = 106999; loop(); frame("Age 1 s");
++    host::radio().hasCrc = true;
++    host::radio().standbyCode = -8;
++    const auto receives = host::radio().receives;
++    host::inject(bytes, sizeof(bytes)); loop();
++    assert(host::radio().receives == receives + 1 && hasLine("reason=standby"));
++    host::radio().standbyCode = 0;
++    host::radio().receiveCode = -3;
++    host::now = 107000; host::inject(bytes, sizeof(bytes)); loop(); frame("ERREUR RADIO"); frame("Lux 537.6");
++    host::buttonPressed() = true;
++    host::now = 107100; loop(); host::now = 107140; loop();
++    host::now = 110140; loop(); frame("Relacher PRG");
++    host::buttonPressed() = false;
++    host::now = 110200; loop(); host::now = 110240;
++    try { loop(); assert(false); } catch (const SleepEntered&) {}
++    const auto& calls = host::gpioCalls();
++    const auto radioSleep = std::find(calls.begin(), calls.end(), "radio_sleep");
++    const auto spiEnd = std::find(calls.begin(), calls.end(), "spi_end");
++    assert(radioSleep < spiEnd && spiEnd < std::find(calls.begin(), calls.end(), "deep_sleep"));
++    assert(std::find(calls.begin(), calls.end(), scenario == "sleep_failed" ? "write12:0" : "write12:1") != calls.end());
++    assert(Serial.flushed);
++    puts("PASS vrais radio/main/OLED : RX, age inchange au rejet, peremption, defaut sans valeur, lux concurrents, reprise, PRG et sommeil/reset de secours");
++}
+--- /dev/null
++++ b/docs/soil-lora.md
+@@ -0,0 +1,207 @@
++# SOIL-01 : test XIAO → Heltec, LoRa 868 MHz
++
++Ce test transporte la mesure brute ADS1115 de la sonde capacitive SOIL-01
++vers l'OLED du Heltec. La tension est derivee du meme entier aux deux bouts :
++`microvolts = brut × 125`. Il ne produit ni pourcentage d'humidite ni conseil
++d'arrosage. Les antennes 868 MHz doivent etre raccordees avant alimentation.
++Les identifiants de noeud, session, compteur et CRC ne fournissent **aucune
++authentification**. Les journaux et l'OLED le signalent.
++
++## Profils et compilation
++
++Les profils historiques `xiao_soil_diagnostic`, `heltec_v3_text` et
++`heltec_v3_json` restent disponibles sans initialisation radio. Les nouveaux
++profils sont `xiao_soil_lora_tx` et `heltec_v3_soil_lora` ; RadioLib est figee
++a **7.8.1**. Les versions des coeurs et des autres bibliotheques restent celles
++des projets existants. La version du diagnostic lux et son schema JSON
++restent `1.2.0` ; le profil radio utilise les lignes texte `SOIL_*` en plus
++des diagnostics lux habituels.
++
++Depuis la racine du depot, avec les paquets locaux deja installes :
++
++```powershell
++$env:PYTHONPATH = Join-Path $PWD '.tools/xiao-diagnostic-python'
++$env:PLATFORMIO_CORE_DIR = Join-Path $PWD '.tools/platformio'
++python -m platformio run --project-dir firmware/XiaoSoilDiagnostic -e xiao_soil_diagnostic -e xiao_soil_lora_tx
++$env:PYTHONPATH = Join-Path $PWD '.tools/python'
++python -m platformio run --project-dir firmware/PlantStationVeml7700 -e heltec_v3_text -e heltec_v3_json -e heltec_v3_soil_lora
++python firmware/PlantStationVeml7700/test/run_host_tests.py
++python tools/run_soil_lora_host_tests.py
++python tests/test_capture_soil_lora.py
++```
++
++Les commandes ci-dessus compilent sans flasher. Avant installation, conserver
++l'application et la configuration des deux cartes ; ne pas effacer la flash
++ni changer le chargeur. Les ports COM peuvent changer apres installation.
++Le profil XIAO lit et emet aussi sans terminal USB ouvert. D0 reste une
++entree sans tirage ; la logique du bouton/P-MOS n'est pas commandee.
++Dans le profil TX, chaque ligne USB est assemblee avant emission. Le chemin
++CDC non bloquant attend au plus 4 ms pour une ligne entiere de 256 octets
++maximum ; une ligne perdue lorsque DTR est actif est annoncee ensuite par
++`[SOIL_LOG] dropped_lines=...`. Un terminal deconnecte ne cree pas de perte
++de preuve. Un hote qui garde DTR actif sans lire ne bloque pas les mesures
++ni les emissions LoRa. Le profil USB historique garde son journal habituel.
++
++## Branchements
++
++Conserver ADS1115 et sonde sous 3,3 V, avec masses communes : XIAO D6/P1.11
++vers SDA, D7/P1.12 vers SCL, AOUT vers A0. Un unique candidat ADS entre
++`0x48` et `0x4B` est requis. Ne pas toucher au strap ADDR sous tension.
++Le bus logiciel existant garde ses attentes SCL bornees a 2 ms et ne force
++jamais un niveau haut. Le scan reste repete tous les dix essais.
++
++| SX1262 du kit XIAO | XIAO |
++| --- | --- |
++| SCK / MISO / MOSI | D8 / D9 / D10 |
++| NSS / DIO1 / RESET / BUSY | D4 / D1 / D2 / D3 |
++| RXEN | D5 |
++| TX RF switch / TCXO | DIO2 / 1,8 V |
++
++Le module RadioLib recoit explicitement `SPI`, puis `SPI.begin()` est appele.
++Ce chemin du coeur Seeed ne configure pas SS/D7, qui reste le SCL ADS.
++RXEN est configure par `setRfSwitchPins(5, RADIOLIB_NC)` ; DIO2 commande TX.
++
++Le Heltec conserve VEML7700 sur GPIO4/5, adresse `0x10`, et OLED sur le second
++controleur I2C GPIO17/18, `0x3C`, RESET21, Vext36 actif bas. Sa radio integree
++utilise SCK9/MISO11/MOSI10/NSS8/RESET12/BUSY13/DIO1=14, DIO2 RF switch,
++TCXO 1,8 V. Les erreurs radio laissent tourner les lux a 1 s et PRG.
++
++## Format radio strict, version 1
++
++Trame fixe de **20 octets**, sans structure C copiee directement ; les entiers
++multioctets sont encodes en petit-boutiste.
++
++| Octet(s) | Champ |
++| --- | --- |
++| 0–1 | Signature ASCII `PS` |
++| 2 | Version `1` |
++| 3 | Noeud `1` = SOIL-01 |
++| 4–7 | Session de demarrage non nulle, entier 32 bits |
++| 8–11 | Compteur circulaire 32 bits |
++| 12–15 | Uptime XIAO en ms, modulo 2³² |
++| 16 | Statut : `0` OK, `1` ADS indisponible, `2` erreur lecture, `3` hors plage |
++| 17 | Adresse ADS `0x48`–`0x4B`, ou `0` uniquement si indisponible |
++| 18–19 | Brut signe 16 bits ; `0` canonique pour tout defaut |
++
++Une mesure OK accepte les codes `-8` a `26400` (offset possible pres de zero,
++plage nominale jusqu'a 3,3 V). Une lecture hors plage reste dans le journal USB
++ADC existant, mais devient un defaut radio explicite sans valeur courante.
++Les versions, noeuds, statuts, longueurs et combinaisons adresse/brut inconnus
++sont rejetes. Le statut de defaut est transmis meme si l'ADS ne repond pas.
++
++La session utilise quatre octets du RNG materiel nRF52840, avec une attente
++totale de 25 ms. Un echec ou zero interdit l'emission et declenche une nouvelle
++tentative espacee de 10 s. Ce nombre distingue les redemarrages sans preuve
++de securite et sans garantie mathematique d'unicite.
++
++Une nouvelle session remplace l'etat precedent. Dans la session courante,
++un compteur n'est nouveau que si la difference non signee est dans
++`1..0x7fffffff`. Doublon, ancien compteur, paquet malforme et erreur CRC ne
++rafraichissent ni mesure ni age. A **90 000 ms** sans nouveau paquet accepte,
++l'ecran retire brut et volts et affiche « MESURE PERIMEE ». Un defaut ADS
++accepte remplace immediatement la valeur. L'expiration reste acquise jusqu'au
++paquet suivant, meme apres un tour complet de `millis()` ; les calculs de
++cadence et d'age utilisent des differences non signees.
++
++L'OLED conserve lux, SOIL-01 brut/volts si actuels, age et etat radio. Un
++nouveau paquet, un changement radio ou la frontiere de peremption rafraichit
++l'ecran sans attendre la prochaine mesure lux. Le service RX est non bloquant
++entre interruptions ; chaque traitement relance
++la reception. Il place d'abord la radio en standby, puis controle longueur,
++presence du CRC dans l'en-tete LoRa explicite et charge utile sur le meme
++paquet fige ; un echec est rejete et la reception est relancee.
++Les reinitialisations apres erreur sont espacees de 10 s. La recherche
++synchrone de puce de RadioLib s'execute dans une tache privee : elle possede
++seule SPI/radio jusqu'a publication atomique de son resultat. La boucle
++principale continue lux et PRG pendant une initialisation lente ou en panne.
++PRG 3 s puis relachement met capteur, OLED et radio en sommeil. Si SX1262
++ne confirme pas le sommeil, RESET radio reste bas. Si une initialisation est
++encore en cours, la demande reste acquise et les GPIO de sommeil ne sont
++prepares qu'apres son retour, pour eviter tout acces concurrent. RST restaure
++les fonctions.
++
++## Parametres et temps d'antenne
++
++868,1 MHz, BW125 kHz, SF7, CR4/5, sync prive `0x12`, CRC 2 octets, en-tete
++explicite, preambule 8, puissance emise conduite **0 dBm**. Une trame courante
++est tentee toutes les **30 s**, sans repetition, ACK ni rattrapage apres retard.
++Le compteur avance egalement lors d'un echec d'emission. La prochaine trame
++contient une nouvelle lecture plutot qu'une ancienne valeur.
++
++Pour 20 octets, le calcul LoRa donne `(8 + 4,25 + 43) × 1,024 ms = 56,576 ms`,
++soit **0,1886 %** sur 30 s. Le TX verifie aussi `getTimeOnAir(20) <= 300000 µs`
++avant de declarer la radio prete : une configuration depassant 1 % est refusee.
++L'[annexe, bande 48, de la decision UE 2025/105](https://eur-lex.europa.eu/eli/dec_impl/2025/105/oj/eng/pdf)
++prevoit pour 868–868,6 MHz une limite de 25 mW PAR avec, en alternative aux
++techniques d'acces au spectre indiquees, un rapport cyclique maximal de 1 %.
++Le calcul ci-dessus porte sur ce test, pas sur une homologation du montage.
++
++## Capturer et comparer
++
++Fermer les moniteurs serie et choisir un prefixe neuf ; l'outil refuse
++d'ecraser des preuves. Le fichier JSON est reserve exclusivement avant tout
++acces aux ports. Les deux ports sont ouverts avant une fenetre commune,
++puis leurs tampons d'entree sont vides. Chaque ligne porte un horodatage hote
++`[HOST t_s=...]`. Les lectures se font simultanement, avec timeout, lignes
++bornees et une duree limitee a 600 s.
++
++```powershell
++python tools/capture_soil_lora.py --tx-port COM6 --rx-port COM5 --seconds 105 --output-prefix diagnostics/soil-lora-hardware-20261103
++```
++
++Ce prefixe est un exemple : verifier les vrais ports. Sorties distinctes :
++`-tx.log`, `-rx.log` et `.json`. La comparaison porte exactement sur session,
++compteur, uptime, statut, adresse, brut et microvolts. Elle signale pertes TX,
++RX sans TX apparie, doublons, divergences, defauts ADC, rejets et erreurs de
++capture. Une marge de1s a chaque extremite distingue les paires de frontiere
++des pertes dans la fenetre pleinement observable ; ces paires sont conservees
++dans `boundary_pairs`. La sortie vaut zero seulement avec au moins trois
++**mesures valides** appariees dans cette fenetre et aucune erreur/perte.
++Une interruption, un UTF-8 invalide ou une ligne de plus de8192octets est une
++erreur explicite, avec conservation des octets defectueux en hexadecimal.
++Une ligne partielle commencee dans la derniere seconde est conservee comme
++frontiere ; une ligne restee partielle plus longtemps est une erreur. Une
++capture vide n'est jamais une reussite. Ctrl+C arrete les lecteurs avant de
++fermer les ports, puis conserve un rapport `completed:false` et le code retour2.
++
++Exemple de ligne (simulee) :
++
++```text
++[SOIL_TX] authenticated=no node=SOIL-01 session=1234 seq=1 uptime_ms=30000 status=ok address=72 raw=21565 uv=2695625
++```
++
++La ligne RX correspondante doit etre identique sauf `TX`/`RX`. Le diagnostic
++USB ADS `[MESURE] ... A0_brut=... A0_V=...` garde son format existant et est
++produit par la meme lecture utilisee pour le paquet.
++
++## Preuves et limites
++
++Les tests hote couvrent codec, champs, longueurs, defauts, sessions, ordre,
++debordements, frontiere 90 s, remplacement des valeurs OLED, reessais radio,
++lux concurrents et veille/repli RESET avec les vrais modules firmware. Les
++tests cibles de `tools/run_soil_lora_host_tests.py` executent aussi le vrai
++`serviceTransmit` et le vrai `setup/loop` XIAO : espacement minimal 30 s,
++absence de rattrapage, debordement, compteur apres erreur TX, echec/reprise du
++RNG, statuts ADS et terminal absent ou bloque. Le main Heltec est teste avec
++une initialisation differee de plus de 14 s, PRG et attente de sommeil, ainsi
++qu'avec de nouvelles trames distinctes dont le CRC est absent ou incorrect.
++Les tests historiques Heltec et leur schema JSON strict sont conserves. Les tests
++de capture n'ouvrent aucun port serie. Les journaux logiciels sont dans
++`diagnostics/soil-lora-host-tests-20261103.log`,
++`diagnostics/soil-lora-xiao-builds-20261103.log` et
++`diagnostics/soil-lora-heltec-builds-20261103.log`.
++
++Les corrections de relecture sont aussi verifiees par
++`python tools/run_soil_lora_host_tests.py` : neuf scenarios executent les vrais
++firmwares, notamment initialisation differee14s, CRC absent/incorrect,
++cadence TX, RNG et USB bloque/deconnecte. Les treize tests de
++`python tests/test_capture_soil_lora.py` couvrent appariement, frontieres,
++corruption, interruption, nettoyage des lecteurs et reservation exclusive
++du rapport. Aucun de ces tests n'accede aux vraies cartes.
++
++Les preuves materielles sont a enregistrer separement par l'agent principal :
++trois paquets apparies, lux pendant reception, observation OLED, absence ou
++defaut sans ancienne valeur, PRG/veille/RST et retour reception. Les tests
++logiciels ne constituent pas une preuve de reception radio reelle. Aucune
++page Web, authentification, calibration, optimisation batterie ni garantie
++de livraison n'est apportee par ce premier test.
+--- /dev/null
++++ b/lib/PlantSoilProtocol/library.json
+@@ -0,0 +1 @@
++{"name":"PlantSoilProtocol","version":"1.0.0","description":"Protocole diagnostic SOIL-01 portable et non authentifie","build":{"includeDir":"src"}}
+--- /dev/null
++++ b/lib/PlantSoilProtocol/src/PlantSoilProtocol.h
+@@ -0,0 +1,126 @@
++#pragma once
++#include <stddef.h>
++#include <stdint.h>
++#include <stdio.h>
++
++// Transport diagnostic : identifiants et CRC n'authentifient pas l'emetteur.
++namespace plantsoil {
++constexpr uint8_t kVersion = 1, kNode = 1;
++constexpr size_t kPacketSize = 20;
++constexpr uint32_t kTransmitMs = 30000, kStaleMs = 90000;
++enum class AdcStatus : uint8_t { Ok = 0, Unavailable = 1, ReadError = 2, RangeError = 3 };
++struct Packet {
++    uint32_t session = 0, sequence = 0, uptimeMs = 0;
++    AdcStatus status = AdcStatus::Unavailable;
++    uint8_t address = 0;
++    int16_t raw = 0;
++};
++enum class Result { Accepted, Length, Header, Session, Status, Address, Raw, Duplicate, OldSequence };
++inline const char* resultName(Result result) {
++    switch (result) {
++    case Result::Accepted: return "accepted";
++    case Result::Length: return "length";
++    case Result::Header: return "header";
++    case Result::Session: return "session";
++    case Result::Status: return "status";
++    case Result::Address: return "address";
++    case Result::Raw: return "raw";
++    case Result::Duplicate: return "duplicate";
++    default: return "old_sequence";
++    }
++}
++inline const char* statusName(AdcStatus status) {
++    switch (status) {
++    case AdcStatus::Ok: return "ok";
++    case AdcStatus::Unavailable: return "adc_unavailable";
++    case AdcStatus::ReadError: return "adc_error";
++    default: return "adc_range";
++    }
++}
++inline Result validate(const Packet& packet) {
++    if (!packet.session) return Result::Session;
++    if (static_cast<uint8_t>(packet.status) > 3) return Result::Status;
++    const bool adsAddress = packet.address >= 0x48 && packet.address <= 0x4B;
++    if (packet.status == AdcStatus::Unavailable) {
++        if (packet.address != 0) return Result::Address;
++    } else if (!adsAddress) return Result::Address;
++    // Entree simple nominale 0..3,3 V ; tolerance de huit codes negatifs d'offset.
++    if (packet.status == AdcStatus::Ok) {
++        if (packet.raw < -8 || packet.raw > 26400) return Result::Raw;
++    } else if (packet.raw != 0) return Result::Raw;
++    return Result::Accepted;
++}
++inline void put32(uint8_t* out, uint32_t value) {
++    for (uint8_t i = 0; i < 4; ++i) out[i] = static_cast<uint8_t>(value >> (8 * i));
++}
++inline uint32_t get32(const uint8_t* in) {
++    uint32_t value = 0;
++    for (uint8_t i = 0; i < 4; ++i) value |= static_cast<uint32_t>(in[i]) << (8 * i);
++    return value;
++}
++inline Result encode(const Packet& packet, uint8_t* out, size_t size) {
++    if (!out || size != kPacketSize) return Result::Length;
++    const Result valid = validate(packet);
++    if (valid != Result::Accepted) return valid;
++    out[0] = 'P'; out[1] = 'S'; out[2] = kVersion; out[3] = kNode;
++    put32(out + 4, packet.session); put32(out + 8, packet.sequence); put32(out + 12, packet.uptimeMs);
++    out[16] = static_cast<uint8_t>(packet.status); out[17] = packet.address;
++    const uint16_t bits = static_cast<uint16_t>(packet.raw);
++    out[18] = static_cast<uint8_t>(bits); out[19] = static_cast<uint8_t>(bits >> 8);
++    return Result::Accepted;
++}
++inline Result decode(const uint8_t* in, size_t size, Packet& out) {
++    if (!in || size != kPacketSize) return Result::Length;
++    if (in[0] != 'P' || in[1] != 'S' || in[2] != kVersion || in[3] != kNode) return Result::Header;
++    Packet value;
++    value.session = get32(in + 4); value.sequence = get32(in + 8); value.uptimeMs = get32(in + 12);
++    value.status = static_cast<AdcStatus>(in[16]); value.address = in[17];
++    const uint16_t bits = static_cast<uint16_t>(in[18]) | (static_cast<uint16_t>(in[19]) << 8);
++    // Decodage signe explicite, sans conversion u16 -> i16 dependante du compilateur.
++    value.raw = static_cast<int16_t>(bits <= 32767 ? static_cast<int32_t>(bits) : static_cast<int32_t>(bits) - 65536);
++    const Result valid = validate(value);
++    if (valid == Result::Accepted) out = value;
++    return valid;
++}
++inline int32_t microvolts(int16_t raw) { return static_cast<int32_t>(raw) * 125; }
++enum class Freshness { Waiting, Current, AdcFault, Stale };
++class Receiver {
++public:
++    Result accept(const uint8_t* data, size_t size, uint32_t now) {
++        Packet next;
++        const Result parsed = decode(data, size, next);
++        if (parsed != Result::Accepted) return parsed;
++        if (seen_ && next.session == packet_.session) {
++            const uint32_t delta = next.sequence - packet_.sequence;
++            if (!delta) return Result::Duplicate;
++            if (delta >= 0x80000000UL) return Result::OldSequence;
++        }
++        packet_ = next; receivedAt_ = now; seen_ = true; stale_ = false;
++        return Result::Accepted;
++    }
++    Freshness state(uint32_t now) const {
++        if (!seen_) return Freshness::Waiting;
++        // Appeler a chaque tour : une expiration observee reste acquise meme
++        // apres un tour complet de millis(), jusqu'au prochain paquet accepte.
++        if (age(now) >= kStaleMs) stale_ = true;
++        if (stale_) return Freshness::Stale;
++        return packet_.status == AdcStatus::Ok ? Freshness::Current : Freshness::AdcFault;
++    }
++    uint32_t age(uint32_t now) const { return static_cast<uint32_t>(now - receivedAt_); }
++    const Packet& packet() const { return packet_; }
++private:
++    Packet packet_;
++    uint32_t receivedAt_ = 0;
++    bool seen_ = false;
++    mutable bool stale_ = false;
++};
++// Ligne commune pour comparer TX/RX sans modifier le schema JSON lux existant.
++inline bool formatPacket(char* out, size_t size, const char* direction, const Packet& packet) {
++    const int count = snprintf(out, size,
++        "[SOIL_%s] authenticated=no node=SOIL-01 session=%lu seq=%lu uptime_ms=%lu status=%s address=%u raw=%d uv=%ld",
++        direction, static_cast<unsigned long>(packet.session), static_cast<unsigned long>(packet.sequence),
++        static_cast<unsigned long>(packet.uptimeMs), statusName(packet.status), packet.address, packet.raw,
++        static_cast<long>(packet.status == AdcStatus::Ok ? microvolts(packet.raw) : 0));
++    return count >= 0 && static_cast<size_t>(count) < size;
++}
++}
+--- /dev/null
++++ b/lib/PlantSoilProtocol/test/test_protocol.cpp
+@@ -0,0 +1,71 @@
++#include <PlantSoilProtocol.h>
++#include <assert.h>
++#include <string.h>
++#include <initializer_list>
++using namespace plantsoil;
++int main() {
++    Packet source;
++    source.session = 0x12345678; source.sequence = 42; source.uptimeMs = 0xFEDCBA98;
++    source.address = 0x48; source.status = AdcStatus::Ok; source.raw = 21565;
++    uint8_t bytes[kPacketSize], changed[kPacketSize + 1];
++    assert(encode(source, bytes, sizeof(bytes)) == Result::Accepted);
++    assert(bytes[4] == 0x78 && bytes[7] == 0x12 && bytes[8] == 42);
++    Packet decoded;
++    assert(decode(bytes, sizeof(bytes), decoded) == Result::Accepted);
++    assert(decoded.raw == 21565 && microvolts(decoded.raw) == 2695625);
++    assert(decoded.session == source.session && decoded.uptimeMs == source.uptimeMs);
++    for (size_t len = 0; len <= kPacketSize + 1; ++len)
++        if (len != kPacketSize) assert(decode(bytes, len, decoded) == Result::Length);
++    for (size_t index : {size_t(0), size_t(1), size_t(2), size_t(3), size_t(16), size_t(17)}) {
++        memcpy(changed, bytes, kPacketSize); changed[index] = 255;
++        const Packet before = decoded;
++        assert(decode(changed, kPacketSize, decoded) != Result::Accepted);
++        assert(decoded.raw == before.raw && decoded.session == before.session);
++    }
++    memcpy(changed, bytes, kPacketSize); memset(changed + 4, 0, 4);
++    assert(decode(changed, kPacketSize, decoded) == Result::Session);
++    source.raw = -8;
++    assert(encode(source, bytes, sizeof(bytes)) == Result::Accepted);
++    assert(decode(bytes, sizeof(bytes), decoded) == Result::Accepted && decoded.raw == -8);
++    source.raw = -9; assert(encode(source, bytes, sizeof(bytes)) == Result::Raw);
++    source.raw = 26400; assert(encode(source, bytes, sizeof(bytes)) == Result::Accepted);
++    source.raw = 26401; assert(encode(source, bytes, sizeof(bytes)) == Result::Raw);
++    source.raw = 21565;
++    assert(encode(source, bytes, sizeof(bytes)) == Result::Accepted);
++    Receiver receiver;
++    assert(receiver.state(0) == Freshness::Waiting);
++    const uint32_t base = 0xFFFFF000;
++    assert(receiver.accept(bytes, sizeof(bytes), base) == Result::Accepted);
++    assert(receiver.state(base + 89999) == Freshness::Current);
++    assert(receiver.state(base + 90000) == Freshness::Stale);
++    assert(receiver.state(base + 100) == Freshness::Stale); // expiration acquise apres un tour complet
++    assert(receiver.age(base + 90001) == 90001);
++    assert(receiver.accept(bytes, sizeof(bytes), base + 50000) == Result::Duplicate);
++    assert(receiver.age(base + 50000) == 50000);
++    source.sequence = 41; encode(source, bytes, sizeof(bytes));
++    assert(receiver.accept(bytes, sizeof(bytes), base + 60000) == Result::OldSequence);
++    memcpy(changed, bytes, kPacketSize); changed[16] = 255;
++    assert(receiver.accept(changed, kPacketSize, base + 70000) == Result::Status);
++    assert(receiver.state(base + 90000) == Freshness::Stale);
++    source.session++; source.sequence = 0xFFFFFFFF; source.status = AdcStatus::ReadError; source.raw = 0;
++    assert(encode(source, bytes, sizeof(bytes)) == Result::Accepted);
++    assert(receiver.accept(bytes, sizeof(bytes), 100) == Result::Accepted);
++    assert(receiver.state(100) == Freshness::AdcFault);
++    source.sequence = 0; source.status = AdcStatus::Ok; source.raw = 8000;
++    encode(source, bytes, sizeof(bytes));
++    assert(receiver.accept(bytes, sizeof(bytes), 200) == Result::Accepted);
++    source.sequence = 0x80000000; encode(source, bytes, sizeof(bytes));
++    assert(receiver.accept(bytes, sizeof(bytes), 300) == Result::OldSequence);
++    source.session++; source.sequence = 1; source.status = AdcStatus::Unavailable; source.address = 0; source.raw = 0;
++    assert(encode(source, bytes, sizeof(bytes)) == Result::Accepted);
++    assert(receiver.accept(bytes, sizeof(bytes), 400) == Result::Accepted);
++    assert(receiver.state(400) == Freshness::AdcFault);
++    source.raw = 1; assert(encode(source, bytes, sizeof(bytes)) == Result::Raw);
++    source.raw = 0; source.address = 0x48; assert(encode(source, bytes, sizeof(bytes)) == Result::Address);
++    source.status = AdcStatus::RangeError;
++    assert(encode(source, bytes, sizeof(bytes)) == Result::Accepted);
++    char line[240]; assert(formatPacket(line, sizeof(line), "TX", source));
++    assert(strstr(line, "authenticated=no") && strstr(line, "status=adc_range") && strstr(line, "raw=0 uv=0"));
++    assert(!formatPacket(line, 10, "RX", source));
++    puts("PASS protocole SOIL : codec strict, brut signe, defauts, session, compteurs/temps circulaires, frontiere 90s, rejet sans rafraichir l'age");
++}
+--- /dev/null
++++ b/tests/test_capture_soil_lora.py
+@@ -0,0 +1,217 @@
++"""Tests hors ligne de l'appariement exact ; aucun port serie ouvert."""
++import importlib.util
++import contextlib
++import io
++import json
++from pathlib import Path
++import sys
++import tempfile
++import threading
++import time
++import types
++import unittest
++from unittest import mock
++
++spec = importlib.util.spec_from_file_location("capture", Path(__file__).resolve().parents[1] / "tools/capture_soil_lora.py")
++capture = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(capture)
++
++def line(direction, seq, raw=21565, status="ok", address=72):
++    return f"[SOIL_{direction}] authenticated=no node=SOIL-01 session=1234 seq={seq} uptime_ms={seq*30000} status={status} address={address} raw={raw} uv={raw*125}"
++
++
++def stamped(direction, seq, when):
++    return f"[HOST t_s={when:.6f}] " + line(direction, seq)
++
++class CaptureTests(unittest.TestCase):
++    def test_exact_pairing(self):
++        result = capture.compare([line("TX", i) for i in range(3)], [line("RX", i) for i in range(3)])
++        self.assertTrue(result["accepted"])
++        self.assertEqual(result["valid_matched_count"], 3)
++
++    def test_losses_mismatch_duplicates(self):
++        tx = [line("TX", i) for i in range(3)]
++        rx = [line("RX", 0), line("RX", 0), line("RX", 1, 8000), line("RX", 4)]
++        result = capture.compare(tx, rx)
++        self.assertFalse(result["accepted"])
++        self.assertEqual(len(result["losses"]), 1)
++        self.assertEqual(len(result["mismatches"]), 1)
++        self.assertEqual(len(result["unmatched_rx"]), 1)
++        self.assertEqual(len(result["rx_duplicates"]), 1)
++
++    def test_fault_and_malformed(self):
++        records, errors = capture.parse_records([line("RX", 1, 0, "adc_error"), line("RX", 2) + " extra",
++                                                line("RX", 3).replace("uv=2695625", "uv=1"),
++                                                "[SOIL_REJECT] reason=duplicate authenticated=no"], "RX")
++        self.assertEqual(len(records), 1)
++        self.assertEqual(len(errors), 4)
++
++    def test_boundary_pairs_and_real_loss(self):
++        tx = [stamped("TX", i, when) for i, when in enumerate((0.1, 10, 40, 70, 104.5))]
++        rx = [stamped("RX", i, when) for i, when in enumerate((0.2, 10.1, 40.1, 70.1, 104.6))]
++        # Le premier TX et dernier RX manquent uniquement dans la marge.
++        result = capture.compare(tx[1:], rx[:-1], duration=105)
++        self.assertTrue(result["accepted"])
++        self.assertEqual(result["valid_matched_count"], 3)
++        self.assertEqual(len(result["boundary_pairs"]), 2)
++        result = capture.compare(tx[1:], [rx[0], rx[1], rx[3]], duration=105)
++        self.assertFalse(result["accepted"])
++        self.assertEqual([p["seq"] for p in result["losses"]], [2])
++
++    def test_capture_window_requires_timestamps(self):
++        result = capture.compare([line("TX", i) for i in range(3)],
++                                 [line("RX", i) for i in range(3)], duration=105)
++        self.assertFalse(result["accepted"])
++        self.assertIn("missing_host_timestamp: TX", result["errors"])
++
++    def test_oversized_completed_line_and_invalid_utf8(self):
++        output, errors = io.StringIO(), []
++        capture.record_raw(output, b"A" * 8193, 1, errors)
++        capture.record_raw(output, b"\xff[SOIL_TX]", 2, errors)
++        self.assertEqual(errors, ["line_too_long", "invalid_utf8"])
++        self.assertIn("raw_hex=ff5b534f494c5f54585d", output.getvalue())
++        _, parsed_errors = capture.parse_records(output.getvalue().splitlines(), "TX")
++        self.assertEqual(len(parsed_errors), 2)
++
++    def test_giant_numeric_field_is_an_explicit_error(self):
++        malformed = line("TX", 1).replace("session=1234", "session=" + "9" * 5000)
++        records, errors = capture.parse_records([malformed], "TX")
++        self.assertEqual(records, [])
++        self.assertEqual(len(errors), 1)
++        self.assertIn("invalid_numeric_log", errors[0])
++
++    def run_main_with_capture_failure(self, interruption=False):
++        with tempfile.TemporaryDirectory() as directory:
++            prefix = Path(directory) / "evidence"
++            def fake_capture(tx_port, rx_port, seconds, tx_path, rx_path):
++                for direction, path in (("TX", tx_path), ("RX", rx_path)):
++                    path.write_text("\n".join(stamped(direction, i, 10 + 30 * i)
++                                              for i in range(3)) + "\n", encoding="utf-8")
++                if interruption:
++                    raise KeyboardInterrupt
++                return {"errors": ["serial disconnected"], "duration_s": 105, "interrupted": False}
++            argv = ["capture", "--tx-port", "COM8", "--rx-port", "COM5", "--seconds", "105",
++                    "--output-prefix", str(prefix)]
++            with mock.patch.object(sys, "argv", argv), mock.patch.object(capture, "capture", fake_capture), contextlib.redirect_stdout(io.StringIO()):
++                result = capture.main()
++            summary = json.loads(Path(str(prefix) + ".json").read_text(encoding="utf-8"))
++            self.assertEqual(result, 2)
++            self.assertEqual(summary["valid_matched_count"], 3)
++            self.assertFalse(summary["accepted"])
++            self.assertFalse(summary["completed"])
++            self.assertTrue(summary["capture_errors"])
++            self.assertEqual(summary["interrupted"], interruption)
++
++    def test_main_capture_error_overrides_matching_pairs(self):
++        self.run_main_with_capture_failure()
++
++    def test_main_interrupt_preserves_report(self):
++        self.run_main_with_capture_failure(interruption=True)
++
++    def test_exclusive_summary_reservation_wins_the_race(self):
++        with tempfile.TemporaryDirectory() as directory:
++            prefix = Path(directory) / "evidence"
++            summary = Path(str(prefix) + ".json")
++            summary.write_text("preuve existante", encoding="utf-8")
++            argv = ["capture", "--tx-port", "COM8", "--rx-port", "COM5", "--output-prefix", str(prefix)]
++            # Simuler un autre processus creant le fichier apres le precontrole.
++            with mock.patch.object(sys, "argv", argv), mock.patch.object(Path, "exists", return_value=False), mock.patch.object(capture, "capture") as run_capture, contextlib.redirect_stderr(io.StringIO()):
++                with self.assertRaises(SystemExit) as raised:
++                    capture.main()
++            self.assertEqual(raised.exception.code, 2)
++            run_capture.assert_not_called()
++            self.assertEqual(summary.read_text(encoding="utf-8"), "preuve existante")
++
++    def test_interrupt_joins_readers_before_closing_ports(self):
++        ports = []
++        class FakePort:
++            def __init__(self, **kwargs):
++                self.active_read = False
++                self.closed = False
++                ports.append(self)
++            def open(self):
++                pass
++            def reset_input_buffer(self):
++                pass
++            @property
++            def in_waiting(self):
++                return 0
++            def read(self, count):
++                self.active_read = True
++                time.sleep(0.002)
++                self.active_read = False
++                return b""
++            def close(self):
++                self.closed_while_reading = self.active_read
++                self.closed = True
++        original_join = threading.Thread.join
++        interrupted_once = [False]
++        def interrupted_join(thread, *args, **kwargs):
++            if not interrupted_once[0]:
++                interrupted_once[0] = True
++                raise KeyboardInterrupt
++            return original_join(thread, *args, **kwargs)
++        with tempfile.TemporaryDirectory() as directory, mock.patch.dict(sys.modules, {"serial": types.SimpleNamespace(Serial=FakePort)}), mock.patch.object(threading.Thread, "join", interrupted_join):
++            result = capture.capture("COM8", "COM5", 1, Path(directory) / "tx.log", Path(directory) / "rx.log")
++        self.assertTrue(result["interrupted"])
++        self.assertTrue(result["errors"])
++        self.assertEqual(len(ports), 2)
++        self.assertTrue(all(port.closed and not port.closed_while_reading for port in ports))
++
++    def test_reader_checks_completed_long_lines_and_utf8(self):
++        created = []
++        class FakePort:
++            def __init__(self, **kwargs):
++                self.data = b"A" * 8193 + b"\n" if not created else b"\xffbroken\n"
++                created.append(self)
++            def open(self):
++                pass
++            def reset_input_buffer(self):
++                pass
++            @property
++            def in_waiting(self):
++                return len(self.data)
++            def read(self, count):
++                chunk, self.data = self.data[:count], self.data[count:]
++                if not chunk:
++                    time.sleep(0.001)
++                return chunk
++            def close(self):
++                pass
++        with tempfile.TemporaryDirectory() as directory, mock.patch.dict(sys.modules, {"serial": types.SimpleNamespace(Serial=FakePort)}):
++            result = capture.capture("COM8", "COM5", 0.03, Path(directory) / "tx.log", Path(directory) / "rx.log")
++            self.assertIn("line_too_long", result["errors"])
++            self.assertIn("invalid_utf8", result["errors"])
++            self.assertIn("raw_hex=ff62726f6b656e", (Path(directory) / "rx.log").read_text(encoding="utf-8"))
++
++    def test_only_a_recent_partial_tail_is_a_capture_boundary(self):
++        created = []
++        class FakePort:
++            def __init__(self, **kwargs):
++                self.wait = 0 if not created else 1.5
++                self.data = b"tail"
++                self.started = time.monotonic()
++                created.append(self)
++            def open(self):
++                pass
++            def reset_input_buffer(self):
++                pass
++            @property
++            def in_waiting(self):
++                return len(self.data) if time.monotonic() - self.started >= self.wait else 0
++            def read(self, count):
++                time.sleep(0.001)
++                if time.monotonic() - self.started < self.wait:
++                    return b""
++                chunk, self.data = self.data[:count], self.data[count:]
++                return chunk
++            def close(self):
++                pass
++        with tempfile.TemporaryDirectory() as directory, mock.patch.dict(sys.modules, {"serial": types.SimpleNamespace(Serial=FakePort)}):
++            result = capture.capture("COM8", "COM5", 2.05, Path(directory) / "tx.log", Path(directory) / "rx.log")
++            self.assertIn("COM8: partial_line", result["errors"])
++            self.assertNotIn("COM5: partial_line", result["errors"])
++            self.assertIn("[CAPTURE_BOUNDARY] partial_tail", (Path(directory) / "rx.log").read_text(encoding="utf-8"))
++
++if __name__ == "__main__":
++    unittest.main()
+--- /dev/null
++++ b/tools/capture_soil_lora.py
+@@ -0,0 +1,253 @@
++"""Capture USB simultanee bornee et comparaison exacte des diagnostics SOIL-01 TX/RX."""
++import argparse
++from datetime import datetime, timezone
++import json
++from pathlib import Path
++import re
++import threading
++import time
++
++PACKET = re.compile(r"^\[SOIL_(TX|RX)\] authenticated=no node=SOIL-01 session=(\d+) seq=(\d+) uptime_ms=(\d+) status=(ok|adc_unavailable|adc_error|adc_range) address=(\d+) raw=(-?\d+) uv=(-?\d+)$")
++ARRIVAL = re.compile(r"^\[HOST t_s=(\d{1,6}\.\d{6})\] (.*)$")
++FIELDS = ("session", "seq", "uptime_ms", "status", "address", "raw", "uv")
++
++
++def parse_records(lines, direction):
++    records, errors = [], []
++    for line in lines:
++        line = line.rstrip("\r\n")
++        arrival = ARRIVAL.fullmatch(line)
++        elapsed = float(arrival[1]) if arrival else None
++        if arrival:
++            line = arrival[2]
++        match = PACKET.fullmatch(line)
++        if match:
++            if match[1] != direction:
++                errors.append("unexpected_direction: " + line)
++                continue
++            item = dict(zip(FIELDS, match.groups()[1:]))
++            try:
++                for key in item:
++                    if key != "status":
++                        if len(item[key]) > 12:
++                            raise ValueError("champ numerique trop long")
++                        item[key] = int(item[key])
++            except ValueError:
++                errors.append("invalid_numeric_log: " + line)
++                continue
++            valid = (0 < item["session"] <= 0xFFFFFFFF and 0 <= item["seq"] <= 0xFFFFFFFF
++                     and 0 <= item["uptime_ms"] <= 0xFFFFFFFF)
++            if item["status"] == "ok":
++                valid &= 0x48 <= item["address"] <= 0x4B and -8 <= item["raw"] <= 26400 and item["uv"] == item["raw"] * 125
++            else:
++                valid &= item["raw"] == 0 and item["uv"] == 0 and (item["address"] == 0 if item["status"] == "adc_unavailable" else 0x48 <= item["address"] <= 0x4B)
++            if valid:
++                item["host_elapsed_s"] = elapsed
++                records.append(item)
++                if item["status"] != "ok":
++                    errors.append("adc_fault: " + line)
++            else:
++                errors.append("invalid_packet_log: " + line)
++        elif line.startswith(("[SOIL_TX]", "[SOIL_RX]", "[SOIL_TX_ERROR]", "[SOIL_REJECT]", "[SOIL_LOG]", "[ERREUR]", "[CAPTURE_ERROR]")) or (line.startswith("[SOIL_RADIO]") and ("error=" in line or "state=error" in line or "code=" in line and "code=0" not in line)):
++            errors.append(line)
++    return records, errors
++
++
++def compare(tx_lines, rx_lines, minimum=3, duration=None, margin=1.0):
++    tx, tx_errors = parse_records(tx_lines, "TX")
++    rx, rx_errors = parse_records(rx_lines, "RX")
++    def interior(packet):
++        when = packet["host_elapsed_s"]
++        return duration is None or when is not None and margin <= when <= duration - margin
++    def index(records):
++        result, duplicates = {}, []
++        for packet in records:
++            key = (packet["session"], packet["seq"])
++            if key in result:
++                duplicates.append(list(key))
++            result[key] = packet
++        return result, duplicates
++    sent, tx_duplicate = index(tx)
++    received, rx_duplicate = index(rx)
++    mismatches, matched, boundary = [], [], []
++    for key in sorted(sent.keys() & received.keys()):
++        left, right = sent[key], received[key]
++        if any(left[field] != right[field] for field in FIELDS):
++            mismatches.append({"tx": left, "rx": right})
++        elif interior(left) and interior(right):
++            matched.append({**{field: left[field] for field in FIELDS},
++                            "tx_host_s": left["host_elapsed_s"], "rx_host_s": right["host_elapsed_s"]})
++        else:
++            boundary.append({"kind": "paired_boundary", "tx": left, "rx": right})
++    losses, unmatched_rx = [], []
++    for key in sorted(sent.keys() - received.keys()):
++        packet = sent[key]
++        if interior(packet):
++            losses.append(packet)
++        else:
++            boundary.append({"kind": "tx_incomplete_boundary", "tx": packet})
++    for key in sorted(received.keys() - sent.keys()):
++        packet = received[key]
++        if interior(packet):
++            unmatched_rx.append(packet)
++        else:
++            boundary.append({"kind": "rx_incomplete_boundary", "rx": packet})
++    valid_matches = sum(packet["status"] == "ok" for packet in matched)
++    errors = tx_errors + rx_errors
++    if duration is not None:
++        for direction, records in (("TX", tx), ("RX", rx)):
++            if any(packet["host_elapsed_s"] is None for packet in records):
++                errors.append("missing_host_timestamp: " + direction)
++    return {"authenticated": False, "tx_count": len(tx), "rx_count": len(rx), "matched": matched,
++            "comparison_window_s": [margin, max(margin, duration - margin)] if duration is not None else None,
++            "boundary_margin_s": margin, "boundary_pairs": boundary,
++            "valid_matched_count": valid_matches, "losses": losses, "unmatched_rx": unmatched_rx,
++            "mismatches": mismatches, "tx_duplicates": tx_duplicate, "rx_duplicates": rx_duplicate,
++            "errors": errors, "accepted": valid_matches >= minimum and not (losses or unmatched_rx or mismatches or tx_duplicate or rx_duplicate or errors)}
++
++
++def record_raw(log, raw, elapsed, errors):
++    """Conserver les octets defectueux en hexadecimal, sans remplacement UTF-8."""
++    problem = None
++    if len(raw) > 8192:
++        problem = "line_too_long"
++    try:
++        line = raw.decode("utf-8").rstrip("\r")
++    except UnicodeDecodeError:
++        problem = "invalid_utf8" if problem is None else problem + "+invalid_utf8"
++        line = ""
++    if problem:
++        line = "[CAPTURE_ERROR] " + problem + " raw_hex=" + raw.hex()
++        errors.append(problem)
++    log.write(f"[HOST t_s={elapsed:.6f}] {line}\n")
++    log.flush()
++
++
++def capture(tx_port, rx_port, seconds, tx_path, rx_path):
++    import serial
++    ports, logs, threads, errors = [], [], [], []
++    stop = threading.Event()
++    started = time.monotonic()
++    interrupted = False
++    try:
++        # Reserver aussi les journaux avant toute operation sur les ports.
++        logs = [tx_path.open("x", encoding="utf-8")]
++        logs.append(rx_path.open("x", encoding="utf-8"))
++        for name, dtr in [(tx_port, True), (rx_port, False)]:
++            port = serial.Serial(port=None, baudrate=115200, timeout=0.1)
++            port.dtr, port.rts, port.port = dtr, False, name
++            ports.append(port)
++            port.open()
++        for port in ports:
++            port.reset_input_buffer()
++        started = time.monotonic()
++        deadline = started + seconds
++        def read_port(port, log):
++            pending = b""
++            pending_started = started
++            try:
++                log.write(f"Capture {port.port}, UTC={datetime.now(timezone.utc).isoformat()}, seconds={seconds}\n")
++                while not stop.is_set() and time.monotonic() < deadline:
++                    chunk = port.read(min(port.in_waiting or 1, 4096))
++                    if chunk and not pending:
++                        pending_started = time.monotonic()
++                    pending += chunk
++                    while b"\n" in pending:
++                        raw, pending = pending.split(b"\n", 1)
++                        record_raw(log, raw, time.monotonic() - started, errors)
++                        pending_started = time.monotonic()
++                    if len(pending) > 8192:
++                        raise RuntimeError("ligne serie de plus de 8192 octets")
++            except Exception as exc:
++                errors.append(f"{port.port}: {exc}")
++                stop.set()
++            finally:
++                if pending:
++                    if not stop.is_set() and time.monotonic() >= deadline and pending_started >= deadline - 1.0:
++                        # Une ligne en cours a la limite normale n'appartient
++                        # pas a la fenetre complete. Conserver ses octets.
++                        log.write(f"[CAPTURE_BOUNDARY] partial_tail raw_hex={pending.hex()}\n")
++                    else:
++                        record_raw(log, pending, time.monotonic() - started, errors)
++                        errors.append(f"{port.port}: partial_line")
++                        log.write("[CAPTURE_ERROR] partial_line\n")
++                    log.flush()
++        threads = [threading.Thread(target=read_port, args=pair) for pair in zip(ports, logs)]
++        for thread in threads:
++            thread.start()
++        for thread in threads:
++            thread.join()
++    except KeyboardInterrupt:
++        interrupted = True
++        errors.append("interrupted: KeyboardInterrupt")
++    except Exception as exc:
++        errors.append(str(exc))
++    finally:
++        stop.set()
++        # Aucun port ni journal ferme tant qu'un lecteur peut encore l'utiliser.
++        for thread in threads:
++            while thread.is_alive():
++                try:
++                    thread.join(0.2)
++                except KeyboardInterrupt:
++                    interrupted = True
++                    errors.append("interrupted: KeyboardInterrupt")
++        for port in ports:
++            port.close()
++        for log in logs:
++            log.close()
++    return {"errors": errors, "duration_s": time.monotonic() - started, "interrupted": interrupted}
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--tx-port", required=True)
++    parser.add_argument("--rx-port", required=True)
++    parser.add_argument("--seconds", type=float, default=105)
++    parser.add_argument("--boundary-margin", type=float, default=1.0)
++    parser.add_argument("--output-prefix", type=Path, required=True)
++    args = parser.parse_args()
++    if not 0 < args.seconds <= 600 or args.tx_port.upper() == args.rx_port.upper():
++        parser.error("utiliser des ports distincts et 0 < seconds <= 600")
++    if not 0 <= args.boundary_margin <= 2 or args.seconds <= 2 * args.boundary_margin:
++        parser.error("marge de 0 a 2 s, inferieure a la demi-duree de capture")
++    paths = [Path(str(args.output_prefix) + suffix) for suffix in ("-tx.log", "-rx.log", ".json")]
++    args.output_prefix.parent.mkdir(parents=True, exist_ok=True)
++    if any(path.exists() for path in paths):
++        parser.error("sortie existante ; choisir un nouveau prefixe pour conserver les preuves")
++    try:
++        reserved_summary = paths[2].open("x", encoding="utf-8")
++    except FileExistsError:
++        parser.error("bilan reserve par une autre capture ; choisir un nouveau prefixe")
++    with reserved_summary as output:
++        output.write(json.dumps({"accepted": False, "completed": False, "capture_errors": ["capture_en_cours"]}))
++        output.flush()
++        result = {"errors": [], "duration_s": args.seconds, "interrupted": False}
++        try:
++            result = capture(args.tx_port, args.rx_port, args.seconds, paths[0], paths[1])
++        except KeyboardInterrupt:
++            result["errors"].append("interrupted: KeyboardInterrupt")
++            result["interrupted"] = True
++        except Exception as exc:
++            result["errors"].append(str(exc))
++        lines = []
++        for path in paths[:2]:
++            try:
++                lines.append(path.read_text(encoding="utf-8").splitlines() if path.exists() else [])
++            except (OSError, UnicodeError) as exc:
++                result["errors"].append(f"{path}: {exc}")
++                lines.append([])
++        summary = compare(*lines, duration=result["duration_s"], margin=args.boundary_margin)
++        summary.update({"tx_port": args.tx_port, "rx_port": args.rx_port, "duration_requested_s": args.seconds,
++                        "duration_s": result["duration_s"], "capture_errors": result["errors"],
++                        "interrupted": result["interrupted"], "completed": not result["errors"] and not result["interrupted"]})
++        summary["accepted"] &= summary["completed"]
++        output.seek(0)
++        output.write(json.dumps(summary, indent=2))
++        output.truncate()
++    print(json.dumps(summary, indent=2))
++    return 0 if summary["accepted"] else 2
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+--- /dev/null
++++ b/tools/run_soil_lora_host_tests.py
+@@ -0,0 +1,28 @@
++"""Tests cibles des vrais firmwares radio SOIL, sans autre suite ni carte USB."""
++import os
++from pathlib import Path
++import subprocess
++
++root = Path(__file__).resolve().parents[1]
++plant = root / "firmware/PlantStationVeml7700"
++xiao = root / "firmware/XiaoSoilDiagnostic"
++build = root / "output/soil-lora-targeted-tests"
++build.mkdir(parents=True, exist_ok=True)
++compiler = ["uv", "run", "--with", "ziglang==0.13.0", "python", "-m", "ziglang", "c++", "-std=c++11", "-O0", "-g", "-Wall", "-Wextra"]
++if os.name == "nt":
++    compiler += ["-target", "x86_64-windows-gnu"]
++protocol = root / "lib/PlantSoilProtocol/src"
++sensor = plant / ".pio/libdeps/heltec_v3_text/SparkFun VEML7700 Arduino Library/src"
++toolkit = plant / ".pio/libdeps/heltec_v3_text/SparkFun Toolkit/src"
++plant_files = ["test/test_soil_radio.cpp", "src/main.cpp", "src/radio/SoilRadio.cpp", "src/display/OledDisplay.cpp", "src/power/SleepPower.cpp", "src/sensors/VEML7700Sensor.cpp", "src/diagnostics/Diagnostics.cpp"]
++for name, includes, sources, flags, scenarios in [
++    ("heltec", [plant / "test/support", plant / "include", plant / "src", protocol, sensor, toolkit],
++     [plant / item for item in plant_files] + [sensor / "sfTk/sfDevVEML7700.cpp", toolkit / "sfTk/sfToolkit.cpp"],
++     ["-DPLANT_SOIL_LORA=1"], ["normal", "radio_failed", "sleep_failed", "pending_init"]),
++    ("xiao", [xiao / "test/support", protocol], [xiao / "test/test_tx.cpp"], ["-DSOIL_LORA_TX=1"],
++     ["cadence", "wrap", "rng", "usb", "disconnected"]),
++]:
++    executable = build / (name + (".exe" if os.name == "nt" else ""))
++    subprocess.run(compiler + ["-I" + str(path) for path in includes] + [str(path) for path in sources] + flags + ["-o", str(executable)], check=True)
++    for scenario in scenarios:
++        subprocess.run([str(executable), scenario], check=True)

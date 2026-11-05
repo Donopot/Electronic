@@ -1,0 +1,41 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T12:48:34.967268+00:00
+[ERREUR] Scan 0x08 : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x09 : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x0A : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan interrompu : trois erreurs de bus consecutives.
+[DIAG] BMP180 : GPIO4/SDA=1, GPIO1/SCL=0 (niveaux logiques).
+[SCAN] Incomplet : 0 peripherique(s), 3 erreur(s) de bus.
+[INFO] Presence a 0x77 non verifiee par le scan ; tentative directe au prochain cycle.
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : delai I2C depasse (bus bloque ?) (code 5).
+[LCD] Test cible a 0x3F : SDA=GPIO3, SCL=GPIO2.
+[ERREUR] LCD 0x3F : aucune reponse, NACK (code 2).
+[INFO] LCD indisponible ; nouvelle tentative dans 10 s. Lecture BMP180 maintenue.
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : delai I2C depasse (bus bloque ?) (code 5).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : delai I2C depasse (bus bloque ?) (code 5).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : delai I2C depasse (bus bloque ?) (code 5).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : delai I2C depasse (bus bloque ?) (code 5).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : delai I2C depasse (bus bloque ?) (code 5).
+[LCD] Test cible a 0x3F : SDA=GPIO3, SCL=GPIO2.
+[ERREUR] LCD 0x3F : aucune reponse, NACK (code 2).
+[INFO] LCD indisponible ; nouvelle tentative dans 10 s. Lecture BMP180 maintenue.
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : delai I2C depasse (bus bloque ?) (code 5).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : delai I2C depasse (bus bloque ?) (code 5).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : delai I2C depasse (bus bloque ?) (code 5).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : delai I2C depasse (bus bloque ?) (code 5).
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+[ERREUR] I2C 0x77 registre 0xD0 : delai I2C depasse (bus bloque ?) (code 5).
+[LCD] Test cible a 0x3F : SDA=GPIO3, SCL=GPIO2.
+[ERREUR] LCD 0x3F : aucune reponse, NACK (code 2).
+[INFO] LCD indisponible ; nouvelle tentative dans 10 s. Lecture BMP180 maintenue.
+[INFO] Nouvelle tentative de detection/calibration a 0x77...
+BILAN : 0 mesures, 18 erreurs, 25.1 s de capture.

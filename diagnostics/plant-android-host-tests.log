@@ -1,0 +1,14 @@
+PASS shared model: neutral/healthy/dry + independent warnings, battery unknown, stale, reboot, UTF-8 names
+PASS history: 31 simulated days / four nodes / 30-day filter / pagination / gaps / ADC faults / reboot / interrupted writes / unknown data preserved
+PASS full flash: bounded sector ring wraps and reboots without losing newest records
+PASS durable anchors: undated/synced/reboot, failed persistence, effective-date filtering before 1/7/30-day pagination, future/old/boundary records, cache overflow; corruption counted once across retained sectors
+PASS API validation and PRG face/details/QR, 3-second threshold and release-to-sleep
+PASS bounded captive DNS: A/IN reply, short/truncated datagrams and labels, compression/multiple questions/AAAA rejected, EDNS bounds and output capacity
+PASS installed Arduino-ESP32 SDK: WiFiClient fd public, inherited availableForWrite=0, lwIP MSG_DONTWAIT available; actual serviceHttp uses the tested sender
+PASS production HTTP socket sender: one MSG_DONTWAIT call/tick, complete partial response, EAGAIN/EWOULDBLOCK/EINTR retry, 512-byte bound, close/error handling (SDK syscall simulated)
+PASS actual dashboard main/radio/OLED: shared model, unknown battery, adaptive URL/Wi-Fi QR + 4-module quiet zone + readable key, portal fallback, 3s sleep / 8s setup release, OLED absent (worker and QR encoder simulated)
+PASS actual dashboard main/radio/OLED: shared model, unknown battery, adaptive URL/Wi-Fi QR + 4-module quiet zone + readable key, portal fallback, 3s sleep / 8s setup release, OLED absent (worker and QR encoder simulated)
+PASS production setup: protected AP, outage/reopen recovery, late cancel, durable commit despite RAM-selection failure and next-candidate guard, LAN Host/origin restrictions, invalid UTF8 scan filtering, timeout/rollback, SSID32/PSK64, DHCP/log, no secrets, bounded close
+PASS production HTTP/queues/storage/Preferences: complete Content-Length bytes through partial sends+EAGAIN, routing validation, exactly-once ingestion/all fields, durable clock reboot, names pending/failure/save/load/shutdown
+PASS scheduled production worker: bounded real task iterations, HTTP candidate -> RAM test -> injected GOT_IP -> durable FLASH commit, queued ingestion exactly once, HTTP name save and real worker reload after reboot (no manual serviceNetwork)
+PASS real scheduled worker + production protocomm adapter (SDK authentication simulated): Security1/PoP binding, unauthorized/invalid/oversized refusal, queue full, HTTP/BLE contention, correlation, timeout->old FLASH preserved->correct retry->GOT_IP->commit, no secrets, stop/reopen/failure

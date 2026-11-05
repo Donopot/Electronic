@@ -1,0 +1,9 @@
+{
+  "name": "LoRa169",
+  "version": "0.8.0-lf1",
+  "description": "Arduino-LoRa 0.8.0 adapted for the project's SX1278 low-frequency radios",
+  "license": "MIT",
+  "frameworks": ["arduino"],
+  "platforms": ["espressif32"],
+  "headers": ["LoRa.h"]
+}

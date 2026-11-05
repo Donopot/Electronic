@@ -1,0 +1,9 @@
+{
+  "utc": "20261104-162525Z",
+  "path": ".tools\\private\\before-plant-setup-20261104-162525Z\\flash-8MB.bin",
+  "bytes": 8388608,
+  "sha256": "f706e3708f7e5ea3a6d9b29052df25d714b3131e6bc377fa2505136b03c1edf5",
+  "usb_port": "COM5",
+  "expected_mac": "3c:0f:02:eb:f5:28",
+  "purpose": "Sauvegarde avant remplacement BLE par assistant local ; conserver NVS et historique"
+}

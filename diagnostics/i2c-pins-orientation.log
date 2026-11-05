@@ -1,0 +1,41 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T11:49:24.186550+00:00
+[PROBE] SDA=3 SCL=2 adresse=0x77 : TIMEOUT (code 5)
+[PROBE] SDA=GPIO2 SCL=GPIO3 | repos SDA=1 SCL=1
+[PROBE] SDA=2 SCL=3 adresse=0x3F : NACK (code 2)
+[PROBE] SDA=2 SCL=3 adresse=0x77 : NACK (code 2)
+[PROBE] SDA=GPIO4 SCL=GPIO5 | repos SDA=1 SCL=1
+[PROBE] SDA=4 SCL=5 adresse=0x3F : NACK (code 2)
+[PROBE] SDA=4 SCL=5 adresse=0x77 : NACK (code 2)
+[PROBE] SDA=GPIO5 SCL=GPIO4 | repos SDA=1 SCL=1
+[PROBE] SDA=5 SCL=4 adresse=0x3F : NACK (code 2)
+[PROBE] SDA=5 SCL=4 adresse=0x77 : NACK (code 2)
+[PROBE] Fin ; prochain test dans 10 secondes.
+[PROBE] Debut test des quatre orientations I2C.
+[PROBE] SDA=GPIO3 SCL=GPIO2 | repos SDA=1 SCL=1
+[PROBE] SDA=3 SCL=2 adresse=0x3F : TIMEOUT (code 5)
+[PROBE] SDA=3 SCL=2 adresse=0x77 : NACK (code 2)
+[PROBE] SDA=GPIO2 SCL=GPIO3 | repos SDA=1 SCL=1
+[PROBE] SDA=2 SCL=3 adresse=0x3F : NACK (code 2)
+[PROBE] SDA=2 SCL=3 adresse=0x77 : NACK (code 2)
+[PROBE] SDA=GPIO4 SCL=GPIO5 | repos SDA=1 SCL=1
+[PROBE] SDA=4 SCL=5 adresse=0x3F : NACK (code 2)
+[PROBE] SDA=4 SCL=5 adresse=0x77 : NACK (code 2)
+[PROBE] SDA=GPIO5 SCL=GPIO4 | repos SDA=1 SCL=1
+[PROBE] SDA=5 SCL=4 adresse=0x3F : NACK (code 2)
+[PROBE] SDA=5 SCL=4 adresse=0x77 : NACK (code 2)
+[PROBE] Fin ; prochain test dans 10 secondes.
+[PROBE] Debut test des quatre orientations I2C.
+[PROBE] SDA=GPIO3 SCL=GPIO2 | repos SDA=1 SCL=1
+[PROBE] SDA=3 SCL=2 adresse=0x3F : TIMEOUT (code 5)
+[PROBE] SDA=3 SCL=2 adresse=0x77 : NACK (code 2)
+[PROBE] SDA=GPIO2 SCL=GPIO3 | repos SDA=1 SCL=1
+[PROBE] SDA=2 SCL=3 adresse=0x3F : NACK (code 2)
+[PROBE] SDA=2 SCL=3 adresse=0x77 : NACK (code 2)
+[PROBE] SDA=GPIO4 SCL=GPIO5 | repos SDA=1 SCL=1
+[PROBE] SDA=4 SCL=5 adresse=0x3F : NACK (code 2)
+[PROBE] SDA=4 SCL=5 adresse=0x77 : NACK (code 2)
+[PROBE] SDA=GPIO5 SCL=GPIO4 | repos SDA=1 SCL=1
+[PROBE] SDA=5 SCL=4 adresse=0x3F : NACK (code 2)
+[PROBE] SDA=5 SCL=4 adresse=0x77 : NACK (code 2)
+[PROBE] Fin ; prochain test dans 10 secondes.
+BILAN : 0 mesures, 0 erreurs, 25.3 s de capture.

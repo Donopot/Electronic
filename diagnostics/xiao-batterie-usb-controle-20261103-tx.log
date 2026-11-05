@@ -1,0 +1,187 @@
+Capture COM8, UTC=2026-11-03T16:36:08.116414+00:00, seconds=72.0
+[HOST t_s=0.828000] 
+[HOST t_s=0.828000] [XIAO-SOIL-DIAG] v1 / USB / D6=P1.11 SDA / D7=P1.12 SCL
+[HOST t_s=0.828000] [CONFIG] ADS1115 attendu 0x48, selection unique 0x48..0x4B, A0/GND, +/-4.096 V, 128 SPS.
+[HOST t_s=0.828000] [INFO] D0 relachee ; SOIL-01 LoRa 868.1 MHz / 0 dBm / 30 s ; diagnostic non authentifie ; aucun pourcentage.
+[HOST t_s=0.828000] [BUS] SDA=1 SCL=1
+[HOST t_s=0.859000] [I2C] ACK adresse=0x48
+[HOST t_s=0.875000] [SCAN] peripheriques=1
+[HOST t_s=0.875000] [INFO] Un ACK seul ne permet pas d'identifier la puce.
+[HOST t_s=0.890000] [ADC] adresse_selectionnee=0x48
+[HOST t_s=0.890000] [MESURE] t_ms=14444 adresse=0x48 A0_brut=21491 A0_V=2.686375 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=0.890000] [BILAN] essais=14 mesures=14 erreurs=0
+[HOST t_s=1.906000] [MESURE] t_ms=15458 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=1.906000] [BILAN] essais=15 mesures=15 erreurs=0
+[HOST t_s=2.922000] [MESURE] t_ms=16473 adresse=0x48 A0_brut=21486 A0_V=2.685750 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=2.922000] [BILAN] essais=16 mesures=16 erreurs=0
+[HOST t_s=3.937000] [MESURE] t_ms=17488 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=3.937000] [BILAN] essais=17 mesures=17 erreurs=0
+[HOST t_s=4.937000] [MESURE] t_ms=18502 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=4.937000] [BILAN] essais=18 mesures=18 erreurs=0
+[HOST t_s=5.968000] [MESURE] t_ms=19517 adresse=0x48 A0_brut=21486 A0_V=2.685750 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=5.968000] [BILAN] essais=19 mesures=19 erreurs=0
+[HOST t_s=6.953000] [BUS] SDA=1 SCL=1
+[HOST t_s=6.984000] [I2C] ACK adresse=0x48
+[HOST t_s=7.000000] [SCAN] peripheriques=1
+[HOST t_s=7.000000] [INFO] Un ACK seul ne permet pas d'identifier la puce.
+[HOST t_s=7.000000] [ADC] adresse_selectionnee=0x48
+[HOST t_s=7.015000] [MESURE] t_ms=20577 adresse=0x48 A0_brut=21490 A0_V=2.686250 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=7.015000] [BILAN] essais=20 mesures=20 erreurs=0
+[HOST t_s=8.031000] [MESURE] t_ms=21591 adresse=0x48 A0_brut=21486 A0_V=2.685750 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=8.031000] [BILAN] essais=21 mesures=21 erreurs=0
+[HOST t_s=9.047000] [MESURE] t_ms=22606 adresse=0x48 A0_brut=21486 A0_V=2.685750 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=9.047000] [BILAN] essais=22 mesures=22 erreurs=0
+[HOST t_s=10.062000] [MESURE] t_ms=23621 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=10.062000] [BILAN] essais=23 mesures=23 erreurs=0
+[HOST t_s=11.062000] [MESURE] t_ms=24635 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=11.062000] [BILAN] essais=24 mesures=24 erreurs=0
+[HOST t_s=12.093000] [MESURE] t_ms=25650 adresse=0x48 A0_brut=21486 A0_V=2.685750 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=12.093000] [BILAN] essais=25 mesures=25 erreurs=0
+[HOST t_s=13.093000] [MESURE] t_ms=26665 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=13.093000] [BILAN] essais=26 mesures=26 erreurs=0
+[HOST t_s=14.125000] [MESURE] t_ms=27679 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=14.125000] [BILAN] essais=27 mesures=27 erreurs=0
+[HOST t_s=15.140000] [MESURE] t_ms=28694 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=15.140000] [BILAN] essais=28 mesures=28 erreurs=0
+[HOST t_s=16.156000] [MESURE] t_ms=29708 adresse=0x48 A0_brut=21486 A0_V=2.685750 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=16.156000] [BILAN] essais=29 mesures=29 erreurs=0
+[HOST t_s=17.156000] [BUS] SDA=1 SCL=1
+[HOST t_s=17.172000] [I2C] ACK adresse=0x48
+[HOST t_s=17.203000] [SCAN] peripheriques=1
+[HOST t_s=17.203000] [INFO] Un ACK seul ne permet pas d'identifier la puce.
+[HOST t_s=17.203000] [ADC] adresse_selectionnee=0x48
+[HOST t_s=17.203000] [MESURE] t_ms=30768 adresse=0x48 A0_brut=21491 A0_V=2.686375 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=17.203000] [BILAN] essais=30 mesures=30 erreurs=0
+[HOST t_s=18.234000] [MESURE] t_ms=31783 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=18.234000] [BILAN] essais=31 mesures=31 erreurs=0
+[HOST t_s=18.297000] [SOIL_TX] authenticated=no node=SOIL-01 session=4279149232 seq=2 uptime_ms=31783 status=ok address=72 raw=21487 uv=2685875
+[HOST t_s=19.297000] [MESURE] t_ms=32862 adresse=0x48 A0_brut=21486 A0_V=2.685750 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=19.297000] [BILAN] essais=32 mesures=32 erreurs=0
+[HOST t_s=20.328000] [MESURE] t_ms=33876 adresse=0x48 A0_brut=21486 A0_V=2.685750 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=20.328000] [BILAN] essais=33 mesures=33 erreurs=0
+[HOST t_s=21.343000] [MESURE] t_ms=34891 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=21.343000] [BILAN] essais=34 mesures=34 erreurs=0
+[HOST t_s=22.343000] [MESURE] t_ms=35906 adresse=0x48 A0_brut=21486 A0_V=2.685750 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=22.343000] [BILAN] essais=35 mesures=35 erreurs=0
+[HOST t_s=23.359000] [MESURE] t_ms=36920 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=23.359000] [BILAN] essais=36 mesures=36 erreurs=0
+[HOST t_s=24.375000] [MESURE] t_ms=37935 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=24.375000] [BILAN] essais=37 mesures=37 erreurs=0
+[HOST t_s=25.390000] [MESURE] t_ms=38950 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=25.390000] [BILAN] essais=38 mesures=38 erreurs=0
+[HOST t_s=26.406000] [MESURE] t_ms=39964 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=26.406000] [BILAN] essais=39 mesures=39 erreurs=0
+[HOST t_s=27.406000] [BUS] SDA=1 SCL=1
+[HOST t_s=27.437000] [I2C] ACK adresse=0x48
+[HOST t_s=27.453000] [SCAN] peripheriques=1
+[HOST t_s=27.453000] [INFO] Un ACK seul ne permet pas d'identifier la puce.
+[HOST t_s=27.453000] [ADC] adresse_selectionnee=0x48
+[HOST t_s=27.468000] [MESURE] t_ms=41024 adresse=0x48 A0_brut=21490 A0_V=2.686250 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=27.468000] [BILAN] essais=40 mesures=40 erreurs=0
+[HOST t_s=28.484000] [MESURE] t_ms=42040 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=28.484000] [BILAN] essais=41 mesures=41 erreurs=0
+[HOST t_s=29.500000] [MESURE] t_ms=43054 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=29.500000] [BILAN] essais=42 mesures=42 erreurs=0
+[HOST t_s=30.500000] [MESURE] t_ms=44069 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=30.500000] [BILAN] essais=43 mesures=43 erreurs=0
+[HOST t_s=31.531000] [MESURE] t_ms=45083 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=31.531000] [BILAN] essais=44 mesures=44 erreurs=0
+[HOST t_s=32.531000] [MESURE] t_ms=46098 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=32.531000] [BILAN] essais=45 mesures=45 erreurs=0
+[HOST t_s=33.562000] [MESURE] t_ms=47113 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=33.562000] [BILAN] essais=46 mesures=46 erreurs=0
+[HOST t_s=34.562000] [MESURE] t_ms=48128 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=34.562000] [BILAN] essais=47 mesures=47 erreurs=0
+[HOST t_s=35.593000] [MESURE] t_ms=49143 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=35.593000] [BILAN] essais=48 mesures=48 erreurs=0
+[HOST t_s=36.593000] [MESURE] t_ms=50158 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=36.593000] [BILAN] essais=49 mesures=49 erreurs=0
+[HOST t_s=37.593000] [BUS] SDA=1 SCL=1
+[HOST t_s=37.625000] [I2C] ACK adresse=0x48
+[HOST t_s=37.640000] [SCAN] peripheriques=1
+[HOST t_s=37.640000] [INFO] Un ACK seul ne permet pas d'identifier la puce.
+[HOST t_s=37.640000] [ADC] adresse_selectionnee=0x48
+[HOST t_s=37.656000] [MESURE] t_ms=51217 adresse=0x48 A0_brut=21492 A0_V=2.686500 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=37.656000] [BILAN] essais=50 mesures=50 erreurs=0
+[HOST t_s=38.672000] [MESURE] t_ms=52232 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=38.672000] [BILAN] essais=51 mesures=51 erreurs=0
+[HOST t_s=39.687000] [MESURE] t_ms=53247 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=39.687000] [BILAN] essais=52 mesures=52 erreurs=0
+[HOST t_s=40.703000] [MESURE] t_ms=54261 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=40.703000] [BILAN] essais=53 mesures=53 erreurs=0
+[HOST t_s=41.718000] [MESURE] t_ms=55276 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=41.718000] [BILAN] essais=54 mesures=54 erreurs=0
+[HOST t_s=42.734000] [MESURE] t_ms=56291 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=42.734000] [BILAN] essais=55 mesures=55 erreurs=0
+[HOST t_s=43.750000] [MESURE] t_ms=57305 adresse=0x48 A0_brut=21487 A0_V=2.685875 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=43.750000] [BILAN] essais=56 mesures=56 erreurs=0
+[HOST t_s=44.765000] [MESURE] t_ms=58320 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=44.765000] [BILAN] essais=57 mesures=57 erreurs=0
+[HOST t_s=45.765000] [MESURE] t_ms=59334 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=45.765000] [BILAN] essais=58 mesures=58 erreurs=0
+[HOST t_s=46.781000] [MESURE] t_ms=60349 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=46.781000] [BILAN] essais=59 mesures=59 erreurs=0
+[HOST t_s=47.797000] [BUS] SDA=1 SCL=1
+[HOST t_s=47.812000] [I2C] ACK adresse=0x48
+[HOST t_s=47.828000] [SCAN] peripheriques=1
+[HOST t_s=47.828000] [INFO] Un ACK seul ne permet pas d'identifier la puce.
+[HOST t_s=47.828000] [ADC] adresse_selectionnee=0x48
+[HOST t_s=47.859000] [MESURE] t_ms=61409 adresse=0x48 A0_brut=21492 A0_V=2.686500 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=47.859000] [BILAN] essais=60 mesures=60 erreurs=0
+[HOST t_s=48.875000] [MESURE] t_ms=62423 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=48.875000] [BILAN] essais=61 mesures=61 erreurs=0
+[HOST t_s=48.937000] [SOIL_TX] authenticated=no node=SOIL-01 session=4279149232 seq=3 uptime_ms=62423 status=ok address=72 raw=21489 uv=2686125
+[HOST t_s=49.937000] [MESURE] t_ms=63502 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=49.937000] [BILAN] essais=62 mesures=62 erreurs=0
+[HOST t_s=50.953000] [MESURE] t_ms=64517 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=50.953000] [BILAN] essais=63 mesures=63 erreurs=0
+[HOST t_s=51.968000] [MESURE] t_ms=65532 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=51.968000] [BILAN] essais=64 mesures=64 erreurs=0
+[HOST t_s=52.984000] [MESURE] t_ms=66546 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=52.984000] [BILAN] essais=65 mesures=65 erreurs=0
+[HOST t_s=54.000000] [MESURE] t_ms=67561 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=54.000000] [BILAN] essais=66 mesures=66 erreurs=0
+[HOST t_s=55.015000] [MESURE] t_ms=68576 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=55.015000] [BILAN] essais=67 mesures=67 erreurs=0
+[HOST t_s=56.031000] [MESURE] t_ms=69590 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=56.031000] [BILAN] essais=68 mesures=68 erreurs=0
+[HOST t_s=57.031000] [MESURE] t_ms=70605 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=57.031000] [BILAN] essais=69 mesures=69 erreurs=0
+[HOST t_s=58.047000] [BUS] SDA=1 SCL=1
+[HOST t_s=58.062000] [I2C] ACK adresse=0x48
+[HOST t_s=58.093000] [SCAN] peripheriques=1
+[HOST t_s=58.093000] [INFO] Un ACK seul ne permet pas d'identifier la puce.
+[HOST t_s=58.093000] [ADC] adresse_selectionnee=0x48
+[HOST t_s=58.093000] [MESURE] t_ms=71665 adresse=0x48 A0_brut=21491 A0_V=2.686375 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=58.093000] [BILAN] essais=70 mesures=70 erreurs=0
+[HOST t_s=59.125000] [MESURE] t_ms=72679 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=59.125000] [BILAN] essais=71 mesures=71 erreurs=0
+[HOST t_s=60.140000] [MESURE] t_ms=73694 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=60.140000] [BILAN] essais=72 mesures=72 erreurs=0
+[HOST t_s=61.156000] [MESURE] t_ms=74708 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=61.156000] [BILAN] essais=73 mesures=73 erreurs=0
+[HOST t_s=62.172000] [MESURE] t_ms=75723 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=62.172000] [BILAN] essais=74 mesures=74 erreurs=0
+[HOST t_s=63.172000] [MESURE] t_ms=76738 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=63.172000] [BILAN] essais=75 mesures=75 erreurs=0
+[HOST t_s=64.203000] [MESURE] t_ms=77752 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=64.203000] [BILAN] essais=76 mesures=76 erreurs=0
+[HOST t_s=65.203000] [MESURE] t_ms=78767 adresse=0x48 A0_brut=21488 A0_V=2.686000 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=65.203000] [BILAN] essais=77 mesures=77 erreurs=0
+[HOST t_s=66.218000] [MESURE] t_ms=79782 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=66.218000] [BILAN] essais=78 mesures=78 erreurs=0
+[HOST t_s=67.234000] [MESURE] t_ms=80796 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=67.234000] [BILAN] essais=79 mesures=79 erreurs=0
+[HOST t_s=68.234000] [BUS] SDA=1 SCL=1
+[HOST t_s=68.265000] [I2C] ACK adresse=0x48
+[HOST t_s=68.281000] [SCAN] peripheriques=1
+[HOST t_s=68.281000] [INFO] Un ACK seul ne permet pas d'identifier la puce.
+[HOST t_s=68.281000] [ADC] adresse_selectionnee=0x48
+[HOST t_s=68.297000] [MESURE] t_ms=81856 adresse=0x48 A0_brut=21493 A0_V=2.686625 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=68.297000] [BILAN] essais=80 mesures=80 erreurs=0
+[HOST t_s=69.297000] [MESURE] t_ms=82871 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=69.297000] [BILAN] essais=81 mesures=81 erreurs=0
+[HOST t_s=70.328000] [MESURE] t_ms=83885 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=70.328000] [BILAN] essais=82 mesures=82 erreurs=0
+[HOST t_s=71.343000] [MESURE] t_ms=84900 adresse=0x48 A0_brut=21489 A0_V=2.686125 etat=DANS_PLAGE_NOMINALE
+[HOST t_s=71.343000] [BILAN] essais=83 mesures=83 erreurs=0

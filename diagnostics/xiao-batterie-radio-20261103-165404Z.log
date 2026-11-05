@@ -1,0 +1,125 @@
+Capture RX batterie seule ; XIAO absent USB ; Heltec COM5 DTR=0 RTS=0 ; UTC=2026-11-03T16:54:05.441618+00:00
+[HOST t_s=0.000000] ESP-ROM:esp32s3-20210327
+[HOST t_s=0.000000] Build:Mar 27 2021
+[HOST t_s=0.000000] rst:0x1 (POWERON),boot:0x8 (SPI_FAST_FLASH_BOOT)
+[HOST t_s=0.000000] SPIWP:0xee
+[HOST t_s=0.000000] mode:DIO, clock div:1
+[HOST t_s=0.000000] load:0x3fce3808,len:0x4bc
+[HOST t_s=0.000000] load:0x403c9700,len:0xbd8
+[HOST t_s=0.000000] load:0x403cc700,len:0x2a0c
+[HOST t_s=0.000000] entry 0x403c98d0
+[HOST t_s=0.000000] [PlantStation VEML7700 v1.2.0] uptime_ms=116 evenement=demarrage statut=conversion_en_cours raw=null lux=null adresse=globale Heltec V3 cible; puce ESP32-S3 revision 0 flash 8388608 octets; UART0 CP2102; SDA=4 SCL=5; sous-revision V3.x non determinee
+[HOST t_s=0.187000] [PlantStation VEML7700 v1.2.0] uptime_ms=370 evenement=oled statut=ok raw=null lux=null adresse=0x3C OLED initialise sur I2C1 GPIO17/18
+[HOST t_s=0.203000] [PlantStation VEML7700 v1.2.0] uptime_ms=383 evenement=scan_ack statut=ok raw=null lux=null adresse=0x10 ACK recu; identite du composant non garantie
+[HOST t_s=0.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=408 evenement=scan_fin statut=conversion_en_cours raw=null lux=null adresse=globale Fin du scanner I2C
+[HOST t_s=0.250000] [PlantStation VEML7700 v1.2.0] uptime_ms=424 evenement=configuration statut=conversion_en_cours raw=null lux=null adresse=0x10 Configuration verifiee : gain 1/8, integration 100 ms, economie desactivee
+[HOST t_s=0.250000] [SOIL_RADIO] state=listening node=SOIL-01 authenticated=no frequency=868100000
+[HOST t_s=1.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=1409 evenement=mesure statut=ok raw=11 lux=5.9136 adresse=0x10 Luminosite ambiante
+[HOST t_s=2.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=2409 evenement=mesure statut=ok raw=11 lux=5.9136 adresse=0x10 Luminosite ambiante
+[HOST t_s=3.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=3409 evenement=mesure statut=ok raw=11 lux=5.9136 adresse=0x10 Luminosite ambiante
+[HOST t_s=4.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=4409 evenement=mesure statut=ok raw=11 lux=5.9136 adresse=0x10 Luminosite ambiante
+[HOST t_s=5.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=5409 evenement=mesure statut=ok raw=10 lux=5.3760 adresse=0x10 Luminosite ambiante
+[HOST t_s=6.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=6409 evenement=mesure statut=ok raw=11 lux=5.9136 adresse=0x10 Luminosite ambiante
+[HOST t_s=7.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=7409 evenement=mesure statut=ok raw=10 lux=5.3760 adresse=0x10 Luminosite ambiante
+[HOST t_s=8.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=8409 evenement=mesure statut=ok raw=10 lux=5.3760 adresse=0x10 Luminosite ambiante
+[HOST t_s=9.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=9409 evenement=mesure statut=ok raw=10 lux=5.3760 adresse=0x10 Luminosite ambiante
+[HOST t_s=10.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=10409 evenement=mesure statut=ok raw=10 lux=5.3760 adresse=0x10 Luminosite ambiante
+[HOST t_s=11.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=11409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=12.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=12409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=13.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=13409 evenement=mesure statut=ok raw=5 lux=2.6880 adresse=0x10 Luminosite ambiante
+[HOST t_s=14.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=14409 evenement=mesure statut=ok raw=4 lux=2.1504 adresse=0x10 Luminosite ambiante
+[HOST t_s=15.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=15409 evenement=mesure statut=ok raw=5 lux=2.6880 adresse=0x10 Luminosite ambiante
+[HOST t_s=16.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=16409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=17.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=17409 evenement=mesure statut=ok raw=6 lux=3.2256 adresse=0x10 Luminosite ambiante
+[HOST t_s=18.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=18409 evenement=mesure statut=ok raw=6 lux=3.2256 adresse=0x10 Luminosite ambiante
+[HOST t_s=19.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=19409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=20.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=20409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=21.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=21409 evenement=mesure statut=ok raw=6 lux=3.2256 adresse=0x10 Luminosite ambiante
+[HOST t_s=22.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=22409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=23.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=23409 evenement=mesure statut=ok raw=6 lux=3.2256 adresse=0x10 Luminosite ambiante
+[HOST t_s=24.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=24409 evenement=mesure statut=ok raw=6 lux=3.2256 adresse=0x10 Luminosite ambiante
+[HOST t_s=25.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=25409 evenement=mesure statut=ok raw=6 lux=3.2256 adresse=0x10 Luminosite ambiante
+[HOST t_s=26.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=26409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=27.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=27409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=28.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=28409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=29.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=29409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=30.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=30409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=31.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=31409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=32.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=32409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=33.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=33409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=34.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=34409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=35.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=35409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=36.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=36409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=37.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=37409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=38.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=38409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=39.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=39409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=40.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=40409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=41.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=41409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=42.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=42409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=43.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=43409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=44.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=44409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=45.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=45409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=46.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=46409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=47.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=47409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=48.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=48409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=49.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=49409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=50.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=50409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=51.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=51409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=52.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=52409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=53.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=53409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=54.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=54409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=55.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=55409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=56.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=56409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=57.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=57409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=58.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=58409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=59.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=59409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=60.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=60409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=61.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=61409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=62.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=62409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=63.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=63409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=64.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=64409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=65.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=65409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=66.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=66409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=67.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=67409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=68.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=68409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=69.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=69409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=70.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=70409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=71.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=71409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=72.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=72409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=73.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=73409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=74.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=74409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=75.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=75409 evenement=mesure statut=ok raw=5 lux=2.6880 adresse=0x10 Luminosite ambiante
+[HOST t_s=76.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=76409 evenement=mesure statut=ok raw=5 lux=2.6880 adresse=0x10 Luminosite ambiante
+[HOST t_s=77.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=77409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=78.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=78409 evenement=mesure statut=ok raw=6 lux=3.2256 adresse=0x10 Luminosite ambiante
+[HOST t_s=79.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=79409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=80.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=80409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=81.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=81409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=82.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=82409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=83.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=83409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=84.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=84409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=85.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=85409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=86.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=86409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=87.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=87409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=88.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=88409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=89.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=89409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=90.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=90409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=91.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=91409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=92.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=92409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=93.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=93409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=94.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=94409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=95.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=95409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=96.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=96409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=97.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=97409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=98.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=98409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=99.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=99409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=100.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=100409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=101.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=101409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=102.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=102409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=103.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=103409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=104.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=104409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=105.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=105409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=106.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=106409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante
+[HOST t_s=107.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=107409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=108.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=108409 evenement=mesure statut=ok raw=7 lux=3.7632 adresse=0x10 Luminosite ambiante
+[HOST t_s=109.219000] [PlantStation VEML7700 v1.2.0] uptime_ms=109409 evenement=mesure statut=ok raw=8 lux=4.3008 adresse=0x10 Luminosite ambiante

@@ -1,0 +1,17 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T08:33:06.560360+00:00
+[OK] t=14222 ms | Temperature : 24.3 °C | Pression : 1008.95 hPa
+[OK] t=16222 ms | Temperature : 24.3 °C | Pression : 1009.02 hPa
+[OK] t=18222 ms | Temperature : 24.3 °C | Pression : 1009.02 hPa
+[OK] t=20222 ms | Temperature : 24.2 °C | Pression : 1009.03 hPa
+[OK] t=22222 ms | Temperature : 24.2 °C | Pression : 1008.99 hPa
+[OK] t=24222 ms | Temperature : 24.2 °C | Pression : 1009.01 hPa
+[OK] t=26222 ms | Temperature : 24.2 °C | Pression : 1009.01 hPa
+[OK] t=28222 ms | Temperature : 24.2 °C | Pression : 1008.93 hPa
+[OK] t=30222 ms | Temperature : 24.2 °C | Pression : 1009.00 hPa
+[OK] t=32222 ms | Temperature : 24.2 °C | Pression : 1009.05 hPa
+[OK] t=34222 ms | Temperature : 24.1 °C | Pression : 1009.02 hPa
+[OK] t=36222 ms | Temperature : 24.1 °C | Pression : 1008.95 hPa
+[OK] t=38222 ms | Temperature : 24.1 °C | Pression : 1008.96 hPa
+[OK] t=40222 ms | Temperature : 24.1 °C | Pression : 1009.04 hPa
+[OK] t=42222 ms | Temperature : 24.1 °C | Pression : 1009.02 hPa
+BILAN : 15 mesures, 0 erreurs, 30.1 s de capture. Temperature=24.1..24.3 C; pression=1008.93..1009.05 hPa. Intervalles=2000..2000 ms.

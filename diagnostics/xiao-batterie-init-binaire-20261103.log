@@ -1,0 +1,37 @@
+000347e0 <initVariant()>:
+   347e0:	b508      	push	{r3, lr}
+   347e2:	2100      	movs	r1, #0
+   347e4:	200e      	movs	r0, #14
+   347e6:	f003 ff55 	bl	38694 <digitalWrite>
+   347ea:	2101      	movs	r1, #1
+   347ec:	200e      	movs	r0, #14
+   347ee:	f003 fecd 	bl	3858c <pinMode>
+   347f2:	2100      	movs	r1, #0
+   347f4:	2016      	movs	r0, #22
+   347f6:	f003 fec9 	bl	3858c <pinMode>
+   347fa:	2101      	movs	r1, #1
+   347fc:	2019      	movs	r0, #25
+   347fe:	f003 fec5 	bl	3858c <pinMode>
+   34802:	2101      	movs	r1, #1
+   34804:	2019      	movs	r0, #25
+   34806:	f003 ff45 	bl	38694 <digitalWrite>
+   3480a:	2101      	movs	r1, #1
+   3480c:	200b      	movs	r0, #11
+   3480e:	f003 febd 	bl	3858c <pinMode>
+   34812:	2101      	movs	r1, #1
+   34814:	200b      	movs	r0, #11
+   34816:	f003 ff3d 	bl	38694 <digitalWrite>
+   3481a:	2101      	movs	r1, #1
+   3481c:	200d      	movs	r0, #13
+   3481e:	f003 feb5 	bl	3858c <pinMode>
+   34822:	2101      	movs	r1, #1
+   34824:	200d      	movs	r0, #13
+   34826:	f003 ff35 	bl	38694 <digitalWrite>
+   3482a:	2101      	movs	r1, #1
+   3482c:	200c      	movs	r0, #12
+   3482e:	f003 fead 	bl	3858c <pinMode>
+   34832:	2101      	movs	r1, #1
+   34834:	200c      	movs	r0, #12
+   34836:	e8bd 4008 	ldmia.w	sp!, {r3, lr}
+   3483a:	f003 bf2b 	b.w	38694 <digitalWrite>
+   3483e:	bf00      	nop

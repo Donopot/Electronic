@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <string>
 #include <vector>
 
@@ -20,9 +21,14 @@ inline void delay(unsigned long ms) { host::gpioCalls().push_back("delay" + std:
 struct FakeSerial {
     bool flushed = false;
     std::vector<std::string> lines;
+    std::string input;
+    size_t inputAt=0;
     void begin(unsigned long baud) { if (baud != 115200) throw "baud incorrect"; }
     void println(const char* line) { lines.emplace_back(line); }
     void flush() { flushed = true; }
+    int available() {return input.size()-inputAt;}
+    int read() {return available()?input[inputAt++]:-1;}
+    void printf(const char* format,...) {char text[512];va_list args;va_start(args,format);vsnprintf(text,sizeof(text),format,args);va_end(args);lines.emplace_back(text);}
 };
 struct FakeEsp {
     const char* getChipModel() { return "ESP32-S3"; }

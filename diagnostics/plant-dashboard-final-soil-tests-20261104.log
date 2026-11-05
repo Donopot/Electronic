@@ -1,0 +1,155 @@
+[SCENARIO] profile=protocol scenario=normal
+PASS protocole SOIL : codec compatible v1, noeuds 1/2/3/4 isoles, inconnu rejete, defauts, sessions, temps circulaires et frontiere 90min
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src\sfTk\sfDevVEML7700.cpp:25:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src\sfTk/sfDevVEML7700.h:30:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkII2C.h:16:
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  445 |         uint16_t data16[length];
+      |                         ^~~~~~
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: note: function parameter 'length' with unknown value cannot be used in a constant expression
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:438:85: note: declared here
+  438 |     virtual sfTkError_t writeRegister(uint16_t devReg, const uint16_t *data, size_t length)
+      |                                                                                     ^
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\src\main.cpp:5:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\src/sensors/StrictWireTransport.h:4:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun VEML7700 Arduino Library\src/sfTk/sfDevVEML7700.h:30:
+In file included from C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkII2C.h:16:
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  445 |         uint16_t data16[length];
+      |                         ^~~~~~
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:445:25: note: function parameter 'length' with unknown value cannot be used in a constant expression
+C:\Users\Anwender\Documents\ChatGPT\Electronic\firmware\PlantStationVeml7700\.pio\libdeps\heltec_v3_text\SparkFun Toolkit\src/sfTk/sfTkIBus.h:438:85: note: declared here
+  438 |     virtual sfTkError_t writeRegister(uint16_t devReg, const uint16_t *data, size_t length)
+      |                                                                                     ^
+1 warning generated.
+1 warning generated.
+[SCENARIO] profile=heltec scenario=normal
+PASS vrais radio/main/OLED : RX, age inchange au rejet, peremption, defaut sans valeur, lux concurrents, reprise, PRG et sommeil/reset de secours
+[SCENARIO] profile=heltec scenario=radio_failed
+PASS vrais radio/main/OLED : RX, age inchange au rejet, peremption, defaut sans valeur, lux concurrents, reprise, PRG et sommeil/reset de secours
+[SCENARIO] profile=heltec scenario=sleep_failed
+PASS vrais radio/main/OLED : RX, age inchange au rejet, peremption, defaut sans valeur, lux concurrents, reprise, PRG et sommeil/reset de secours
+[SCENARIO] profile=heltec scenario=pending_init
+PASS initialisation differee : lux/PRG apres 14s, boucle sans attente, sommeil attend le proprietaire SPI
+[SCENARIO] profile=heltec scenario=multi
+PASS deux sondes : etats, sessions et ages isoles, peremption individuelle et deux valeurs OLED
+[SCENARIO] profile=heltec scenario=three
+PASS trois sondes : etats, reprise, peremption individuelle et trois lignes OLED
+[SCENARIO] profile=heltec scenario=four
+PASS quatre sondes : etats, compteurs, reprise radio, expiration exacte et huit lignes OLED
+[SCENARIO] profile=heltec scenario=layout
+PASS disposition quatre sondes : valeurs extremes, age 89m, lux en cours/erreur et limites ecran
+[SCENARIO] profile=xiao scenario=cadence
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+[SCENARIO] profile=xiao scenario=wrap
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+[SCENARIO] profile=xiao scenario=rng
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+[SCENARIO] profile=xiao scenario=usb
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+[SCENARIO] profile=xiao scenario=disconnected
+PASS vrai XIAO : cadence, panne/reprise, statuts ADC, RNG borne, USB absent/bloque et pertes explicites
+[SCENARIO] profile=xiao_pmos scenario=banner
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos scenario=acquire
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos scenario=commands
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos scenario=gate
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos scenario=parser
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos scenario=auto
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos scenario=blocked
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos scenario=wrap
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos scenario=integration
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos scenario=radio_fault
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos scenario=deferred_error
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos scenario=cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos scenario=auto_guard
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node2 scenario=banner
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node2 scenario=acquire
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node2 scenario=commands
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node2 scenario=gate
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node2 scenario=parser
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node2 scenario=auto
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node2 scenario=blocked
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node2 scenario=wrap
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node2 scenario=integration
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node2 scenario=radio_fault
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node2 scenario=deferred_error
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node2 scenario=cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node2 scenario=auto_guard
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node3 scenario=banner
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node3 scenario=acquire
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node3 scenario=commands
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node3 scenario=gate
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node3 scenario=parser
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node3 scenario=auto
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node3 scenario=blocked
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node3 scenario=wrap
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node3 scenario=integration
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node3 scenario=radio_fault
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node3 scenario=deferred_error
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node3 scenario=cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node3 scenario=auto_guard
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node4 scenario=banner
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node4 scenario=acquire
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node4 scenario=commands
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node4 scenario=gate
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node4 scenario=parser
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node4 scenario=auto
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node4 scenario=blocked
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node4 scenario=wrap
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node4 scenario=integration
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node4 scenario=radio_fault
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node4 scenario=deferred_error
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node4 scenario=cadence
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence
+[SCENARIO] profile=xiao_pmos_node4 scenario=auto_guard
+PASS P-MOS : grille sans HIGH, OFF sur erreur, mediane, commandes bornees et cadence

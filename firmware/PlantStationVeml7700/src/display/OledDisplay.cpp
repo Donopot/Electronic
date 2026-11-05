@@ -72,7 +72,7 @@ void OledDisplay::show(const Measurement& value, uint64_t uptime) {
     display_.print(text);
     display_.display();
 }
-void OledDisplay::showSleepPrompt() {
+void OledDisplay::showSleepPrompt(bool setupChoice) {
     if (!ready_) return;
     display_.clearDisplay();
     display_.setTextColor(SSD1306_WHITE);
@@ -82,7 +82,7 @@ void OledDisplay::showSleepPrompt() {
     display_.setCursor(0, 22);
     display_.print("Relacher PRG");
     display_.setCursor(0, 44);
-    display_.print("RST pour reprendre");
+    display_.print(setupChoice?"Ou tenir 8s : Wi-Fi":"RST pour reprendre");
     display_.display();
 }
 #if PLANT_SOIL_LORA
@@ -132,15 +132,20 @@ void OledDisplay::sleep() {
 namespace {
 Adafruit_SSD1306* qrDisplay = nullptr;
 bool qrRendered = false;
+int qrExtent=0;
 void drawQr(esp_qrcode_handle_t code) {
-    const int size=esp_qrcode_get_size(code);
-    // Uppercase HTTP://IP/ is QR alphanumeric: version 1 fits at two pixels
-    // per module with the full four-module quiet zone on this 64px display.
-    if(size!=21 || !qrDisplay) return;
-    qrDisplay->fillRect(0,3,58,58,SSD1306_WHITE);
-    for(int y=0;y<size;++y) for(int x=0;x<size;++x)
-        if(esp_qrcode_get_module(code,x,y)) qrDisplay->fillRect(8+x*2,11+y*2,2,2,SSD1306_BLACK);
-    qrRendered=true;
+    const int size=esp_qrcode_get_size(code),scale=64/(size+8)>=2?2:1;
+    const int extent=(size+8)*scale,top=(64-extent)/2;
+    if(extent>64||!qrDisplay)return;
+    qrDisplay->fillRect(0,top,extent,extent,SSD1306_WHITE);
+    for(int y=0;y<size;++y)for(int x=0;x<size;++x)
+        if(esp_qrcode_get_module(code,x,y))qrDisplay->fillRect((x+4)*scale,top+(y+4)*scale,scale,scale,SSD1306_BLACK);
+    qrExtent=extent;qrRendered=true;
+}
+void generateQr(Adafruit_SSD1306& display,const char* payload,int maxVersion) {
+    qrDisplay=&display;qrRendered=false;qrExtent=0;
+    esp_qrcode_config_t config=ESP_QRCODE_CONFIG_DEFAULT();config.display_func=drawQr;config.max_qrcode_version=maxVersion;
+    esp_qrcode_generate(&config,payload);qrDisplay=nullptr;
 }
 const char* oledState(PlantState state) {
     switch(state) {
@@ -152,6 +157,13 @@ const char* oledState(PlantState state) {
     default:return "PERIMEE";
     }
 }
+}
+void OledDisplay::showSetupPrompt() {
+    if(!ready_)return;
+    display_.clearDisplay();display_.setTextSize(1);display_.setTextColor(SSD1306_WHITE);
+    display_.setCursor(0,0);display_.print("CONFIGURATION WI-FI");
+    display_.setCursor(0,22);display_.print("Relacher PRG");
+    display_.setCursor(0,44);display_.print("Puis scanner le QR");display_.display();
 }
 void OledDisplay::showDashboard(const PlantView& view,Screen screen,const DashboardNetwork& network) {
     if(!ready_ && elapsed(millis(),lastAttempt_,10000)) begin();
@@ -170,31 +182,45 @@ void OledDisplay::showDashboard(const PlantView& view,Screen screen,const Dashbo
             else snprintf(line,sizeof(line),"%s",oledState(p.state));
             display_.print(line);
         }
-    } else if(screen==Screen::Qr) {
-        if(network.online) {
-            char url[40];snprintf(url,sizeof(url),"%s",network.url);
-            for(char* p=url;*p;++p) if(*p>='a' && *p<='z') *p-=32;
-            qrDisplay=&display_;qrRendered=false;
-            esp_qrcode_config_t config=ESP_QRCODE_CONFIG_DEFAULT();config.display_func=drawQr;config.max_qrcode_version=2;
-            esp_qrcode_generate(&config,url);qrDisplay=nullptr;
-            display_.setCursor(62,3);display_.print("ACCES LOCAL");
-            display_.setCursor(63,17);display_.print("Meme Wi-Fi");
-            const char* ip=network.url+7;char ipText[24];snprintf(ipText,sizeof(ipText),"%s",ip);
+    } else if(screen==Screen::Qr||screen==Screen::PortalUrl||screen==Screen::WifiQr) {
+        const bool portal=screen==Screen::PortalUrl;
+        if(network.bleSetup&&!network.setupSuccess&&screen==Screen::Qr){
+            char payload[160];snprintf(payload,sizeof(payload),"{\"ver\":\"v1\",\"name\":\"%s\",\"transport\":\"ble\",\"security\":1,\"pop\":\"%s\"}",network.setupSsid,network.setupPassword);
+            generateQr(display_,payload,9);
+            const int column=qrExtent+4;
+            display_.setCursor(column,0);display_.print("ANDROID");
+            display_.setCursor(column,11);display_.print("PLANT-");
+            display_.setCursor(column,20);display_.print(network.setupSsid+6);
+            display_.setCursor(column,29);display_.print("Code:");
+            char half[9]={};memcpy(half,network.setupPassword,8);display_.setCursor(column,38);display_.print(half);
+            memcpy(half,network.setupPassword+8,8);display_.setCursor(column,47);display_.print(half);
+            display_.setCursor(column,56);display_.print("PRG:WiFi");
+        }else if(network.provisioning&&!network.setupSuccess&&!portal){
+            char payload[96];snprintf(payload,sizeof(payload),"WIFI:T:WPA;S:%s;P:\"%s\";;",network.setupSsid,network.setupPassword);
+            generateQr(display_,payload,4);
+            display_.setCursor(47,3);display_.print("1. SCANNER");
+            display_.setCursor(47,16);display_.print(network.setupSsid);
+            display_.setCursor(47,25);display_.print("Cle Wi-Fi :");
+            char half[9]={};memcpy(half,network.setupPassword,8);display_.setCursor(47,36);display_.print(half);
+            memcpy(half,network.setupPassword+8,8);display_.setCursor(47,46);display_.print(half);
+            display_.setCursor(0,56);display_.print("2.Assistant PRG:lien");
+        }else if(network.online||(portal&&network.provisioning)){
+            char url[40];snprintf(url,sizeof(url),"%s",portal?network.setupUrl:network.url);
+            for(char* p=url;*p;++p)if(*p>='a'&&*p<='z')*p-=32;
+            generateQr(display_,url,2);
+            display_.setCursor(62,3);display_.print(portal?"ASSISTANT":"ACCES LOCAL");
+            display_.setCursor(63,17);display_.print(portal?"Wi-Fi kit":"Meme Wi-Fi");
+            const char* ip=(portal?network.setupUrl:network.url)+7;char ipText[24];snprintf(ipText,sizeof(ipText),"%s",ip);
             char* slash=strchr(ipText,'/');if(slash)*slash=0;
-            // Split the IP into two groups so it remains readable beside QR.
             char* split=strchr(ipText,'.');if(split)split=strchr(split+1,'.');
-            if(split) {*split=0;display_.setCursor(63,32);display_.print(ipText);display_.setCursor(63,42);display_.print(split+1);}
-            if(!qrRendered) {display_.setCursor(0,20);display_.print("QR indisponible");}
-            display_.setCursor(63,56);display_.print("PRG:visage");
-        } else {
-            display_.setCursor(0,0);display_.print(network.provisioning?"CONFIGURATION BLE":"WI-FI ABSENT");
-            if(network.provisioning) {
-                display_.setCursor(0,12);display_.print("ESP BLE Provisioning");
-                display_.setCursor(0,25);display_.print(network.bluetoothName);
-                display_.setCursor(0,38);display_.print("Code ");display_.print(network.proof);
-            } else {display_.setCursor(0,18);display_.print("Reconnexion en cours");}
-            display_.setCursor(0,54);display_.print("Radio/lux maintenus");
+            if(split){*split=0;display_.setCursor(63,32);display_.print(ipText);display_.setCursor(63,42);display_.print(split+1);}
+            display_.setCursor(63,56);display_.print(network.provisioning&&!portal?"PRG:lien":"PRG:visage");
+        }else{
+            display_.setCursor(0,0);display_.print("WI-FI ABSENT");
+            display_.setCursor(0,20);display_.print("Reconnexion en cours");
+            display_.setCursor(0,48);display_.print("PRG 8s : configurer");
         }
+        if(!qrRendered&&(network.provisioning||network.online)){display_.setCursor(0,20);display_.print("QR indisponible");}
     } else {
         display_.setCursor(0,0);display_.print("PLANT STATION");
         display_.drawRoundRect(3,20,43,30,7,SSD1306_WHITE);
@@ -212,7 +238,7 @@ void OledDisplay::showDashboard(const PlantView& view,Screen screen,const Dashbo
         }
         display_.setCursor(0,56);
         if(!view.radioReady) display_.print("RADIO! PRG:details");
-        else if(view.luxValid) {snprintf(line,sizeof(line),"Lux %.0f PRG:details",view.lux);display_.print(line);}
+        else if(view.luxValid) {snprintf(line,sizeof(line),"Lx %.0f PRG:detail",view.lux);display_.print(line);}
         else display_.print("Lux -- PRG:details");
     }
     display_.display();

@@ -1,0 +1,12 @@
+{
+  "source": "Sauvegarde réelle avant assistant Wi-Fi",
+  "backup_sha256": "f706e3708f7e5ea3a6d9b29052df25d714b3131e6bc377fa2505136b03c1edf5",
+  "history_partition_sha256": "4292faca15013b6b92556310c7c106180c0d4c71e24f9fb16d8a5a9d47065d03",
+  "counts_by_node": {
+    "1": 1,
+    "2": 1,
+    "3": 1,
+    "4": 1
+  },
+  "crc_invalid_records": 0
+}

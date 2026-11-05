@@ -1,0 +1,49 @@
+{
+  "kind": "soil_rx_battery_after_solder_repair",
+  "authenticated": false,
+  "started_utc": "2026-11-03T17:08:20.014551+00:00",
+  "rx_port": "COM5",
+  "xiao_usb_present_before": false,
+  "xiao_usb_present_after": false,
+  "duration_s": 82.40600000000268,
+  "packets": [
+    {
+      "session": 4236450037,
+      "seq": 5,
+      "uptime_ms": 133392,
+      "status": "ok",
+      "address": 72,
+      "raw": 21189,
+      "uv": 2648625,
+      "host_elapsed_s": 21.125
+    },
+    {
+      "session": 4236450037,
+      "seq": 6,
+      "uptime_ms": 164031,
+      "status": "ok",
+      "address": 72,
+      "raw": 21174,
+      "uv": 2646750,
+      "host_elapsed_s": 51.766
+    },
+    {
+      "session": 4236450037,
+      "seq": 7,
+      "uptime_ms": 194669,
+      "status": "ok",
+      "address": 72,
+      "raw": 21162,
+      "uv": 2645250,
+      "host_elapsed_s": 82.406
+    }
+  ],
+  "valid_count": 3,
+  "consecutive_same_session": true,
+  "lux_samples_ok": 81,
+  "errors": [],
+  "tx_capture_available": false,
+  "loss_rate_measured": false,
+  "log": "diagnostics\\xiao-batterie-apres-soudure-20261103-170819Z.log",
+  "accepted": true
+}

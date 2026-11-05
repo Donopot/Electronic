@@ -1,0 +1,251 @@
+{
+  "port": "COM8",
+  "completed": true,
+  "duration_requested_s": 30.0,
+  "duration_s": 30.156000000002678,
+  "max_gap_s": 1.0780000000013388,
+  "coverage_ok": true,
+  "sample_count": 29,
+  "errors": [],
+  "addresses": [
+    "0x49"
+  ],
+  "samples": [
+    {
+      "t_ms": 1258951,
+      "address": "0x49",
+      "raw": 15331,
+      "volts": 1.916375,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 1.0310000000026776
+    },
+    {
+      "t_ms": 1259965,
+      "address": "0x49",
+      "raw": 15323,
+      "volts": 1.915375,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 2.0310000000026776
+    },
+    {
+      "t_ms": 1260980,
+      "address": "0x49",
+      "raw": 15326,
+      "volts": 1.91575,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 3.047000000002299
+    },
+    {
+      "t_ms": 1261996,
+      "address": "0x49",
+      "raw": 15325,
+      "volts": 1.915625,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 4.062000000001717
+    },
+    {
+      "t_ms": 1263011,
+      "address": "0x49",
+      "raw": 15324,
+      "volts": 1.9155,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 5.078000000001339
+    },
+    {
+      "t_ms": 1264027,
+      "address": "0x49",
+      "raw": 15322,
+      "volts": 1.91525,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 6.09400000000096
+    },
+    {
+      "t_ms": 1265042,
+      "address": "0x49",
+      "raw": 15323,
+      "volts": 1.915375,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 7.109000000000378
+    },
+    {
+      "t_ms": 1266058,
+      "address": "0x49",
+      "raw": 15322,
+      "volts": 1.91525,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 8.125
+    },
+    {
+      "t_ms": 1267074,
+      "address": "0x49",
+      "raw": 15322,
+      "volts": 1.91525,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 9.139999999999418
+    },
+    {
+      "t_ms": 1268133,
+      "address": "0x49",
+      "raw": 15329,
+      "volts": 1.916125,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 10.203000000001339
+    },
+    {
+      "t_ms": 1269149,
+      "address": "0x49",
+      "raw": 15319,
+      "volts": 1.914875,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 11.21900000000096
+    },
+    {
+      "t_ms": 1270165,
+      "address": "0x49",
+      "raw": 15321,
+      "volts": 1.915125,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 12.234000000000378
+    },
+    {
+      "t_ms": 1271180,
+      "address": "0x49",
+      "raw": 15321,
+      "volts": 1.915125,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 13.25
+    },
+    {
+      "t_ms": 1272196,
+      "address": "0x49",
+      "raw": 15318,
+      "volts": 1.91475,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 14.264999999999418
+    },
+    {
+      "t_ms": 1273210,
+      "address": "0x49",
+      "raw": 15319,
+      "volts": 1.914875,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 15.281000000002678
+    },
+    {
+      "t_ms": 1274226,
+      "address": "0x49",
+      "raw": 15317,
+      "volts": 1.914625,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 16.2970000000023
+    },
+    {
+      "t_ms": 1275242,
+      "address": "0x49",
+      "raw": 15319,
+      "volts": 1.914875,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 17.2970000000023
+    },
+    {
+      "t_ms": 1276257,
+      "address": "0x49",
+      "raw": 15319,
+      "volts": 1.914875,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 18.32800000000134
+    },
+    {
+      "t_ms": 1277272,
+      "address": "0x49",
+      "raw": 15319,
+      "volts": 1.914875,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 19.32800000000134
+    },
+    {
+      "t_ms": 1278332,
+      "address": "0x49",
+      "raw": 15327,
+      "volts": 1.915875,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 20.406000000002678
+    },
+    {
+      "t_ms": 1279346,
+      "address": "0x49",
+      "raw": 15321,
+      "volts": 1.915125,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 21.4220000000023
+    },
+    {
+      "t_ms": 1280362,
+      "address": "0x49",
+      "raw": 15321,
+      "volts": 1.915125,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 22.437000000001717
+    },
+    {
+      "t_ms": 1281377,
+      "address": "0x49",
+      "raw": 15321,
+      "volts": 1.915125,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 23.45300000000134
+    },
+    {
+      "t_ms": 1282393,
+      "address": "0x49",
+      "raw": 15321,
+      "volts": 1.915125,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 24.46900000000096
+    },
+    {
+      "t_ms": 1283408,
+      "address": "0x49",
+      "raw": 15320,
+      "volts": 1.915,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 25.46900000000096
+    },
+    {
+      "t_ms": 1284423,
+      "address": "0x49",
+      "raw": 15323,
+      "volts": 1.915375,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 26.5
+    },
+    {
+      "t_ms": 1285439,
+      "address": "0x49",
+      "raw": 15325,
+      "volts": 1.915625,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 27.5
+    },
+    {
+      "t_ms": 1286455,
+      "address": "0x49",
+      "raw": 15327,
+      "volts": 1.915875,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 28.531000000002678
+    },
+    {
+      "t_ms": 1287470,
+      "address": "0x49",
+      "raw": 15326,
+      "volts": 1.91575,
+      "state": "DANS_PLAGE_NOMINALE",
+      "host_elapsed_s": 29.531000000002678
+    }
+  ],
+  "volts_min": 1.914625,
+  "volts_max": 1.916375,
+  "physical_sensor_validated": false,
+  "note": "Les conversions ne prouvent pas la presence de la sonde ni sa sensibilite a l'humidite."
+}

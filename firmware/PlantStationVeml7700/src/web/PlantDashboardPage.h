@@ -12,15 +12,24 @@ static const char PLANT_DASHBOARD_PAGE[] PROGMEM = R"PLANTHTML(<!doctype html><h
 <div class="section-label"><h2 class="section-title">Mes quatre plantes</h2><span class="small">Relevés toutes les 30 min</span></div><section class="cards" id="cards" aria-label="Les quatre plantes"></section>
 <section class="history"><div class="history-head"><div><h3 id="history-title">L’évolution des plantes</h3><p class="small">Tension de la sonde · volts · mesures reçues</p></div><div class="segmented" aria-label="Période"><button data-range="1" aria-pressed="false">24 h</button><button data-range="7" aria-pressed="false">7 j</button><button data-range="30" aria-pressed="true">30 j</button></div></div><svg class="chart" id="chart" viewBox="0 0 700 210" role="img" aria-label="Historique en attente"></svg><p class="small" id="chart-note" role="status">Aucune donnée chargée.</p></section></div>
 <aside class="sidebar"><p class="eyebrow">Votre station locale</p><p id="network" class="side-note">Connexion en cours…</p><p class="side-note" id="address"></p><div class="rule"><div class="side-row"><span>Lumière</span><strong id="lux">—</strong></div><div class="side-row"><span>Historique</span><strong>30 jours glissants</strong></div><div class="side-row"><span>Horloge</span><strong id="clock">Inconnue</strong></div></div><p class="side-note">PRG court : visage → sondes → QR d’accès.<br>PRG 3 s puis relâcher : veille.<br>RST : reprendre.</p><p class="side-note">Après redémarrage, les valeurs courantes attendent de nouveaux paquets. Les anciennes mesures restent dans l’historique.</p><p class="small" id="storage"></p><button id="refresh" class="outline">Actualiser</button></aside></div></main>
-<footer><span>Wi-Fi domestique · sans compte · sans service externe</span><span>SOIL-01 à SOIL-04 · PS v1 · péremption à 90 min</span></footer>
+<footer><span>Wi-Fi domestique · sans compte · sans service externe</span><span>SOIL-01 à SOIL-04 · péremption à 90 min</span></footer>
 <dialog id="edit"><form id="edit-form"><h2>Une plante, un nom</h2><p class="small">24 caractères maximum. Les réglages et le calibrage se feront plus tard.</p><div id="name-fields"></div><p id="edit-error" role="alert"></p><div class="dialog-actions"><button type="button" class="outline" id="cancel">Annuler</button><button class="primary" id="save">Enregistrer</button></div></form></dialog>
 <script>
 'use strict';
-let state=null,selected=1,range=30,history=[],historyAbort=null,loading=false,lastHistory=0;
+let state=null,selected=1,range=30,history=[],historyAbort=null,loading=false,lastHistory=0,historyNeedsReload=false,historyError='';
+let clockBusy=false,lastClockAttempt=-Infinity;
+const REQUEST_TIMEOUT_MS=6000,CLOCK_RETRY_MS=30000;
 const $=id=>document.getElementById(id),idLabel=id=>'SOIL-'+String(id).padStart(2,'0');
 const labels={waiting:'En attente',uncalibrated:'À étalonner',healthy:'Satisfaisant',dry:'Sèche',adc_fault:'Défaut ADC',stale:'Périmée'};
 function robot(mood){const mouth=mood==='sad'?'M36 57Q48 44 60 57':mood==='happy'?'M34 49Q48 67 62 49':mood==='worried'?'M37 55L44 51L51 55L59 51':'M37 54H59';return `<svg viewBox="0 0 96 84" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M48 18V9"/><circle cx="48" cy="6" r="3" fill="currentColor"/><rect x="15" y="19" width="66" height="51" rx="15"/><path d="M9 36V51M87 36V51M32 76H64"/><rect x="29" y="32" width="9" height="9" rx="3" fill="currentColor"/><rect x="58" y="32" width="9" height="9" rx="3" fill="currentColor"/><path d="${mouth}"/></svg>`;}
-async function api(url,options={}){const result=await fetch(url,{cache:'no-store',...options});if(!result.ok){let reason='HTTP '+result.status;try{reason+=' · '+(await result.json()).error;}catch{}throw new Error(reason);}return result.json();}
+async function api(url,options={}){
+ const controller=new AbortController(),external=options.signal;let timedOut=false,timer;
+ const cancel=()=>controller.abort();if(external?.aborted)cancel();else external?.addEventListener('abort',cancel,{once:true});
+ const deadline=new Promise((_,reject)=>{timer=setTimeout(()=>{timedOut=true;controller.abort();reject(new Error('Délai de réponse dépassé'));},REQUEST_TIMEOUT_MS);});
+ try{return await Promise.race([(async()=>{const result=await fetch(url,{cache:'no-store',...options,signal:controller.signal});if(!result.ok){let reason='HTTP '+result.status;try{reason+=' · '+(await result.json()).error;}catch{}throw new Error(reason);}return result.json();})(),deadline]);}
+ catch(e){if(timedOut)throw new Error('Délai de réponse dépassé');throw e;}
+ finally{clearTimeout(timer);external?.removeEventListener('abort',cancel);}
+}
 function post(path,fields){return api(path,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded','X-Plant-Request':'1'},body:new URLSearchParams(fields).toString()});}
 function render(){
  if(!state)return;const plants=state.plants,dry=plants.filter(p=>p.state==='dry'),warnings=plants.filter(p=>['waiting','adc_fault','stale'].includes(p.state));
@@ -28,22 +37,53 @@ function render(){
  $('detail').textContent=dry.length?'Sèches : '+dry.map(p=>idLabel(p.id)+' · '+p.name).join(', '):state.mood==='happy'?'Les quatre dernières mesures sont satisfaisantes.':'Sans seuil défini : à étalonner. Aucune sécheresse déduite de l’absence de signal.';
  $('warnings').textContent=(!state.radio_ready?'Radio indisponible. ':'')+warnings.map(p=>idLabel(p.id)+' : '+labels[p.state]).join(' · ');
  const focused=document.activeElement?.dataset?.node;$('cards').replaceChildren();for(const p of plants){const card=document.createElement('button');card.dataset.node=String(p.id);card.className='card'+(p.id===selected?' active':'');card.setAttribute('aria-pressed',String(p.id===selected));const badge=document.createElement('span');badge.className='state '+p.state;badge.textContent=labels[p.state]||p.state;const top=document.createElement('div');top.className='card-top';top.append(badge);const title=document.createElement('h3');title.textContent=p.name;const id=document.createElement('div');id.className='id';id.textContent=idLabel(p.id);const value=document.createElement('div');value.className='voltage';value.textContent=p.microvolts===null?'—':(p.microvolts/1e6).toLocaleString('fr-FR',{minimumFractionDigits:3,maximumFractionDigits:3})+' V';const age=document.createElement('div');age.className='age';age.textContent=p.age_ms===null?'Aucun paquet reçu depuis le démarrage':'Dernier paquet : il y a '+Math.floor(p.age_ms/60000)+' min'+(p.state==='stale'?' · valeur ancienne':'');const battery=document.createElement('div');battery.className='age';battery.textContent='Batterie : non communiqué';const batteryIcon=document.createElement('span');batteryIcon.className='battery-icon';batteryIcon.setAttribute('aria-hidden','true');battery.prepend(batteryIcon);card.append(top,title,id,value,age,battery);card.onclick=()=>{selected=p.id;render();loadHistory();};$('cards').append(card);if(focused===String(p.id))card.focus();}
- $('connection').textContent='Connecté au Heltec';$('network').textContent=state.network_message;$('address').textContent=[state.url,state.hostname].filter(Boolean).join(' · ');$('lux').textContent=state.lux===null?'Indisponible':state.lux.toLocaleString('fr-FR')+' lux';$('clock').textContent=state.utc_ms===null?'Inconnue':'Téléphone';$('settings').disabled=false;
+ $('connection').textContent='Connecté au Heltec';$('network').textContent=state.network_message;$('address').textContent=[state.url,state.hostname].filter(Boolean).join(' · ');$('lux').textContent=state.lux===null?'Indisponible':state.lux.toLocaleString('fr-FR')+' lux';$('clock').textContent=state.utc_ms===null?(state.clock_persistence==='failed'?'Sauvegarde impossible':clockBusy?'Synchronisation…':'Inconnue · nouvel essai automatique'):'Téléphone';$('settings').disabled=false;
  $('storage').textContent=state.history_state==='ready'?'Historique persistant local.'+((state.history_dropped||state.history_corrupt)?' Trous détectés : '+state.history_dropped+' mesure(s) non enregistrée(s), '+state.history_corrupt+' écriture(s) interrompue(s).':''):'Historique indisponible : '+state.history_state+'. Les mesures en direct continuent.';
  $('history-title').textContent='L’évolution de '+(plants.find(p=>p.id===selected)?.name||idLabel(selected));
 }
 function chart(){
  const c=$('chart'),now=state?.utc_ms,start=now===null||now===undefined?null:now-range*86400000,dated=start===null?[]:history.filter(r=>r.utc_ms!==null&&(start===null||r.utc_ms>=start)&&(!now||r.utc_ms<=now)).sort((a,b)=>a.utc_ms-b.utc_ms),unknown=history.filter(r=>r.utc_ms===null).length;
  const svgWidth=Math.max(240,Math.round(c.getBoundingClientRect().width));c.setAttribute('viewBox','0 0 '+svgWidth+' 210');let paths='',path='',previous=null;const left=42,width=svgWidth-60,top=16,height=160;
- for(const r of dated){if(r.microvolts===null){previous=null;path='';continue;}const x=left+(r.utc_ms-start)/(range*86400000)*width,y=top+height-(r.microvolts/1e6+0.01)/3.32*height;const gap=!previous||r.boot!==previous.boot||r.utc_ms-previous.utc_ms>=5400000;if(gap){path=`M${x.toFixed(1)} ${y.toFixed(1)}`;paths+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2" fill="#314a37"/>`;}else{paths+=`<path class="curve" d="${path} L${x.toFixed(1)} ${y.toFixed(1)}"/>`;path=`M${x.toFixed(1)} ${y.toFixed(1)}`;}previous=r;}
+ for(const r of dated){if(r.microvolts===null){previous=null;path='';continue;}const x=left+(r.utc_ms-start)/(range*86400000)*width,y=top+height-(r.microvolts/1e6+0.01)/3.32*height;const gap=!previous||r.boot!==previous.boot||r.utc_ms-previous.utc_ms>2400000;if(gap){path=`M${x.toFixed(1)} ${y.toFixed(1)}`;paths+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2" fill="#314a37"/>`;}else{paths+=`<path class="curve" d="${path} L${x.toFixed(1)} ${y.toFixed(1)}"/>`;path=`M${x.toFixed(1)} ${y.toFixed(1)}`;}previous=r;}
  c.innerHTML=`<path class="grid" d="M42 16H${left+width}M42 64H${left+width}M42 112H${left+width}M42 176H${left+width}"/><text x="3" y="20">3,3</text><text x="3" y="68">2,3</text><text x="3" y="116">1,3</text><text x="3" y="180">0,0</text>`+paths+`<text x="42" y="201">Il y a ${range===1?'24 h':range+' jours'}</text><text x="${left+width}" y="201" text-anchor="end">Maintenant</text>`;
- c.setAttribute('aria-label','Historique réel de '+idLabel(selected)+' sur '+range+' jour(s), '+dated.length+' relevés datés.');
- if(!loading)$('chart-note').textContent=(start===null?'Heure inconnue : synchronisez avec ce téléphone. ':dated.length?'Les interruptions de 90 min, défauts ADC et redémarrages coupent la courbe. ':'Aucune mesure datée sur cette période. ')+(unknown?unknown+' relevé(s) sans date, conservé(s) séparément et non placés sur la courbe. ':'');
+ c.setAttribute('aria-label','Historique réel de '+idLabel(selected)+' sur '+range+' jour(s), '+dated.length+' relevés datés.'+(historyError?' Chargement incomplet.':''));
+ if(!loading)$('chart-note').textContent=historyError||(start===null?'Heure inconnue : synchronisez avec ce téléphone. ':dated.length?'Un cycle manquant (> 40 min), défaut ADC ou redémarrage coupe la courbe. ':'Aucune mesure datée sur cette période. ')+(unknown?unknown+' relevé(s) sans date, conservé(s) séparément et non placés sur la courbe. ':'');
 }
-async function loadHistory(){if(!state)return;if(historyAbort)historyAbort.abort();historyAbort=new AbortController();const controller=historyAbort,node=selected,days=range;history=[];loading=true;chart();$('chart-note').textContent='Chargement de l’historique…';try{let after='0';do{const page=await api('/api/history?node='+node+'&days='+days+'&after='+after,{signal:controller.signal});if(controller!==historyAbort)return;history.push(...page.records);if(!page.more)break;if(page.next===after)throw new Error('Pagination interrompue');after=page.next;}while(true);loading=false;lastHistory=Date.now();chart();}catch(e){if(e.name==='AbortError')return;loading=false;$('chart-note').textContent='Historique inaccessible : '+e.message;}}
-async function refresh(){if(refresh.busy)return;refresh.busy=true;try{const first=!state;state=await api('/api/status');if(state.source!=='live'||state.plants.length!==4)throw new Error('Réponse inattendue');$('offline').hidden=true;render();if(first||Date.now()-lastHistory>60000)loadHistory();}catch(e){$('offline').hidden=false;$('connection').textContent='Heltec inaccessible';}finally{refresh.busy=false;}}
+async function loadHistory(){
+ if(!state)return;if(historyAbort)historyAbort.abort();const controller=new AbortController();historyAbort=controller;
+ const node=selected,days=range;history=[];loading=true;chart();$('chart-note').textContent='Chargement de l’historique…';
+ try{let after='0';do{const page=await api('/api/history?node='+node+'&days='+days+'&after='+after,{signal:controller.signal});if(controller!==historyAbort)return;history.push(...page.records);if(!page.more)break;if(page.next===after)throw new Error('Pagination interrompue');after=page.next;}while(true);lastHistory=Date.now();historyError='';}
+ catch(e){if(controller!==historyAbort||controller.signal.aborted)return;historyError='Historique incomplet : '+e.message+' · Rechargez pour réessayer.';}
+ finally{if(controller===historyAbort){loading=false;historyAbort=null;}}
+ if(!controller.signal.aborted)chart();
+}
+async function syncClock(){
+ if(clockBusy||Date.now()-lastClockAttempt<CLOCK_RETRY_MS)return;
+ clockBusy=true;lastClockAttempt=Date.now();
+ try{await post('/api/time',{utc_ms:String(Date.now())});await refresh();}
+ catch(e){$('clock').textContent='Synchronisation en attente · nouvel essai automatique';}
+ finally{clockBusy=false;}
+}
+async function refresh(){
+ if(refresh.busy)return;refresh.busy=true;
+ try{const first=!state,previous=state;const next=await api('/api/status');if(next.source!=='live'||next.plants.length!==4)throw new Error('Réponse inattendue');state=next;
+ if(previous&&(previous.utc_ms===null&&state.utc_ms!==null||state.uptime_ms<previous.uptime_ms))historyNeedsReload=true;
+ $('offline').hidden=true;render();
+ if(state.utc_ms===null)syncClock();
+ if(!loading&&(first||historyNeedsReload||Date.now()-lastHistory>60000)){historyNeedsReload=false;loadHistory();}
+ }catch(e){$('offline').hidden=false;$('connection').textContent='Heltec inaccessible';}
+ finally{refresh.busy=false;}
+}
 document.querySelectorAll('[data-range]').forEach(b=>b.onclick=()=>{range=Number(b.dataset.range);document.querySelectorAll('[data-range]').forEach(v=>v.setAttribute('aria-pressed',String(v===b)));loadHistory();});
-$('refresh').onclick=refresh;$('settings').onclick=()=>{$('name-fields').replaceChildren();for(const p of state.plants){const label=document.createElement('label');label.htmlFor='name-'+p.id;label.textContent=idLabel(p.id);const input=document.createElement('input');input.id=label.htmlFor;input.name=String(p.id);input.value=p.name;input.maxLength=24;input.required=true;$('name-fields').append(label,input);}$('edit-error').textContent='';$('edit').showModal();};$('cancel').onclick=()=>$('edit').close();
-$('edit-form').onsubmit=async e=>{e.preventDefault();$('save').disabled=true;try{for(const input of $('name-fields').querySelectorAll('input')){const name=input.value.trim();if(!name||[...name].length>24||new TextEncoder().encode(name).length>48)throw new Error('Nom : 24 caractères et 48 octets maximum.');await post('/api/plants',{id:input.name,name});}$('edit').close();await refresh();}catch(e){$('edit-error').textContent='Enregistrement incomplet : '+e.message;}finally{$('save').disabled=false;}};
-(async()=>{try{await post('/api/time',{utc_ms:String(Date.now())});}catch{}await refresh();})();setInterval(refresh,5000);addEventListener('resize',chart);
+$('refresh').onclick=refresh;$('settings').onclick=()=>{$('name-fields').replaceChildren();for(const p of state.plants){const label=document.createElement('label');label.htmlFor='name-'+p.id;label.textContent=idLabel(p.id);const input=document.createElement('input');input.id=label.htmlFor;input.name=String(p.id);input.value=p.name;input.maxLength=48;input.required=true;$('name-fields').append(label,input);}$('edit-error').textContent='';$('edit').showModal();};$('cancel').onclick=()=>$('edit').close();
+$('edit-form').onsubmit=async e=>{
+ e.preventDefault();$('save').disabled=true;
+ try{let revision=0;const expected=[];
+ for(const input of $('name-fields').querySelectorAll('input')){const name=input.value.trim();if(!name||[...name].length>24||new TextEncoder().encode(name).length>48||/[\u0000-\u001f\u007f-\u009f]/.test(name))throw new Error('Nom : 24 caractères et 48 octets maximum.');expected.push({id:Number(input.name),name});}
+ for(const plant of expected){const ack=await post('/api/plants',plant);revision=Math.max(revision,ack.revision||0);}
+ $('edit-error').textContent='Sauvegarde en attente sur le Heltec…';const until=Date.now()+15000;
+ while(true){const saved=await api('/api/status');if(saved.names_persistence==='failed')throw new Error('Sauvegarde refusée par le Heltec ; les noms restent en attente.');if(saved.names_persistence==='saved'&&expected.every(p=>saved.plants.some(q=>q.id===p.id&&q.name===p.name))){state=saved;render();$('edit').close();break;}if(Date.now()>=until)throw new Error('Sauvegarde toujours en attente ; vérifiez la connexion avant de redémarrer.');await new Promise(resolve=>setTimeout(resolve,400));}
+ }catch(e){$('edit-error').textContent='Enregistrement incomplet : '+e.message;}finally{$('save').disabled=false;}
+};
+refresh();setInterval(refresh,5000);addEventListener('resize',chart);
 </script></body></html>)PLANTHTML";

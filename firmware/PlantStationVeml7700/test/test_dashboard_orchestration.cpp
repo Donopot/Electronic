@@ -7,6 +7,7 @@
 #include <qrcode.h>
 #include <esp_sleep.h>
 #include "web/PlantDashboard.h"
+#include "display/OledDisplay.h"
 #include <assert.h>
 #include <string.h>
 #include <algorithm>
@@ -16,7 +17,7 @@ namespace {
 plant::PlantView latest;
 plant::PlantConfig names[4];
 plant::DashboardNetwork network;
-bool stopRequested=false,workerStopped=false;
+bool stopRequested=false,workerStopped=false,setupRequested=false;
 unsigned published=0;
 }
 // Worker boundary is simulated; the real setup/loop/radio/model/OLED/PRG execute.
@@ -26,6 +27,7 @@ void PlantDashboard::publish(const PlantView& view){latest=view;++published;}
 void PlantDashboard::configuration(PlantConfig* out)const{memcpy(out,names,sizeof(names));}
 DashboardNetwork PlantDashboard::network()const{return ::network;}
 void PlantDashboard::requestStop(){stopRequested=true;}
+void PlantDashboard::requestSetup(){setupRequested=true;::network.provisioning=true;strcpy(::network.setupSsid,"PLANT-TEST12");strcpy(::network.setupPassword,"0123456789ABCDEF");}
 bool PlantDashboard::stopped()const{return workerStopped;}
 }
 void setup();void loop();
@@ -63,12 +65,43 @@ int main(int argc,char** argv) {
         assert(host::qrPayload()=="HTTP://192.168.100.100/");bounds();
         const auto found=std::find_if(host::oledRectangles().begin(),host::oledRectangles().end(),[](const host::OledRect& r){return r.x==0&&r.y==3&&r.width==58&&r.height==58&&r.color==SSD1306_WHITE;});
         assert(found!=host::oledRectangles().end());
+        plant::OledDisplay maxLux;assert(maxLux.begin());auto view=latest;view.luxValid=true;view.lux=140000;
+        maxLux.showDashboard(view,plant::Screen::Face,network);bounds();
     }
     host::now=1104+plantsoil::kStaleMs;loop();assert(latest.warningMask==15 && latest.dryMask==0 && latest.mood==plant::Mood::Worried);
+    host::buttonPressed()=true;host::now+=100;loop();host::now+=40;loop();host::now+=3000;loop();
+    if(!absent)assert(host::oledFrames().back().find("Ou tenir 8s")!=std::string::npos);
+    const auto frames=host::oledFrames().size();const unsigned beforeHold=published;
+    plantsoil::Packet held;held.node=1;held.session=77;held.sequence=2;held.address=0x48;held.status=plantsoil::AdcStatus::Ok;held.raw=19000;
+    uint8_t heldBytes[plantsoil::kPacketSize];assert(plantsoil::encode(held,heldBytes,sizeof(heldBytes))==plantsoil::Result::Accepted);
+    host::inject(heldBytes,sizeof(heldBytes));host::now+=100;loop();
+    assert(published>beforeHold&&latest.plants[0].packet.sequence==2&&latest.plants[0].packet.raw==19000);
+    held.sequence=3;assert(plantsoil::encode(held,heldBytes,sizeof(heldBytes))==plantsoil::Result::Accepted);host::inject(heldBytes,sizeof(heldBytes));host::now+=100;loop();
+    assert(latest.plants[0].packet.sequence==3&&host::oledFrames().size()==frames);
+    host::now+=5000;loop();assert(!stopRequested);
+    host::buttonPressed()=false;host::now+=100;loop();host::now+=40;loop();assert(setupRequested&&!Serial.flushed);
+    if(!absent){
+        assert(host::qrPayload()=="WIFI:T:WPA;S:PLANT-TEST12;P:\"0123456789ABCDEF\";;");bounds();
+        assert(host::oledFrames().back().find("01234567")!=std::string::npos&&host::oledFrames().back().find("89ABCDEF")!=std::string::npos);
+        const auto white=std::find_if(host::oledRectangles().begin(),host::oledRectangles().end(),[](const host::OledRect& r){return r.x==0&&r.y==13&&r.width==37&&r.height==37&&r.color==SSD1306_WHITE;});assert(white!=host::oledRectangles().end());
+        host::forceQrSide()=33;plant::OledDisplay qr;assert(qr.begin());qr.showDashboard(latest,plant::Screen::Qr,network);bounds();host::forceQrSide()=0;
+    }
+    if(!absent){
+        plant::OledDisplay qr;assert(qr.begin());network.bleSetup=true;strcpy(network.setupSsid,"PLANT-EBF528");
+        for(int side:{41,45,49,53}){
+            host::forceQrSide()=side;qr.showDashboard(latest,plant::Screen::Qr,network);bounds();
+            assert(host::qrPayload()=="{\"ver\":\"v1\",\"name\":\"PLANT-EBF528\",\"transport\":\"ble\",\"security\":1,\"pop\":\"0123456789ABCDEF\"}");
+            const auto& rects=host::oledRectangles();const int extent=side+8;
+            assert(std::any_of(rects.begin(),rects.end(),[&](const host::OledRect& r){return r.x==0&&r.y==(64-extent)/2&&r.width==extent&&r.height==extent&&r.color==SSD1306_WHITE;}));
+        }
+        host::forceQrSide()=0;network.bleSetup=false;strcpy(network.setupSsid,"PLANT-TEST12");
+    }
+    shortPress(host::now+100);
+    if(!absent){assert(host::qrPayload()=="HTTP://192.168.4.1/");bounds();}
     host::buttonPressed()=true;host::now+=100;loop();host::now+=40;loop();host::now+=3000;loop();
     host::buttonPressed()=false;host::now+=100;loop();host::now+=40;loop();
     assert(stopRequested && !Serial.flushed); // Main never waits synchronously on the worker.
     workerStopped=true;try{loop();assert(false);}catch(const SleepEntered&){}
     assert(Serial.flushed);
-    puts("PASS actual dashboard main/radio/OLED: shared 4-node model/names, unknown battery, offline, QR layout contract, stale, lux, nonblocking worker-stop gate, PRG sleep (worker and QR encoder simulated)");
+    puts("PASS actual dashboard main/radio/OLED: shared model, unknown battery, adaptive URL/Wi-Fi QR + 4-module quiet zone + readable key, portal fallback, 3s sleep / 8s setup release, OLED absent (worker and QR encoder simulated)");
 }

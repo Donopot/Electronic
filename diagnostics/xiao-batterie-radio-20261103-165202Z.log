@@ -1,0 +1,17 @@
+Capture RX seule sur batterie ; XIAO absent USB ; Heltec COM5 ; UTC=2026-11-03T16:52:03.055295+00:00
+[CAPTURE_BOUNDARY] premier fragment ignore raw_hex=5b506c616e7453746174696f6e2056454d4c373730302076312e322e305d20757074696d655f6d733d32363830353233206576656e656d656e743d6d6573757265207374617475743d6f6b207261773d3137206c75783d392e3133393220616472657373653d30783130204c756d696e6f7369746520616d6269616e74650d
+[HOST t_s=1.297000] [PlantStation VEML7700 v1.2.0] uptime_ms=2681523 evenement=mesure statut=ok raw=17 lux=9.1392 adresse=0x10 Luminosite ambiante
+[HOST t_s=2.297000] [PlantStation VEML7700 v1.2.0] uptime_ms=2682523 evenement=mesure statut=ok raw=17 lux=9.1392 adresse=0x10 Luminosite ambiante
+[HOST t_s=2.969000] [PlantStation VEML7700 v1.2.0] uptime_ms=2683189 evenement=veille_demande statut=conversion_en_cours raw=null lux=null adresse=globale Appui long valide ; relacher PRG pour la veille
+[HOST t_s=21.891000] ESP-ROM:esp32s3-20210327
+[HOST t_s=21.891000] Build:Mar 27 2021
+[HOST t_s=21.891000] rst:0x1 (POWERON),boot:0x0 (DOWNLOAD(USB/UART0))
+[HOST t_s=21.906000] waiting for download
+[HOST t_s=24.531000] ESP-ROM:esp32s3-20210327
+[HOST t_s=24.531000] Build:Mar 27 2021
+[HOST t_s=24.547000] rst:0x1 (POWERON),boot:0x20 (DOWNLOAD(USB/UART0))
+[HOST t_s=24.547000] waiting for download
+[HOST t_s=27.031000] ESP-ROM:esp32s3-20210327
+[HOST t_s=27.047000] Build:Mar 27 2021
+[HOST t_s=27.047000] rst:0x1 (POWERON),boot:0x0 (DOWNLOAD(USB/UART0))
+[HOST t_s=27.047000] waiting for download

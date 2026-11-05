@@ -1,0 +1,40 @@
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x1 (POWERON),boot:0x8 (SPI_FAST_FLASH_BOOT)
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce3808,len:0x4bc
+load:0x403c9700,len:0xbd8
+load:0x403cc700,len:0x2a0c
+entry 0x403c98d0
+[PlantStation VEML7700 v1.2.0] uptime_ms=293 evenement=demarrage statut=conversion_en_cours raw=null lux=null adresse=globale Heltec V3 cible; puce ESP32-S3 revision 0 flash 8388608 octets; UART0 CP2102; SDA=4 SCL=5; sous-revision V3.x non determinee
+[PlantStation VEML7700 v1.2.0] uptime_ms=547 evenement=oled statut=ok raw=null lux=null adresse=0x3C OLED initialise sur I2C1 GPIO17/18
+[PLANT_HISTORY] state=ready
+[SOIL_RADIO] state=listening nodes=SOIL-01,SOIL-02,SOIL-03,SOIL-04 authenticated=no frequency=868100000
+[PlantStation VEML7700 v1.2.0] uptime_ms=764 evenement=scan_ack statut=ok raw=null lux=null adresse=0x10 ACK recu; identite du composant non garantie
+[PlantStation VEML7700 v1.2.0] uptime_ms=791 evenement=scan_fin statut=conversion_en_cours raw=null lux=null adresse=globale Fin du scanner I2C
+[PlantStation VEML7700 v1.2.0] uptime_ms=808 evenement=configuration statut=conversion_en_cours raw=null lux=null adresse=0x10 Configuration verifiee : gain 1/8, integration 100 ms, economie desactivee
+[PlantStation VEML7700 v1.2.0] uptime_ms=1793 evenement=mesure statut=ok raw=38 lux=20.4288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=2793 evenement=mesure statut=ok raw=38 lux=20.4288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=3793 evenement=mesure statut=ok raw=38 lux=20.4288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=4793 evenement=mesure statut=ok raw=38 lux=20.4288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=5793 evenement=mesure statut=ok raw=38 lux=20.4288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=6793 evenement=mesure statut=ok raw=38 lux=20.4288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=7793 evenement=mesure statut=ok raw=38 lux=20.4288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=8793 evenement=mesure statut=ok raw=38 lux=20.4288 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=9793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=10793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=11793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=12793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=13793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=14793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=15793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=16793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=17793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=18793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=19793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=20793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=21793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=22793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=23793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=24793 evenement=mesure statut=ok raw=37 lux=19.8912 adresse=0x10 Luminosite ambiante

@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <string.h>
 namespace plant {
+inline void eraseFormBytes(void* data,size_t size){volatile unsigned char* bytes=static_cast<volatile unsigned char*>(data);while(size--)*bytes++=0;}
 inline bool parseUnsigned(const char* value, uint64_t maximum, uint64_t& out) {
     if(!value || !*value) return false;
     uint64_t result=0;
@@ -15,6 +16,8 @@ inline bool parseUnsigned(const char* value, uint64_t maximum, uint64_t& out) {
 struct FormFields {
     char keys[5][20] = {}, values[5][160] = {};
     size_t count=0;
+    void clear(){eraseFormBytes(this,sizeof(*this));}
+    ~FormFields(){clear();}
     const char* get(const char* key) const { for(size_t i=0;i<count;++i) if(!strcmp(key,keys[i])) return values[i]; return nullptr; }
 };
 inline int hexDigit(char c) { return c>='0'&&c<='9' ? c-'0' : c>='a'&&c<='f' ? c-'a'+10 : c>='A'&&c<='F' ? c-'A'+10 : -1; }
@@ -32,7 +35,7 @@ inline bool decodeFormPart(const char* p,size_t n,char* out,size_t capacity) {
     out[length]=0; return true;
 }
 inline bool parseForm(const char* text,FormFields& out) {
-    out=FormFields{};
+    out.clear();
     if(!text || !*text) return false;
     while(*text) {
         if(out.count>=5) return false;

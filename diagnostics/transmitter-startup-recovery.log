@@ -1,0 +1,545 @@
+
+Capture UTC=2026-10-25T19:51:04.877779+00:00
+[USB] Sonde ouverte sur COM3
+[USB] Un redemarrage demande pour observer le demarrage complet.
+ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xf (SPI_FAST_FLASH_BOOT)
+Saved PC:0x420c9258
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5810,len:0x438
+load:0x403cc710,len:0x90c
+load:0x403ce710,len:0x2624
+entry 0x403cc710
+
+=== EnviroTerminal V1 : BMP180 + emetteur meteo LoRa ===
+Alimentation capteur : 3,3 V ; mesures toutes les 2 secondes.
+BMP180 : SDA=GPIO4, SCL=GPIO3, 100 kHz, timeout=50 ms.
+[INFO] LCD desactive.
+[SCAN] Recherche I2C de 0x08 a 0x77...
+[SCAN] Peripherique a 0x77 (adresse BMP180 attendue)
+[SCAN] Termine : 1 peripherique(s), 0 erreur(s) de bus.
+[OK] Capteur compatible BMP180, ID=0x55 ; calibration lue.
+[TX] Apres reset : version=0x12, mode=0x09.
+[TX] Modes ecrits/relus : 00/00 08/08 88/88.
+[TX] Apres begin : version=0x12, mode=0x89.
+[TX] Diagnostic : version=0x12, mode=0x88.
+[OK] LoRa TX pret : 169437500 Hz, SF7, BW31.25kHz, CR4/5, sync=0x12, CRC, 2 dBm.
+[TX] Premiere mesure valide puis au plus une emission toutes les deux minutes.
+[BLE] Configuration disponible (code masque).
+[BLE] Configuration disponible (code masque).
+[BLE] Configuration disponible dans ESP BLE Provisioning.
+[OK] t=541 ms | Temperature : 23.6 °C | Pression : 1007.92 hPa
+[TX] {"v":1,"node":"meteo-1","seq":0,"uptime_ms":542,"temperature_c":23.6,"pressure_hpa":1007.92}
+[TX] Emission terminee (sans acquittement du recepteur).
+[OK] t=2541 ms | Temperature : 23.6 °C | Pression : 1007.91 hPa
+[OK] t=4542 ms | Temperature : 23.6 °C | Pression : 1007.91 hPa
+[OK] t=6543 ms | Temperature : 23.6 °C | Pression : 1007.93 hPa
+[OK] t=8544 ms | Temperature : 23.6 °C | Pression : 1007.96 hPa
+[OK] t=10545 ms | Temperature : 23.6 °C | Pression : 1007.91 hPa
+[OK] t=12546 ms | Temperature : 23.6 °C | Pression : 1007.93 hPa
+[OK] t=14547 ms | Temperature : 23.6 °C | Pression : 1007.90 hPa
+[OK] t=16548 ms | Temperature : 23.6 °C | Pression : 1007.94 hPa
+[OK] t=18549 ms | Temperature : 23.6 °C | Pression : 1007.91 hPa
+[OK] t=20550 ms | Temperature : 23.6 °C | Pression : 1007.91 hPa
+[OK] t=22551 ms | Temperature : 23.6 °C | Pression : 1007.91 hPa
+[OK] t=24552 ms | Temperature : 23.6 °C | Pression : 1007.93 hPa
+[OK] t=26553 ms | Temperature : 23.6 °C | Pression : 1007.97 hPa
+[OK] t=28554 ms | Temperature : 23.7 °C | Pression : 1007.92 hPa
+[OK] t=30555 ms | Temperature : 23.7 °C | Pression : 1007.91 hPa
+[OK] t=32556 ms | Temperature : 23.7 °C | Pression : 1007.92 hPa
+[OK] t=34557 ms | Temperature : 23.7 °C | Pression : 1007.86 hPa
+[OK] t=36558 ms | Temperature : 23.7 °C | Pression : 1007.97 hPa
+[OK] t=38559 ms | Temperature : 23.7 °C | Pression : 1007.91 hPa
+[OK] t=40560 ms | Temperature : 23.6 °C | Pression : 1007.93 hPa
+[OK] t=42561 ms | Temperature : 23.6 °C | Pression : 1007.91 hPa
+[OK] t=44562 ms | Temperature : 23.6 °C | Pression : 1007.96 hPa
+[OK] t=46563 ms | Temperature : 23.6 °C | Pression : 1007.91 hPa
+[OK] t=48564 ms | Temperature : 23.6 °C | Pression : 1007.90 hPa
+[OK] t=50565 ms | Temperature : 23.6 °C | Pression : 1007.89 hPa
+[OK] t=52566 ms | Temperature : 23.7 °C | Pression : 1007.92 hPa
+[OK] t=54567 ms | Temperature : 23.7 °C | Pression : 1007.89 hPa
+[OK] t=56568 ms | Temperature : 23.7 °C | Pression : 1008.01 hPa
+[OK] t=58569 ms | Temperature : 23.6 °C | Pression : 1007.90 hPa
+[OK] t=60570 ms | Temperature : 23.7 °C | Pression : 1007.95 hPa
+[OK] t=62571 ms | Temperature : 23.7 °C | Pression : 1007.94 hPa
+[OK] t=64572 ms | Temperature : 23.7 °C | Pression : 1007.93 hPa
+[OK] t=66573 ms | Temperature : 23.7 °C | Pression : 1007.94 hPa
+[USB] Communication interrompue : ClearCommError failed (PermissionError(13, 'Le périphérique ne reconnaît pas la commande.', None, 22))
+[USB] Attente de la sonde e83dc181ca70...
+[USB] Fin de capture : 150.1 secondes.
+
+Capture UTC=2026-10-25T19:57:19.042979+00:00
+[USB] Sonde ouverte sur COM3
+[OK] t=162727 ms | Temperature : 23.1 °C | Pression : 1007.98 hPa
+[OK] t=164728 ms | Temperature : 23.1 °C | Pression : 1007.96 hPa
+[OK] t=166729 ms | Temperature : 23.1 °C | Pression : 1008.00 hPa
+[OK] t=168730 ms | Temperature : 23.1 °C | Pression : 1007.93 hPa
+[TX] Apres reset : version=0x00, mode=0x00.
+[TX] Modes ecrits/relus : 00/00 08/00 88/00.
+[ERREUR] LoRa TX : ecriture SPI du mode non acquittee ; aucune emission.
+[OK] t=170731 ms | Temperature : 23.2 °C | Pression : 1007.91 hPa
+[OK] t=172732 ms | Temperature : 23.2 °C | Pression : 1007.94 hPa
+[USB] Communication interrompue : ClearCommError failed (PermissionError(13, 'Le périphérique ne reconnaît pas la commande.', None, 22))
+[USB] Attente de la sonde e83dc181ca70...
+[USB] Fin de capture : 140.5 secondes.
+
+Capture UTC=2026-10-25T20:07:31.360805+00:00
+[USB] Sonde ouverte sur COM3
+[USB] Un redemarrage demande pour observer le demarrage complet.
+ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xf (SPI_FAST_FLASH_BOOT)
+Saved PC:0x420c9398
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5810,len:0x438
+load:0x403cc710,len:0x90c
+load:0x403ce710,len:0x2624
+entry 0x403cc710
+
+=== EnviroTerminal V1 : BMP180 + emetteur meteo LoRa ===
+Alimentation capteur : 3,3 V ; mesures toutes les 2 secondes.
+BMP180 : SDA=GPIO4, SCL=GPIO3, 100 kHz, timeout=50 ms.
+[INFO] LCD desactive.
+[SCAN] Recherche I2C de 0x08 a 0x77...
+[SCAN] Peripherique a 0x77 (adresse BMP180 attendue)
+[SCAN] Termine : 1 peripherique(s), 0 erreur(s) de bus.
+[OK] Capteur compatible BMP180, ID=0x55 ; calibration lue.
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[BLE] Configuration disponible (code masque).
+[BLE] Configuration disponible (code masque).
+[BLE] Configuration disponible dans ESP BLE Provisioning.
+[OK] t=503 ms | Temperature : 22.9 °C | Pression : 1008.00 hPa
+[OK] t=2504 ms | Temperature : 22.9 °C | Pression : 1008.01 hPa
+[OK] t=4505 ms | Temperature : 22.9 °C | Pression : 1007.98 hPa
+[OK] t=6506 ms | Temperature : 22.9 °C | Pression : 1008.00 hPa
+[OK] t=8507 ms | Temperature : 22.9 °C | Pression : 1008.01 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=10507 ms | Temperature : 22.9 °C | Pression : 1008.01 hPa
+[OK] t=12508 ms | Temperature : 22.9 °C | Pression : 1008.01 hPa
+[OK] t=14509 ms | Temperature : 22.9 °C | Pression : 1008.00 hPa
+[OK] t=16510 ms | Temperature : 22.9 °C | Pression : 1008.01 hPa
+[OK] t=18511 ms | Temperature : 22.9 °C | Pression : 1007.98 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=20511 ms | Temperature : 22.9 °C | Pression : 1007.97 hPa
+[OK] t=22512 ms | Temperature : 22.9 °C | Pression : 1008.01 hPa
+[OK] t=24513 ms | Temperature : 22.9 °C | Pression : 1007.97 hPa
+[OK] t=26514 ms | Temperature : 22.9 °C | Pression : 1008.04 hPa
+[OK] t=28515 ms | Temperature : 22.9 °C | Pression : 1007.98 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=30515 ms | Temperature : 22.9 °C | Pression : 1007.98 hPa
+[OK] t=32516 ms | Temperature : 22.9 °C | Pression : 1008.00 hPa
+[OK] t=34517 ms | Temperature : 22.9 °C | Pression : 1007.98 hPa
+[OK] t=36518 ms | Temperature : 22.9 °C | Pression : 1007.98 hPa
+[OK] t=38519 ms | Temperature : 22.9 °C | Pression : 1007.96 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=40519 ms | Temperature : 22.9 °C | Pression : 1008.03 hPa
+[OK] t=42520 ms | Temperature : 22.9 °C | Pression : 1008.04 hPa
+[OK] t=44521 ms | Temperature : 22.9 °C | Pression : 1007.99 hPa
+[OK] t=46522 ms | Temperature : 22.9 °C | Pression : 1007.99 hPa
+[OK] t=48523 ms | Temperature : 22.9 °C | Pression : 1008.00 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=50523 ms | Temperature : 22.9 °C | Pression : 1008.00 hPa
+[OK] t=52524 ms | Temperature : 23.0 °C | Pression : 1008.05 hPa
+[OK] t=54525 ms | Temperature : 23.0 °C | Pression : 1008.03 hPa
+[OK] t=56526 ms | Temperature : 23.0 °C | Pression : 1008.00 hPa
+[OK] t=58527 ms | Temperature : 23.0 °C | Pression : 1008.00 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=60527 ms | Temperature : 23.0 °C | Pression : 1008.05 hPa
+[OK] t=62528 ms | Temperature : 23.0 °C | Pression : 1008.04 hPa
+[OK] t=64529 ms | Temperature : 23.0 °C | Pression : 1008.03 hPa
+[OK] t=66530 ms | Temperature : 23.0 °C | Pression : 1008.01 hPa
+[OK] t=68531 ms | Temperature : 22.9 °C | Pression : 1008.00 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=70531 ms | Temperature : 23.0 °C | Pression : 1007.97 hPa
+[OK] t=72532 ms | Temperature : 23.0 °C | Pression : 1007.93 hPa
+[OK] t=74533 ms | Temperature : 23.0 °C | Pression : 1008.01 hPa
+[OK] t=76534 ms | Temperature : 23.0 °C | Pression : 1008.00 hPa
+[OK] t=78535 ms | Temperature : 23.0 °C | Pression : 1008.03 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=80535 ms | Temperature : 23.0 °C | Pression : 1008.03 hPa
+[OK] t=82536 ms | Temperature : 23.0 °C | Pression : 1008.08 hPa
+[OK] t=84537 ms | Temperature : 23.0 °C | Pression : 1008.06 hPa
+[OK] t=86538 ms | Temperature : 23.0 °C | Pression : 1008.07 hPa
+[OK] t=88539 ms | Temperature : 23.0 °C | Pression : 1008.07 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=90539 ms | Temperature : 23.0 °C | Pression : 1008.02 hPa
+[OK] t=92540 ms | Temperature : 23.1 °C | Pression : 1008.01 hPa
+[OK] t=94541 ms | Temperature : 23.1 °C | Pression : 1007.98 hPa
+[OK] t=96542 ms | Temperature : 23.2 °C | Pression : 1007.97 hPa
+[OK] t=98543 ms | Temperature : 23.2 °C | Pression : 1008.02 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=100543 ms | Temperature : 23.2 °C | Pression : 1008.04 hPa
+[OK] t=102544 ms | Temperature : 23.2 °C | Pression : 1008.04 hPa
+[OK] t=104545 ms | Temperature : 23.3 °C | Pression : 1008.10 hPa
+[OK] t=106546 ms | Temperature : 23.4 °C | Pression : 1008.09 hPa
+[OK] t=108547 ms | Temperature : 23.4 °C | Pression : 1008.07 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=110547 ms | Temperature : 23.4 °C | Pression : 1008.10 hPa
+[OK] t=112548 ms | Temperature : 23.5 °C | Pression : 1008.11 hPa
+[OK] t=114549 ms | Temperature : 23.5 °C | Pression : 1008.05 hPa
+[OK] t=116550 ms | Temperature : 23.5 °C | Pression : 1008.08 hPa
+[OK] t=118551 ms | Temperature : 23.5 °C | Pression : 1008.07 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=120551 ms | Temperature : 23.6 °C | Pression : 1008.10 hPa
+[OK] t=122552 ms | Temperature : 23.6 °C | Pression : 1008.02 hPa
+[OK] t=124553 ms | Temperature : 23.6 °C | Pression : 1008.01 hPa
+[OK] t=126554 ms | Temperature : 23.6 °C | Pression : 1008.11 hPa
+[OK] t=128555 ms | Temperature : 23.6 °C | Pression : 1008.11 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=130555 ms | Temperature : 23.7 °C | Pression : 1008.17 hPa
+[OK] t=132556 ms | Temperature : 23.7 °C | Pression : 1008.10 hPa
+[OK] t=134557 ms | Temperature : 23.7 °C | Pression : 1008.12 hPa
+[OK] t=136558 ms | Temperature : 23.7 °C | Pression : 1008.11 hPa
+[OK] t=138559 ms | Temperature : 23.7 °C | Pression : 1008.11 hPa
+[TX] Apres reset SPI/radio : version=0x00/0x00, mode=0x00.
+[ERREUR] LoRa TX : identification SPI invalide ; nouvelle tentative dans 10 s.
+[OK] t=140559 ms | Temperature : 23.7 °C | Pression : 1008.12 hPa
+[OK] t=142560 ms | Temperature : 23.7 °C | Pression : 1008.16 hPa
+[OK] t=144561 ms | Temperature : 23.7 °C | Pression : 1008.11 hPa
+[OK] t=146562 ms | Temperature : 23.8 °C | Pression : 1008.15 hPa
+[OK] t=148563 ms | Temperature : 23.8 °C | Pression : 1008.12 hPa
+[USB] Fin de capture : 150.0 secondes.
+
+Capture UTC=2026-10-25T20:32:12.841970+00:00
+[USB] Sonde ouverte sur COM3
+[USB] Un redemarrage demande pour observer le demarrage complet.
+ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xf (SPI_FAST_FLASH_BOOT)
+Saved PC:0x420c9398
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5810,len:0x438
+load:0x403cc710,len:0x90c
+load:0x403ce710,len:0x2624
+entry 0x403cc710
+
+=== EnviroTerminal V1 : BMP180 + emetteur meteo LoRa ===
+Alimentation capteur : 3,3 V ; mesures toutes les 2 secondes.
+BMP180 : SDA=GPIO4, SCL=GPIO3, 100 kHz, timeout=50 ms.
+[INFO] LCD desactive.
+[SCAN] Recherche I2C de 0x08 a 0x77...
+[SCAN] Peripherique a 0x77 (adresse BMP180 attendue)
+[SCAN] Termine : 1 peripherique(s), 0 erreur(s) de bus.
+[OK] Capteur compatible BMP180, ID=0x55 ; calibration lue.
+[TX] Apres reset SPI/radio : version=0x12/0x12, mode=0x09.
+[TX] Modes ecrits/relus : 00/00 08/08 88/88.
+[TX] Apres begin : version=0x12, mode=0x89.
+[TX] Diagnostic : version=0x12, mode=0x88.
+[OK] LoRa TX pret : 169437500 Hz, SF7, BW31.25kHz, CR4/5, sync=0x12, CRC, 2 dBm.
+[TX] Premiere mesure valide puis au plus une emission toutes les deux minutes.
+[BLE] Configuration disponible (code masque).
+[BLE] Configuration disponible (code masque).
+[BLE] Configuration disponible dans ESP BLE Provisioning.
+[OK] t=543 ms | Temperature : 23.7 °C | Pression : 1008.01 hPa
+[TX] {"v":1,"node":"meteo-1","seq":0,"uptime_ms":544,"temperature_c":23.7,"pressure_hpa":1008.01}
+[TX] Emission terminee (sans acquittement du recepteur).
+[OK] t=2543 ms | Temperature : 23.7 °C | Pression : 1008.05 hPa
+[OK] t=4544 ms | Temperature : 23.7 °C | Pression : 1008.03 hPa
+[OK] t=6545 ms | Temperature : 23.7 °C | Pression : 1008.01 hPa
+[OK] t=8546 ms | Temperature : 23.6 °C | Pression : 1008.03 hPa
+[OK] t=10546 ms | Temperature : 23.6 °C | Pression : 1008.02 hPa
+[OK] t=12547 ms | Temperature : 23.6 °C | Pression : 1008.09 hPa
+[OK] t=14548 ms | Temperature : 23.6 °C | Pression : 1007.99 hPa
+[OK] t=16549 ms | Temperature : 23.6 °C | Pression : 1008.05 hPa
+[OK] t=18550 ms | Temperature : 23.6 °C | Pression : 1007.98 hPa
+[OK] t=20550 ms | Temperature : 23.6 °C | Pression : 1008.09 hPa
+[OK] t=22551 ms | Temperature : 23.6 °C | Pression : 1008.07 hPa
+[OK] t=24552 ms | Temperature : 23.5 °C | Pression : 1008.00 hPa
+[OK] t=26553 ms | Temperature : 23.5 °C | Pression : 1008.00 hPa
+[OK] t=28554 ms | Temperature : 23.5 °C | Pression : 1008.04 hPa
+[OK] t=30554 ms | Temperature : 23.5 °C | Pression : 1008.02 hPa
+[OK] t=32555 ms | Temperature : 23.5 °C | Pression : 1008.05 hPa
+[OK] t=34556 ms | Temperature : 23.5 °C | Pression : 1008.06 hPa
+[OK] t=36557 ms | Temperature : 23.5 °C | Pression : 1008.01 hPa
+[OK] t=38558 ms | Temperature : 23.5 °C | Pression : 1008.04 hPa
+[OK] t=40558 ms | Temperature : 23.5 °C | Pression : 1008.05 hPa
+[OK] t=42559 ms | Temperature : 23.5 °C | Pression : 1008.01 hPa
+[OK] t=44560 ms | Temperature : 23.5 °C | Pression : 1008.01 hPa
+[OK] t=46561 ms | Temperature : 23.4 °C | Pression : 1008.00 hPa
+[OK] t=48562 ms | Temperature : 23.4 °C | Pression : 1008.01 hPa
+[OK] t=50562 ms | Temperature : 23.4 °C | Pression : 1007.98 hPa
+[OK] t=52563 ms | Temperature : 23.4 °C | Pression : 1008.04 hPa
+[OK] t=54564 ms | Temperature : 23.4 °C | Pression : 1008.02 hPa
+[OK] t=56565 ms | Temperature : 23.4 °C | Pression : 1007.99 hPa
+[OK] t=58566 ms | Temperature : 23.4 °C | Pression : 1007.99 hPa
+[OK] t=60566 ms | Temperature : 23.4 °C | Pression : 1007.98 hPa
+[OK] t=62567 ms | Temperature : 23.4 °C | Pression : 1008.05 hPa
+[OK] t=64568 ms | Temperature : 23.4 °C | Pression : 1008.05 hPa
+[OK] t=66569 ms | Temperature : 23.4 °C | Pression : 1008.03 hPa
+[OK] t=68570 ms | Temperature : 23.4 °C | Pression : 1008.04 hPa
+[OK] t=70570 ms | Temperature : 23.4 °C | Pression : 1007.97 hPa
+[OK] t=72571 ms | Temperature : 23.4 °C | Pression : 1007.98 hPa
+[OK] t=74572 ms | Temperature : 23.4 °C | Pression : 1008.03 hPa
+[OK] t=76573 ms | Temperature : 23.4 °C | Pression : 1008.04 hPa
+[OK] t=78574 ms | Temperature : 23.4 °C | Pression : 1008.05 hPa
+[OK] t=80574 ms | Temperature : 23.4 °C | Pression : 1008.03 hPa
+[OK] t=82575 ms | Temperature : 23.3 °C | Pression : 1007.98 hPa
+[OK] t=84576 ms | Temperature : 23.3 °C | Pression : 1008.04 hPa
+[OK] t=86577 ms | Temperature : 23.3 °C | Pression : 1008.03 hPa
+[OK] t=88578 ms | Temperature : 23.3 °C | Pression : 1008.00 hPa
+[OK] t=90578 ms | Temperature : 23.3 °C | Pression : 1008.01 hPa
+[OK] t=92579 ms | Temperature : 23.3 °C | Pression : 1008.01 hPa
+[OK] t=94580 ms | Temperature : 23.3 °C | Pression : 1008.00 hPa
+[OK] t=96581 ms | Temperature : 23.3 °C | Pression : 1008.04 hPa
+[OK] t=98582 ms | Temperature : 23.3 °C | Pression : 1007.99 hPa
+[OK] t=100582 ms | Temperature : 23.3 °C | Pression : 1007.98 hPa
+[OK] t=102583 ms | Temperature : 23.3 °C | Pression : 1008.01 hPa
+[OK] t=104584 ms | Temperature : 23.3 °C | Pression : 1007.98 hPa
+[OK] t=106585 ms | Temperature : 23.3 °C | Pression : 1008.02 hPa
+[OK] t=108586 ms | Temperature : 23.3 °C | Pression : 1008.02 hPa
+[OK] t=110586 ms | Temperature : 23.3 °C | Pression : 1008.07 hPa
+[OK] t=112587 ms | Temperature : 23.3 °C | Pression : 1008.00 hPa
+[OK] t=114588 ms | Temperature : 23.3 °C | Pression : 1007.97 hPa
+[OK] t=116589 ms | Temperature : 23.3 °C | Pression : 1008.03 hPa
+[OK] t=118590 ms | Temperature : 23.3 °C | Pression : 1008.04 hPa
+[OK] t=120590 ms | Temperature : 23.3 °C | Pression : 1007.98 hPa
+[TX] {"v":1,"node":"meteo-1","seq":1,"uptime_ms":120591,"temperature_c":23.3,"pressure_hpa":1007.98}
+[TX] Emission terminee (sans acquittement du recepteur).
+[OK] t=122590 ms | Temperature : 23.3 °C | Pression : 1007.98 hPa
+[OK] t=124591 ms | Temperature : 23.3 °C | Pression : 1008.06 hPa
+[OK] t=126592 ms | Temperature : 23.3 °C | Pression : 1007.97 hPa
+[OK] t=128593 ms | Temperature : 23.3 °C | Pression : 1008.06 hPa
+[OK] t=130593 ms | Temperature : 23.3 °C | Pression : 1007.99 hPa
+[OK] t=132594 ms | Temperature : 23.3 °C | Pression : 1008.03 hPa
+[OK] t=134595 ms | Temperature : 23.3 °C | Pression : 1008.01 hPa
+[OK] t=136596 ms | Temperature : 23.3 °C | Pression : 1008.02 hPa
+[OK] t=138597 ms | Temperature : 23.3 °C | Pression : 1008.03 hPa
+[OK] t=140597 ms | Temperature : 23.2 °C | Pression : 1008.05 hPa
+[OK] t=142598 ms | Temperature : 23.2 °C | Pression : 1008.04 hPa
+[OK] t=144599 ms | Temperature : 23.2 °C | Pression : 1008.07 hPa
+[OK] t=146600 ms | Temperature : 23.2 °C | Pression : 1008.05 hPa
+[OK] t=148601 ms | Temperature : 23.2 °C | Pression : 1008.07 hPa
+[USB] Fin de capture : 150.0 secondes.
+
+Capture UTC=2026-10-25T20:49:21.814158+00:00
+[USB] Sonde ouverte sur COM3
+[USB] Un redemarrage demande pour observer le demarrage complet.
+ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xf (SPI_FAST_FLASH_BOOT)
+Saved PC:0x420c94a4
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5810,len:0x438
+load:0x403cc710,len:0x90c
+load:0x403ce710,len:0x2624
+entry 0x403cc710
+
+=== EnviroTerminal V1 : BMP180 + emetteur meteo LoRa ===
+Alimentation capteur : 3,3 V ; mesures toutes les 2 secondes.
+BMP180 : SDA=GPIO4, SCL=GPIO3, 100 kHz, timeout=50 ms.
+[INFO] LCD desactive.
+[SCAN] Recherche I2C de 0x08 a 0x77...
+[SCAN] Peripherique a 0x77 (adresse BMP180 attendue)
+[SCAN] Termine : 1 peripherique(s), 0 erreur(s) de bus.
+[OK] Capteur compatible BMP180, ID=0x55 ; calibration lue.
+[TX] Apres reset SPI/radio : version=0x12/0x12, mode=0x09.
+[TX] Modes ecrits/relus : 00/00 08/08 88/88.
+[TX] Apres begin : version=0x12, mode=0x89.
+[TX] Diagnostic : version=0x12, mode=0x88.
+[OK] LoRa TX pret : 433920000 Hz, SF7, BW31.25kHz, CR4/5, sync=0x12, CRC, 2 dBm.
+[TX] Premiere mesure valide puis au plus une emission toutes les deux minutes.
+[WEB] Connexion au Wi-Fi enregistre (identifiants masques).
+[OK] t=522 ms | Temperature : 22.9 °C | Pression : 1008.24 hPa
+[TX] {"v":1,"node":"meteo-1","seq":0,"uptime_ms":523,"temperature_c":22.9,"pressure_hpa":1008.24}
+[TX] Emission terminee (sans acquittement du recepteur).
+[OK] t=2520 ms | Temperature : 22.9 °C | Pression : 1008.23 hPa
+[WEB] Site : http://192.168.1.65/ ; http://enviro-81ca70.local/
+[OK] t=4520 ms | Temperature : 22.9 °C | Pression : 1008.20 hPa
+[OK] t=6520 ms | Temperature : 22.9 °C | Pression : 1008.20 hPa
+[OK] t=8520 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=10520 ms | Temperature : 22.9 °C | Pression : 1008.18 hPa
+[OK] t=12521 ms | Temperature : 22.9 °C | Pression : 1008.14 hPa
+[OK] t=14521 ms | Temperature : 22.9 °C | Pression : 1008.23 hPa
+[OK] t=16522 ms | Temperature : 22.9 °C | Pression : 1008.17 hPa
+[OK] t=18523 ms | Temperature : 22.9 °C | Pression : 1008.23 hPa
+[OK] t=20524 ms | Temperature : 22.9 °C | Pression : 1008.22 hPa
+[OK] t=22525 ms | Temperature : 22.9 °C | Pression : 1008.20 hPa
+[OK] t=24526 ms | Temperature : 22.9 °C | Pression : 1008.21 hPa
+[OK] t=26527 ms | Temperature : 22.9 °C | Pression : 1008.20 hPa
+[OK] t=28528 ms | Temperature : 22.9 °C | Pression : 1008.13 hPa
+[OK] t=30528 ms | Temperature : 22.9 °C | Pression : 1008.20 hPa
+[OK] t=32529 ms | Temperature : 22.9 °C | Pression : 1008.14 hPa
+[OK] t=34530 ms | Temperature : 22.9 °C | Pression : 1008.17 hPa
+[OK] t=36531 ms | Temperature : 22.9 °C | Pression : 1008.26 hPa
+[OK] t=38531 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=40531 ms | Temperature : 22.9 °C | Pression : 1008.25 hPa
+[OK] t=42532 ms | Temperature : 22.9 °C | Pression : 1008.21 hPa
+[OK] t=44533 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=46534 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=48535 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=50536 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=52537 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=54537 ms | Temperature : 22.9 °C | Pression : 1008.13 hPa
+[OK] t=56537 ms | Temperature : 22.9 °C | Pression : 1008.16 hPa
+[OK] t=58538 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=60538 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=62539 ms | Temperature : 22.9 °C | Pression : 1008.20 hPa
+[OK] t=64540 ms | Temperature : 22.9 °C | Pression : 1008.21 hPa
+[OK] t=66541 ms | Temperature : 22.9 °C | Pression : 1008.17 hPa
+[OK] t=68541 ms | Temperature : 22.9 °C | Pression : 1008.18 hPa
+[OK] t=70542 ms | Temperature : 22.9 °C | Pression : 1008.23 hPa
+[OK] t=72542 ms | Temperature : 22.9 °C | Pression : 1008.12 hPa
+[OK] t=74543 ms | Temperature : 22.9 °C | Pression : 1008.18 hPa
+[OK] t=76543 ms | Temperature : 22.9 °C | Pression : 1008.16 hPa
+[OK] t=78544 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=80544 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=82545 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=84545 ms | Temperature : 22.9 °C | Pression : 1008.16 hPa
+[OK] t=86546 ms | Temperature : 22.9 °C | Pression : 1008.14 hPa
+[OK] t=88546 ms | Temperature : 22.9 °C | Pression : 1008.24 hPa
+[OK] t=90546 ms | Temperature : 22.9 °C | Pression : 1008.23 hPa
+[OK] t=92547 ms | Temperature : 22.9 °C | Pression : 1008.20 hPa
+[OK] t=94547 ms | Temperature : 22.9 °C | Pression : 1008.17 hPa
+[OK] t=96548 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=98549 ms | Temperature : 22.9 °C | Pression : 1008.16 hPa
+[OK] t=100549 ms | Temperature : 22.9 °C | Pression : 1008.18 hPa
+[OK] t=102550 ms | Temperature : 22.9 °C | Pression : 1008.24 hPa
+[OK] t=104551 ms | Temperature : 22.9 °C | Pression : 1008.20 hPa
+[OK] t=106552 ms | Temperature : 22.9 °C | Pression : 1008.17 hPa
+[OK] t=108553 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=110553 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=112554 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=114555 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=116556 ms | Temperature : 22.9 °C | Pression : 1008.18 hPa
+[OK] t=118557 ms | Temperature : 22.9 °C | Pression : 1008.22 hPa
+[OK] t=120557 ms | Temperature : 22.9 °C | Pression : 1008.25 hPa
+[TX] {"v":1,"node":"meteo-1","seq":1,"uptime_ms":120558,"temperature_c":22.9,"pressure_hpa":1008.25}
+[TX] Emission terminee (sans acquittement du recepteur).
+[OK] t=122557 ms | Temperature : 22.9 °C | Pression : 1008.17 hPa
+[OK] t=124557 ms | Temperature : 22.9 °C | Pression : 1008.17 hPa
+[OK] t=126557 ms | Temperature : 22.9 °C | Pression : 1008.16 hPa
+[OK] t=128558 ms | Temperature : 22.9 °C | Pression : 1008.17 hPa
+[OK] t=130559 ms | Temperature : 22.9 °C | Pression : 1008.20 hPa
+[OK] t=132560 ms | Temperature : 22.9 °C | Pression : 1008.24 hPa
+[OK] t=134560 ms | Temperature : 22.9 °C | Pression : 1008.22 hPa
+[OK] t=136561 ms | Temperature : 22.9 °C | Pression : 1008.19 hPa
+[OK] t=138562 ms | Temperature : 22.9 °C | Pression : 1008.24 hPa
+[OK] t=140562 ms | Temperature : 22.9 °C | Pression : 1008.18 hPa
+[OK] t=142563 ms | Temperature : 22.9 °C | Pression : 1008.16 hPa
+[OK] t=144563 ms | Temperature : 22.9 °C | Pression : 1008.24 hPa
+[OK] t=146563 ms | Temperature : 22.9 °C | Pression : 1008.18 hPa
+[OK] t=148564 ms | Temperature : 22.9 °C | Pression : 1008.21 hPa
+[USB] Fin de capture : 150.0 secondes.
+
+Capture UTC=2026-10-26T10:22:55.997174+00:00
+[USB] Attente de la sonde e83dc181ca70...
+[USB] Sonde ouverte sur COM3
+[TX] Emission terminee (sans acquittement du recepteur).
+[OK] t=2658 ms | Temperature : 23.8 °C | Pression : 1008.66 hPa
+[OK] t=4659 ms | Temperature : 23.8 °C | Pression : 1008.61 hPa
+[OK] t=6660 ms | Temperature : 23.8 °C | Pression : 1008.57 hPa
+[OK] t=8661 ms | Temperature : 23.8 °C | Pression : 1008.56 hPa
+[OK] t=10661 ms | Temperature : 23.8 °C | Pression : 1008.68 hPa
+[OK] t=12662 ms | Temperature : 23.8 °C | Pression : 1008.61 hPa
+[OK] t=14663 ms | Temperature : 23.8 °C | Pression : 1008.70 hPa
+[OK] t=16664 ms | Temperature : 23.8 °C | Pression : 1008.60 hPa
+[OK] t=18665 ms | Temperature : 23.8 °C | Pression : 1008.58 hPa
+[OK] t=20665 ms | Temperature : 23.8 °C | Pression : 1008.66 hPa
+[OK] t=22666 ms | Temperature : 23.9 °C | Pression : 1008.48 hPa
+[OK] t=24667 ms | Temperature : 23.9 °C | Pression : 1008.47 hPa
+[OK] t=26668 ms | Temperature : 24.0 °C | Pression : 1008.52 hPa
+[OK] t=28669 ms | Temperature : 24.0 °C | Pression : 1008.63 hPa
+[OK] t=30669 ms | Temperature : 24.0 °C | Pression : 1008.68 hPa
+[OK] t=32670 ms | Temperature : 24.0 °C | Pression : 1008.65 hPa
+[OK] t=34671 ms | Temperature : 23.9 °C | Pression : 1008.64 hPa
+[OK] t=36672 ms | Temperature : 23.9 °C | Pression : 1008.73 hPa
+[OK] t=38673 ms | Temperature : 23.9 °C | Pression : 1008.77 hPa
+[OK] t=40673 ms | Temperature : 23.9 °C | Pression : 1008.64 hPa
+[OK] t=42674 ms | Temperature : 23.9 °C | Pression : 1008.67 hPa
+[OK] t=44675 ms | Temperature : 23.8 °C | Pression : 1008.59 hPa
+[OK] t=46676 ms | Temperature : 23.8 °C | Pression : 1008.68 hPa
+[OK] t=48677 ms | Temperature : 23.8 °C | Pression : 1008.67 hPa
+[OK] t=50677 ms | Temperature : 23.8 °C | Pression : 1008.56 hPa
+[OK] t=52678 ms | Temperature : 23.8 °C | Pression : 1008.65 hPa
+[OK] t=54679 ms | Temperature : 23.7 °C | Pression : 1008.64 hPa
+[OK] t=56680 ms | Temperature : 23.7 °C | Pression : 1008.60 hPa
+[OK] t=58681 ms | Temperature : 23.7 °C | Pression : 1008.58 hPa
+[OK] t=60681 ms | Temperature : 23.7 °C | Pression : 1008.59 hPa
+[OK] t=62682 ms | Temperature : 23.7 °C | Pression : 1008.64 hPa
+[OK] t=64683 ms | Temperature : 23.7 °C | Pression : 1008.61 hPa
+[OK] t=66684 ms | Temperature : 23.7 °C | Pression : 1008.55 hPa
+[OK] t=68685 ms | Temperature : 23.6 °C | Pression : 1008.58 hPa
+[OK] t=70685 ms | Temperature : 23.6 °C | Pression : 1008.61 hPa
+[OK] t=72686 ms | Temperature : 23.6 °C | Pression : 1008.56 hPa
+[OK] t=74687 ms | Temperature : 23.6 °C | Pression : 1008.58 hPa
+[OK] t=76688 ms | Temperature : 23.6 °C | Pression : 1008.63 hPa
+[OK] t=78689 ms | Temperature : 23.6 °C | Pression : 1008.58 hPa
+[OK] t=80689 ms | Temperature : 23.6 °C | Pression : 1008.64 hPa
+[OK] t=82690 ms | Temperature : 23.6 °C | Pression : 1008.60 hPa
+[OK] t=84691 ms | Temperature : 23.5 °C | Pression : 1008.63 hPa
+[OK] t=86692 ms | Temperature : 23.5 °C | Pression : 1008.60 hPa
+[OK] t=88693 ms | Temperature : 23.5 °C | Pression : 1008.61 hPa
+[OK] t=90693 ms | Temperature : 23.5 °C | Pression : 1008.62 hPa
+[OK] t=92694 ms | Temperature : 23.5 °C | Pression : 1008.61 hPa
+[OK] t=94695 ms | Temperature : 23.5 °C | Pression : 1008.68 hPa
+[OK] t=96696 ms | Temperature : 23.5 °C | Pression : 1008.59 hPa
+[OK] t=98697 ms | Temperature : 23.5 °C | Pression : 1008.60 hPa
+[OK] t=100697 ms | Temperature : 23.5 °C | Pression : 1008.62 hPa
+[OK] t=102698 ms | Temperature : 23.4 °C | Pression : 1008.60 hPa
+[OK] t=104699 ms | Temperature : 23.4 °C | Pression : 1008.63 hPa
+[USB] Fin de capture : 150.0 secondes.
+
+Capture UTC=2026-10-26T10:38:16.907019+00:00
+[USB] Sonde ouverte sur COM3
+[USB] Un redemarrage demande pour observer le demarrage complet.
+ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xf (SPI_FAST_FLASH_BOOT)
+Saved PC:0x420c94f6
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5810,len:0x438
+load:0x403cc710,len:0x90c
+load:0x403ce710,len:0x2624
+entry 0x403cc710
+
+=== EnviroTerminal V1 : BMP180 + emetteur meteo LoRa ===
+Alimentation capteur : 3,3 V ; mesures toutes les 2 secondes.
+BMP180 : SDA=GPIO4, SCL=GPIO3, 100 kHz, timeout=50 ms.
+[INFO] LCD desactive.
+[SCAN] Recherche I2C de 0x08 a 0x77...
+[SCAN] Peripherique a 0x77 (adresse BMP180 attendue)
+[SCAN] Termine : 1 peripherique(s), 0 erreur(s) de bus.
+[OK] Capteur compatible BMP180, ID=0x55 ; calibration lue.
+[TX] Apres reset SPI/radio : version=0x12/0x12, mode=0x09.
+[TX] Modes ecrits/relus : 00/00 08/08 88/88.
+[TX] Apres begin : version=0x12, mode=0x89.
+[TX] Puissance : consigne=8 dBm, PA=0x86 DAC=0x84.
+[TX] Diagnostic : version=0x12, mode=0x88.
+[OK] LoRa TX pret : 433920000 Hz, SF7, BW31.25kHz, CR4/5, sync=0x12, CRC, 8 dBm.
+[TX] Premiere mesure valide puis au plus une emission toutes les deux minutes.
+[BLE] Configuration disponible (code masque).
+[BLE] Configuration disponible (code masque).
+[BLE] Configuration disponible dans ESP BLE Provisioning.
+[OK] t=544 ms | Temperature : 23.2 °C | Pression : 1008.45 hPa
+[TX] {"v":1,"node":"meteo-1","seq":0,"uptime_ms":545,"temperature_c":23.2,"pressure_hpa":1008.45}
+[TX] Emission terminee (sans acquittement du recepteur).
+[OK] t=2544 ms | Temperature : 23.2 °C | Pression : 1008.52 hPa
+[OK] t=4545 ms | Temperature : 23.2 °C | Pression : 1008.44 hPa
+[OK] t=6546 ms | Temperature : 23.2 °C | Pression : 1008.50 hPa
+[OK] t=8547 ms | Temperature : 23.2 °C | Pression : 1008.54 hPa
+[OK] t=10548 ms | Temperature : 23.1 °C | Pression : 1008.45 hPa
+[OK] t=12549 ms | Temperature : 23.1 °C | Pression : 1008.47 hPa
+[OK] t=14550 ms | Temperature : 23.1 °C | Pression : 1008.51 hPa
+[OK] t=16551 ms | Temperature : 23.1 °C | Pression : 1008.52 hPa
+[OK] t=18552 ms | Temperature : 23.1 °C | Pression : 1008.51 hPa
+[USB] Fin de capture : 20.0 secondes.

@@ -2,6 +2,7 @@
 #include "storage/PlantHistory.h"
 #include "web/PlantDashboardApi.h"
 #include "power/PrgButton.h"
+#include "web/CaptiveDns.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -98,6 +99,38 @@ static void ring() {
     assert(previous==7999 && count<=59*101 && count>58*101);
     puts("PASS full flash: bounded sector ring wraps and reboots without losing newest records");
 }
+static void anchorsAndCorruption() {
+    MemoryFlash flash;PlantHistory history(flash);assert(history.begin());
+    const uint64_t now=1793700000000ULL,day=86400000,up=40*day;
+    const uint64_t times[]={up-30*day-1,up-30*day,up-7*day-1,up-7*day,up-day-1,up-day,up-1000,up+1};
+    for(unsigned i=0;i<8;++i){HistoryRecord r;r.node=1;r.boot=5;r.uptimeMs=times[i];r.sequence=i;r.raw=16000;assert(history.append(r));}
+    HistoryRecord values[96];uint64_t next;bool more;
+    assert(history.page(1,0,now,kHistoryMs,values,96,next,more)==8&&values[0].utcMs==0);
+    assert(history.anchor(5,up,now));
+    for(const unsigned days:{1,7,30}) {
+        const size_t expected=days==1?2:days==7?4:6;
+        assert(history.page(1,0,now,days*day,values,96,next,more)==expected);
+        uint64_t after=0;size_t count=0;
+        do{size_t n=history.page(1,after,now,days*day,values,1,next,more);assert(n==1&&next>after);assert(values[0].utcMs>=now-days*day&&values[0].utcMs<=now);after=next;++count;}while(more);
+        assert(count==expected);
+    }
+    PlantHistory reboot(flash);assert(reboot.begin());assert(reboot.page(1,0,now,day,values,96,next,more)==2&&values[0].utcMs==now-day);
+    MemoryFlash failure;PlantHistory failed(failure);assert(failed.begin());HistoryRecord r;r.node=1;r.boot=9;r.uptimeMs=1;assert(failed.append(r));
+    failure.cut=8;assert(!failed.anchor(9,10,now));failure.cut=-1;PlantHistory retry(failure);assert(retry.begin());
+    assert(retry.page(1,0,now,day,values,96,next,more)==1&&values[0].utcMs==0);
+    MemoryFlash rotated;PlantHistory old(rotated);assert(old.begin());r.boot=2;
+    for(unsigned i=0;i<110;++i){r.sequence=i;assert(old.append(r));}
+    rotated.bytes[4096+32+5]^=1; // Corruption is in the older sector, not the current one.
+    PlantHistory corrupt(rotated);assert(corrupt.begin()&&corrupt.corruptRecords()==1);
+    for(unsigned i=0;i<3;++i)corrupt.page(1,0,0,kHistoryMs,values,96,next,more);
+    assert(corrupt.corruptRecords()==1);
+    // More boot anchors than the RAM cache must still resolve from durable flash.
+    MemoryFlash many;PlantHistory cached(many);assert(cached.begin());
+    for(unsigned boot=1;boot<=70;++boot){r.boot=boot;r.uptimeMs=1;r.utcMs=0;assert(cached.append(r));assert(cached.anchor(boot,2,now));}
+    PlantHistory manyReboot(many);assert(manyReboot.begin());assert(manyReboot.page(1,0,now,day,values,96,next,more)==70);
+    for(unsigned i=0;i<70;++i)assert(values[i].utcMs==now-1);
+    puts("PASS durable anchors: undated/synced/reboot, failed persistence, effective-date filtering before 1/7/30-day pagination, future/old/boundary records, cache overflow; corruption counted once across retained sectors");
+}
 static void apiAndNavigation() {
     uint64_t value;assert(parseUnsigned("18446744073709551615",UINT64_MAX,value)&&value==UINT64_MAX);
     assert(!parseUnsigned("18446744073709551616",UINT64_MAX,value));assert(!parseUnsigned("-1",4,value));assert(!parseUnsigned("",4,value));
@@ -108,6 +141,26 @@ static void apiAndNavigation() {
     screen=nextScreen(screen);assert(screen==Screen::Qr);screen=nextScreen(screen);assert(screen==Screen::Face);
     button.update(300,true,true);button.update(340,true,true);assert(button.update(3300,true,true)==ButtonEvent::LongPress);
     button.update(3400,false,true);assert(button.update(3440,false,true)==ButtonEvent::ReleasedForSleep);
+    PrgButton delayed;delayed.begin(0,false);delayed.update(100,true,true);delayed.update(140,true,true);
+    assert(delayed.update(8100,true,true)==ButtonEvent::SetupHold);
+    assert(delayed.update(8140,true,true)==ButtonEvent::None); // No late 3s event after the 8s confirmation.
+    delayed.update(8200,false,true);assert(delayed.update(8240,false,true)==ButtonEvent::ReleasedForSetup);
+    PrgButton boot;boot.begin(0,true);assert(boot.update(9000,true,true)==ButtonEvent::None);
     puts("PASS API validation and PRG face/details/QR, 3-second threshold and release-to-sleep");
 }
-int main(){model();historyTest();ring();apiAndNavigation();}
+static void dns() {
+    const uint8_t valid[]={0x12,0x34,1,0,0,1,0,0,0,0,0,0,7,'e','x','a','m','p','l','e',3,'c','o','m',0,0,1,0,1};
+    uint8_t out[528],query[512];
+    const size_t n=captiveDnsReply(valid,sizeof(valid),out,sizeof(out));assert(n==sizeof(valid)+16&&out[0]==0x12&&out[n-4]==192&&out[n-1]==1&&out[7]==1);
+    for(size_t length=0;length<sizeof(valid);++length)assert(!captiveDnsReply(valid,length,out,sizeof(out)));
+    memcpy(query,valid,sizeof(valid));query[12]=0xC0;assert(!captiveDnsReply(query,sizeof(valid),out,sizeof(out)));
+    memcpy(query,valid,sizeof(valid));query[12]=64;assert(!captiveDnsReply(query,sizeof(valid),out,sizeof(out)));
+    memcpy(query,valid,sizeof(valid));query[5]=2;assert(!captiveDnsReply(query,sizeof(valid),out,sizeof(out)));
+    memcpy(query,valid,sizeof(valid));query[sizeof(valid)-3]=28;assert(!captiveDnsReply(query,sizeof(valid),out,sizeof(out)));
+    assert(!captiveDnsReply(valid,sizeof(valid),out,n-1));
+    memcpy(query,valid,sizeof(valid));query[11]=1;const uint8_t opt[]={0,0,41,2,0,0,0,0,0,0,0};memcpy(query+sizeof(valid),opt,sizeof(opt));
+    assert(captiveDnsReply(query,sizeof(valid)+sizeof(opt),out,sizeof(out))==n);
+    assert(!captiveDnsReply(query,sizeof(valid)+sizeof(opt)-1,out,sizeof(out)));
+    puts("PASS bounded captive DNS: A/IN reply, short/truncated datagrams and labels, compression/multiple questions/AAAA rejected, EDNS bounds and output capacity");
+}
+int main(){model();historyTest();ring();anchorsAndCorruption();apiAndNavigation();dns();}

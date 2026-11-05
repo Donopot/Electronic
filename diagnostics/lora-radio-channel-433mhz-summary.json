@@ -1,0 +1,14 @@
+{
+  "samples": 598,
+  "errors": 0,
+  "first_utc": "2026-10-25T21:12:08.589465+00:00",
+  "last_utc": "2026-10-25T21:14:08.522479+00:00",
+  "min_rssi_dbm": -132,
+  "max_rssi_dbm": -124,
+  "last_counters": {
+    "rx_done_irq_count": 0,
+    "crc_error_irq_count": 0,
+    "valid_header_count": 0,
+    "received_packets": 0
+  }
+}

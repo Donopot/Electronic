@@ -1,0 +1,81 @@
+Capture COM8, UTC=2026-11-03T14:54:28.942817+00:00, duree=30.0s
+
+[XIAO-SOIL-DIAG] v1 / USB / D6=P1.11 SDA / D7=P1.12 SCL
+[CONFIG] ADS1115 attendu 0x48, selection unique 0x48..0x4B, A0/GND, +/-4.096 V, 128 SPS.
+[INFO] D0 relachee ; radio non initialisee ; aucun pourcentage sans etalonnage.
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x49
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ADC] adresse_selectionnee=0x49
+[INFO] Adresse differente de 0x48 : verifier le strap ADDR hors tension.
+[MESURE] t_ms=1258951 adresse=0x49 A0_brut=15331 A0_V=1.916375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=231 mesures=231 erreurs=0
+[MESURE] t_ms=1259965 adresse=0x49 A0_brut=15323 A0_V=1.915375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=232 mesures=232 erreurs=0
+[MESURE] t_ms=1260980 adresse=0x49 A0_brut=15326 A0_V=1.915750 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=233 mesures=233 erreurs=0
+[MESURE] t_ms=1261996 adresse=0x49 A0_brut=15325 A0_V=1.915625 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=234 mesures=234 erreurs=0
+[MESURE] t_ms=1263011 adresse=0x49 A0_brut=15324 A0_V=1.915500 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=235 mesures=235 erreurs=0
+[MESURE] t_ms=1264027 adresse=0x49 A0_brut=15322 A0_V=1.915250 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=236 mesures=236 erreurs=0
+[MESURE] t_ms=1265042 adresse=0x49 A0_brut=15323 A0_V=1.915375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=237 mesures=237 erreurs=0
+[MESURE] t_ms=1266058 adresse=0x49 A0_brut=15322 A0_V=1.915250 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=238 mesures=238 erreurs=0
+[MESURE] t_ms=1267074 adresse=0x49 A0_brut=15322 A0_V=1.915250 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=239 mesures=239 erreurs=0
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x49
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ADC] adresse_selectionnee=0x49
+[INFO] Adresse differente de 0x48 : verifier le strap ADDR hors tension.
+[MESURE] t_ms=1268133 adresse=0x49 A0_brut=15329 A0_V=1.916125 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=240 mesures=240 erreurs=0
+[MESURE] t_ms=1269149 adresse=0x49 A0_brut=15319 A0_V=1.914875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=241 mesures=241 erreurs=0
+[MESURE] t_ms=1270165 adresse=0x49 A0_brut=15321 A0_V=1.915125 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=242 mesures=242 erreurs=0
+[MESURE] t_ms=1271180 adresse=0x49 A0_brut=15321 A0_V=1.915125 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=243 mesures=243 erreurs=0
+[MESURE] t_ms=1272196 adresse=0x49 A0_brut=15318 A0_V=1.914750 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=244 mesures=244 erreurs=0
+[MESURE] t_ms=1273210 adresse=0x49 A0_brut=15319 A0_V=1.914875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=245 mesures=245 erreurs=0
+[MESURE] t_ms=1274226 adresse=0x49 A0_brut=15317 A0_V=1.914625 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=246 mesures=246 erreurs=0
+[MESURE] t_ms=1275242 adresse=0x49 A0_brut=15319 A0_V=1.914875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=247 mesures=247 erreurs=0
+[MESURE] t_ms=1276257 adresse=0x49 A0_brut=15319 A0_V=1.914875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=248 mesures=248 erreurs=0
+[MESURE] t_ms=1277272 adresse=0x49 A0_brut=15319 A0_V=1.914875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=249 mesures=249 erreurs=0
+[BUS] SDA=1 SCL=1
+[I2C] ACK adresse=0x49
+[SCAN] peripheriques=1
+[INFO] Un ACK seul ne permet pas d'identifier la puce.
+[ADC] adresse_selectionnee=0x49
+[INFO] Adresse differente de 0x48 : verifier le strap ADDR hors tension.
+[MESURE] t_ms=1278332 adresse=0x49 A0_brut=15327 A0_V=1.915875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=250 mesures=250 erreurs=0
+[MESURE] t_ms=1279346 adresse=0x49 A0_brut=15321 A0_V=1.915125 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=251 mesures=251 erreurs=0
+[MESURE] t_ms=1280362 adresse=0x49 A0_brut=15321 A0_V=1.915125 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=252 mesures=252 erreurs=0
+[MESURE] t_ms=1281377 adresse=0x49 A0_brut=15321 A0_V=1.915125 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=253 mesures=253 erreurs=0
+[MESURE] t_ms=1282393 adresse=0x49 A0_brut=15321 A0_V=1.915125 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=254 mesures=254 erreurs=0
+[MESURE] t_ms=1283408 adresse=0x49 A0_brut=15320 A0_V=1.915000 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=255 mesures=255 erreurs=0
+[MESURE] t_ms=1284423 adresse=0x49 A0_brut=15323 A0_V=1.915375 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=256 mesures=256 erreurs=0
+[MESURE] t_ms=1285439 adresse=0x49 A0_brut=15325 A0_V=1.915625 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=257 mesures=257 erreurs=0
+[MESURE] t_ms=1286455 adresse=0x49 A0_brut=15327 A0_V=1.915875 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=258 mesures=258 erreurs=0
+[MESURE] t_ms=1287470 adresse=0x49 A0_brut=15326 A0_V=1.915750 etat=DANS_PLAGE_NOMINALE
+[BILAN] essais=259 mesures=259 erreurs=0

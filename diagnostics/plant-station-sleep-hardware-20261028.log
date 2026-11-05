@@ -1,0 +1,51 @@
+Plant Station sleep test COM5, UTC=2026-10-28T09:09:26.395322+00:00
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x1 (POWERON),boot:0x8 (SPI_FAST_FLASH_BOOT)
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce3808,len:0x4bc
+load:0x403c9700,len:0xbd8
+load:0x403cc700,len:0x2a0c
+entry 0x403c98d0
+[PlantStation VEML7700 v1.2.0] uptime_ms=110 evenement=demarrage statut=conversion_en_cours raw=null lux=null adresse=globale Heltec V3 cible; puce ESP32-S3 revision 0 flash 8388608 octets; UART0 CP2102; SDA=4 SCL=5; sous-revision V3.x non determinee
+[PlantStation VEML7700 v1.2.0] uptime_ms=364 evenement=oled statut=ok raw=null lux=null adresse=0x3C OLED initialise sur I2C1 GPIO17/18
+[PlantStation VEML7700 v1.2.0] uptime_ms=376 evenement=scan_ack statut=ok raw=null lux=null adresse=0x10 ACK recu; identite du composant non garantie
+[PlantStation VEML7700 v1.2.0] uptime_ms=401 evenement=scan_fin statut=conversion_en_cours raw=null lux=null adresse=globale Fin du scanner I2C
+[PlantStation VEML7700 v1.2.0] uptime_ms=417 evenement=configuration statut=conversion_en_cours raw=null lux=null adresse=0x10 Configuration verifiee : gain 1/8, integration 100 ms, economie desactivee
+[PlantStation VEML7700 v1.2.0] uptime_ms=1403 evenement=mesure statut=ok raw=199 lux=106.9824 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=2403 evenement=mesure statut=ok raw=199 lux=106.9824 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=3403 evenement=mesure statut=ok raw=200 lux=107.5200 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=4403 evenement=mesure statut=ok raw=200 lux=107.5200 adresse=0x10 Luminosite ambiante
+[TEST] Appui court PRG 0.3 s
+[PlantStation VEML7700 v1.2.0] uptime_ms=5403 evenement=mesure statut=ok raw=201 lux=108.0576 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=6403 evenement=mesure statut=ok raw=202 lux=108.5952 adresse=0x10 Luminosite ambiante
+[[TEST] Appui long PRG 3.6 s, puis relachement
+PlantStation VEML7700 v1.2.0] uptime_ms=7403 evenement=mesure statut=ok raw=190 lux=102.1440 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=8403 evenement=mesure statut=ok raw=201 lux=108.0576 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=9403 evenement=mesure statut=ok raw=161 lux=86.5536 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=10403 evenement=mesure statut=ok raw=155 lux=83.3280 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=10500 evenement=veille_demande statut=conversion_en_cours raw=null lux=null adresse=globale Appui long valide ; relacher PRG pour la veille
+[PlantStation VEML7700 v1.2.0] uptime_ms=11099 evenement=capteur_veille statut=ok raw=null lux=null adresse=0x10 VEML7700 en sommeil confirme
+[PlantStation VEML7700 v1.2.0] uptime_ms=11110 evenement=veille statut=ok raw=null lux=null adresse=globale Entree en veille profonde ; RST pour redemarrer
+[TEST] PRG seul ne doit pas reveiller
+[TEST] RST : reprise OLED et nouvelles mesures
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x1 (POWERON),boot:0x28 (SPI_FAST_FLASH_BOOT)
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce3808,len:0x4bc
+load:0x403c9700,len:0xbd8
+load:0x403cc700,len:0x2a0c
+entry 0x403c98d0
+[PlantStation VEML7700 v1.2.0] uptime_ms=110 evenement=demarrage statut=conversion_en_cours raw=null lux=null adresse=globale Heltec V3 cible; puce ESP32-S3 revision 0 flash 8388608 octets; UART0 CP2102; SDA=4 SCL=5; sous-revision V3.x non determinee
+[PlantStation VEML7700 v1.2.0] uptime_ms=364 evenement=oled statut=ok raw=null lux=null adresse=0x3C OLED initialise sur I2C1 GPIO17/18
+[PlantStation VEML7700 v1.2.0] uptime_ms=376 evenement=scan_ack statut=ok raw=null lux=null adresse=0x10 ACK recu; identite du composant non garantie
+[PlantStation VEML7700 v1.2.0] uptime_ms=401 evenement=scan_fin statut=conversion_en_cours raw=null lux=null adresse=globale Fin du scanner I2C
+[PlantStation VEML7700 v1.2.0] uptime_ms=417 evenement=configuration statut=conversion_en_cours raw=null lux=null adresse=0x10 Configuration verifiee : gain 1/8, integration 100 ms, economie desactivee
+[PlantStation VEML7700 v1.2.0] uptime_ms=1403 evenement=mesure statut=ok raw=202 lux=108.5952 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=2403 evenement=mesure statut=ok raw=203 lux=109.1328 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=3403 evenement=mesure statut=ok raw=203 lux=109.1328 adresse=0x10 Luminosite ambiante
+[PlantStation VEML7700 v1.2.0] uptime_ms=4403 evenement=mesure statut=ok raw=203 lux=109.1328 adresse=0x10 Luminosite ambiante
+[PASS] Appui court, appui long puis relachement, sommeil capteur, silence, PRG seul et RST verifies. Carte laissee active.

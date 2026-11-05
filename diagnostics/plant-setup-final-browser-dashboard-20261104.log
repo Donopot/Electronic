@@ -1,0 +1,1 @@
+PASS browser desktop/mobile: cursor-dependent pages/final plotted point, failed pagination remains incomplete across resize until successful reload, all names validated before any POST, slow history/status polls, hung fetch retry, clock retry/reboot, names durability/Unicode, gap/states/keyboard/axes/no external resources (simulated APIs only)

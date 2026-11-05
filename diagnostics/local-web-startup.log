@@ -1,0 +1,33 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T16:15:05.670225+00:00
+ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xf (SPI_FAST_FLASH_BOOT)
+Saved PC:0x4204af9a
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5810,len:0x438
+load:0x403cc710,len:0x90c
+load:0x403ce710,len:0x2624
+entry 0x403cc710
+
+=== EnviroTerminal V1 : BMP180 + LoRa SPI + site local ===
+Alimentation capteur : 3,3 V ; mesures toutes les 2 secondes.
+BMP180 : SDA=GPIO4, SCL=GPIO3, 100 kHz, timeout=50 ms.
+[INFO] LCD desactive.
+[SCAN] Recherche I2C de 0x08 a 0x77...
+[SCAN] Peripherique a 0x77 (adresse BMP180 attendue)
+[SCAN] Termine : 1 peripherique(s), 0 erreur(s) de bus.
+[OK] Capteur compatible BMP180, ID=0x55 ; calibration lue.
+[LoRa] SPI : SCK=GPIO6, MISO=GPIO5, MOSI=GPIO7, NSS=GPIO10, RESET=GPIO0.
+[OK] LoRa : interface SPI SX127x detectee, version=0x12, mode veille verifie.
+[INFO] Version 0x12 partagee par plusieurs SX127x ; modele et bande RF non identifies par ce registre.
+[INFO] Diagnostic SPI uniquement : aucune emission, aucune reception radio configuree.
+[WEB] Configuration : reseau=EnviroTerminal-CA:70 ; mot de passe=5c7f5fd2e9a8 ; http://192.168.4.1/
+[OK] t=642 ms | Temperature : 23.3 °C | Pression : 1003.23 hPa
+[OK] t=2643 ms | Temperature : 23.4 °C | Pression : 1003.24 hPa
+[OK] t=4644 ms | Temperature : 23.4 °C | Pression : 1003.30 hPa
+[OK] t=6645 ms | Temperature : 23.4 °C | Pression : 1003.31 hPa
+[OK] t=8646 ms | Temperature : 23.4 °C | Pression : 1003.33 hPa
+[ERREUR] LoRa : controle SPI/veille invalide, version=0x12, mode=0x09.
+[OK] t=10647 ms | Temperature : 23.3 °C | Pression : 1003.33 hPa
+BILAN : 6 mesures, 1 erreurs, 12.1 s de capture. Temperature=23.3..23.4 C; pression=1003.23..1003.33 hPa. Intervalles=2001..2001 ms.

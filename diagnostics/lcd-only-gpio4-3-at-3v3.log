@@ -1,0 +1,19 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T13:43:39.016307+00:00
+ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xf (SPI_FAST_FLASH_BOOT)
+Saved PC:0x42013da6
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5810,len:0x438
+load:0x403cc710,len:0x90c
+load:0x403ce710,len:0x2624
+entry 0x403cc710
+
+Test LCD seul : SDA=GPIO4, SCL=GPIO3, LiquidCrystal_I2C.
+[LCD TEST] Adresse 0x3F : NACK (code 2).
+[LCD TEST] Adresse 0x27 : NACK (code 2).
+[SCAN LCD] Recherche complete 0x08..0x77 (0x27 et 0x3F deja sondes).
+[SCAN LCD] Termine : 0 peripherique(s), 0 erreur(s) de bus.
+[ERREUR] Aucun adaptateur LCD detecte. Initialisation abandonnee.
+BILAN : 0 mesures, 1 erreurs, 12.2 s de capture.

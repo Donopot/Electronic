@@ -1,0 +1,1 @@
+PASS browser desktop/mobile: real embedded JS, 4 states/cards, unknown battery, fault gaps, periods, empty/unknown clock, offline, long UTF-8/XSS-safe names, keyboard, zero external resources/JS errors (simulated APIs only)

@@ -1,0 +1,5 @@
+Capture COM3, 115200 bauds, UTC=2026-10-24T08:17:27.567566+00:00
+[ERREUR] Scan 0x1D : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x1E : delai I2C depasse (bus bloque ?) (code 5).
+[ERREUR] Scan 0x1F : delai I2C depasse (bus bloque ?) (code 5).
+BILAN : 0 mesures, 3 erreurs, 2.2 s de capture.

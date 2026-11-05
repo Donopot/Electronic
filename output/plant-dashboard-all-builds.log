@@ -1,0 +1,580 @@
+Processing heltec_v3_text (platform: espressif32@6.12.0; board: heltec_wifi_lora_32_V3; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/heltec_wifi_lora_32_V3.html
+PLATFORM: Espressif 32 (6.12.0) > Heltec WiFi LoRa 32 (V3)
+HARDWARE: ESP32S3 240MHz, 320KB RAM, 8MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-builtin, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 2.40900.250804 (4.9.0) 
+ - toolchain-riscv32-esp @ 8.4.0+2021r2-patch5 
+ - toolchain-xtensa-esp32s3 @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 38 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- SparkFun VEML7700 Arduino Library @ 2.0.1
+|-- SparkFun Toolkit @ 1.2.1
+|-- Adafruit SSD1306 @ 2.5.13
+|-- Adafruit GFX Library @ 1.13.0
+|-- Adafruit BusIO @ 1.17.4
+|-- Wire @ 2.0.0
+|-- ESPmDNS @ 2.0.0
+|-- Preferences @ 2.0.0
+|-- WiFi @ 2.0.0
+|-- WiFiProv @ 2.0.0
+|-- SPI @ 2.0.0
+Building in release mode
+Compiling .pio\build\heltec_v3_text\src\diagnostics\Diagnostics.cpp.o
+Compiling .pio\build\heltec_v3_text\src\display\OledDisplay.cpp.o
+Compiling .pio\build\heltec_v3_text\src\main.cpp.o
+Compiling .pio\build\heltec_v3_text\src\power\SleepPower.cpp.o
+Compiling .pio\build\heltec_v3_text\src\radio\SoilRadio.cpp.o
+Compiling .pio\build\heltec_v3_text\src\sensors\VEML7700Sensor.cpp.o
+Compiling .pio\build\heltec_v3_text\src\storage\PlantHistory.cpp.o
+Compiling .pio\build\heltec_v3_text\src\ui\PlantView.cpp.o
+Compiling .pio\build\heltec_v3_text\src\web\PlantDashboard.cpp.o
+Building .pio\build\heltec_v3_text\bootloader.bin
+Generating partitions .pio\build\heltec_v3_text\partitions.bin
+esptool.py v4.9.0
+Creating esp32s3 image...
+Merged 1 ELF section
+Successfully created esp32s3 image.
+Compiling .pio\build\heltec_v3_text\lib1cb\Wire\Wire.cpp.o
+Compiling .pio\build\heltec_v3_text\liba71\SPI\SPI.cpp.o
+Compiling .pio\build\heltec_v3_text\libdfa\SparkFun Toolkit\sfTkArdI2C.cpp.o
+Compiling .pio\build\heltec_v3_text\libdfa\SparkFun Toolkit\sfTkArdSPI.cpp.o
+Compiling .pio\build\heltec_v3_text\libdfa\SparkFun Toolkit\sfTkArduino.cpp.o
+Compiling .pio\build\heltec_v3_text\libdfa\SparkFun Toolkit\sfTk\sfToolkit.cpp.o
+Compiling .pio\build\heltec_v3_text\lib9cb\SparkFun VEML7700 Arduino Library\sfTk\sfDevVEML7700.cpp.o
+Compiling .pio\build\heltec_v3_text\libca4\Adafruit BusIO\Adafruit_BusIO_Register.cpp.o
+Archiving .pio\build\heltec_v3_text\lib1cb\libWire.a
+Compiling .pio\build\heltec_v3_text\libca4\Adafruit BusIO\Adafruit_GenericDevice.cpp.o
+Archiving .pio\build\heltec_v3_text\liba71\libSPI.a
+Compiling .pio\build\heltec_v3_text\libca4\Adafruit BusIO\Adafruit_I2CDevice.cpp.o
+Compiling .pio\build\heltec_v3_text\libca4\Adafruit BusIO\Adafruit_SPIDevice.cpp.o
+Compiling .pio\build\heltec_v3_text\lib958\Adafruit GFX Library\Adafruit_GFX.cpp.o
+Compiling .pio\build\heltec_v3_text\lib958\Adafruit GFX Library\Adafruit_GrayOLED.cpp.o
+Archiving .pio\build\heltec_v3_text\libdfa\libSparkFun Toolkit.a
+Compiling .pio\build\heltec_v3_text\lib958\Adafruit GFX Library\Adafruit_SPITFT.cpp.o
+Archiving .pio\build\heltec_v3_text\lib9cb\libSparkFun VEML7700 Arduino Library.a
+Compiling .pio\build\heltec_v3_text\lib958\Adafruit GFX Library\glcdfont.c.o
+Compiling .pio\build\heltec_v3_text\lib20e\Adafruit SSD1306\Adafruit_SSD1306.cpp.o
+Compiling .pio\build\heltec_v3_text\lib52b\WiFi\WiFi.cpp.o
+Compiling .pio\build\heltec_v3_text\lib52b\WiFi\WiFiAP.cpp.o
+Compiling .pio\build\heltec_v3_text\lib52b\WiFi\WiFiClient.cpp.o
+Archiving .pio\build\heltec_v3_text\libca4\libAdafruit BusIO.a
+Compiling .pio\build\heltec_v3_text\lib52b\WiFi\WiFiGeneric.cpp.o
+Compiling .pio\build\heltec_v3_text\lib52b\WiFi\WiFiMulti.cpp.o
+Compiling .pio\build\heltec_v3_text\lib52b\WiFi\WiFiSTA.cpp.o
+Archiving .pio\build\heltec_v3_text\lib958\libAdafruit GFX Library.a
+Compiling .pio\build\heltec_v3_text\lib52b\WiFi\WiFiScan.cpp.o
+Archiving .pio\build\heltec_v3_text\lib20e\libAdafruit SSD1306.a
+Compiling .pio\build\heltec_v3_text\lib52b\WiFi\WiFiServer.cpp.o
+Compiling .pio\build\heltec_v3_text\lib52b\WiFi\WiFiUdp.cpp.o
+Compiling .pio\build\heltec_v3_text\libb11\ESPmDNS\ESPmDNS.cpp.o
+Compiling .pio\build\heltec_v3_text\libead\Preferences\Preferences.cpp.o
+Compiling .pio\build\heltec_v3_text\lib9aa\SimpleBLE\SimpleBLE.cpp.o
+Compiling .pio\build\heltec_v3_text\libae9\WiFiProv\WiFiProv.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\Esp.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\FirmwareMSC.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\FunctionalInterrupt.cpp.o
+Archiving .pio\build\heltec_v3_text\lib52b\libWiFi.a
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\HWCDC.cpp.o
+Archiving .pio\build\heltec_v3_text\libb11\libESPmDNS.a
+Archiving .pio\build\heltec_v3_text\libead\libPreferences.a
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\HardwareSerial.cpp.o
+Archiving .pio\build\heltec_v3_text\lib9aa\libSimpleBLE.a
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\IPAddress.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\IPv6Address.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\MD5Builder.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\Print.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\Stream.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\StreamString.cpp.o
+Archiving .pio\build\heltec_v3_text\libae9\libWiFiProv.a
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\Tone.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\USB.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\USBCDC.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\USBMSC.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\WMath.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\WString.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\base64.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\cbuf.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-adc.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-bt.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-cpu.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-dac.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-gpio.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-i2c-slave.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-i2c.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-ledc.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-matrix.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-misc.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-psram.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-rgb-led.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-rmt.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-sigmadelta.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-spi.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-time.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-timer.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-tinyusb.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-touch.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\esp32-hal-uart.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\firmware_msc_fat.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\libb64\cdecode.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\libb64\cencode.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\main.cpp.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\stdlib_noniso.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\wiring_pulse.c.o
+Compiling .pio\build\heltec_v3_text\FrameworkArduino\wiring_shift.c.o
+Archiving .pio\build\heltec_v3_text\libFrameworkArduino.a
+Linking .pio\build\heltec_v3_text\firmware.elf
+Retrieving maximum program size .pio\build\heltec_v3_text\firmware.elf
+Checking size .pio\build\heltec_v3_text\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]   6.1% (used 19892 bytes from 327680 bytes)
+Flash: [=         ]   9.4% (used 314241 bytes from 3342336 bytes)
+Building .pio\build\heltec_v3_text\firmware.bin with action:
+  "$PYTHONEXE" "$OBJCOPY" --chip esp32s3 elf2image --flash_mode ${__get_board_flash_mode(__env__)} --flash_freq ${__get_board_f_image(__env__)} --flash_size 8MB --elf-sha256-offset 0xb0 -o $TARGET $SOURCES
+Building .pio\build\heltec_v3_text\firmware.bin
+esptool.py v4.9.0
+Creating esp32s3 image...
+Merged 3 ELF sections
+Successfully created esp32s3 image.
+========================= [SUCCESS] Took 23.25 seconds =========================
+
+Processing heltec_v3_json (platform: espressif32@6.12.0; board: heltec_wifi_lora_32_V3; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/heltec_wifi_lora_32_V3.html
+PLATFORM: Espressif 32 (6.12.0) > Heltec WiFi LoRa 32 (V3)
+HARDWARE: ESP32S3 240MHz, 320KB RAM, 8MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-builtin, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 2.40900.250804 (4.9.0) 
+ - toolchain-riscv32-esp @ 8.4.0+2021r2-patch5 
+ - toolchain-xtensa-esp32s3 @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 38 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- SparkFun VEML7700 Arduino Library @ 2.0.1
+|-- SparkFun Toolkit @ 1.2.1
+|-- Adafruit SSD1306 @ 2.5.13
+|-- Adafruit GFX Library @ 1.13.0
+|-- Adafruit BusIO @ 1.17.4
+|-- Wire @ 2.0.0
+|-- ESPmDNS @ 2.0.0
+|-- Preferences @ 2.0.0
+|-- WiFi @ 2.0.0
+|-- WiFiProv @ 2.0.0
+|-- SPI @ 2.0.0
+Building in release mode
+Compiling .pio\build\heltec_v3_json\src\diagnostics\Diagnostics.cpp.o
+Compiling .pio\build\heltec_v3_json\src\display\OledDisplay.cpp.o
+Compiling .pio\build\heltec_v3_json\src\main.cpp.o
+Compiling .pio\build\heltec_v3_json\src\power\SleepPower.cpp.o
+Compiling .pio\build\heltec_v3_json\src\radio\SoilRadio.cpp.o
+Compiling .pio\build\heltec_v3_json\src\sensors\VEML7700Sensor.cpp.o
+Compiling .pio\build\heltec_v3_json\src\storage\PlantHistory.cpp.o
+Compiling .pio\build\heltec_v3_json\src\ui\PlantView.cpp.o
+Compiling .pio\build\heltec_v3_json\src\web\PlantDashboard.cpp.o
+Building .pio\build\heltec_v3_json\bootloader.bin
+Generating partitions .pio\build\heltec_v3_json\partitions.bin
+Compiling .pio\build\heltec_v3_json\lib1cb\Wire\Wire.cpp.o
+esptool.py v4.9.0
+Creating esp32s3 image...
+Merged 1 ELF section
+Successfully created esp32s3 image.
+Compiling .pio\build\heltec_v3_json\liba71\SPI\SPI.cpp.o
+Compiling .pio\build\heltec_v3_json\lib2c1\SparkFun Toolkit\sfTkArdI2C.cpp.o
+Compiling .pio\build\heltec_v3_json\lib2c1\SparkFun Toolkit\sfTkArdSPI.cpp.o
+Compiling .pio\build\heltec_v3_json\lib2c1\SparkFun Toolkit\sfTkArduino.cpp.o
+Compiling .pio\build\heltec_v3_json\lib2c1\SparkFun Toolkit\sfTk\sfToolkit.cpp.o
+Compiling .pio\build\heltec_v3_json\lib81d\SparkFun VEML7700 Arduino Library\sfTk\sfDevVEML7700.cpp.o
+Compiling .pio\build\heltec_v3_json\libeaf\Adafruit BusIO\Adafruit_BusIO_Register.cpp.o
+Archiving .pio\build\heltec_v3_json\lib1cb\libWire.a
+Compiling .pio\build\heltec_v3_json\libeaf\Adafruit BusIO\Adafruit_GenericDevice.cpp.o
+Archiving .pio\build\heltec_v3_json\liba71\libSPI.a
+Compiling .pio\build\heltec_v3_json\libeaf\Adafruit BusIO\Adafruit_I2CDevice.cpp.o
+Compiling .pio\build\heltec_v3_json\libeaf\Adafruit BusIO\Adafruit_SPIDevice.cpp.o
+Compiling .pio\build\heltec_v3_json\lib12f\Adafruit GFX Library\Adafruit_GFX.cpp.o
+Compiling .pio\build\heltec_v3_json\lib12f\Adafruit GFX Library\Adafruit_GrayOLED.cpp.o
+Archiving .pio\build\heltec_v3_json\lib2c1\libSparkFun Toolkit.a
+Compiling .pio\build\heltec_v3_json\lib12f\Adafruit GFX Library\Adafruit_SPITFT.cpp.o
+Archiving .pio\build\heltec_v3_json\lib81d\libSparkFun VEML7700 Arduino Library.a
+Compiling .pio\build\heltec_v3_json\lib12f\Adafruit GFX Library\glcdfont.c.o
+Compiling .pio\build\heltec_v3_json\libf8b\Adafruit SSD1306\Adafruit_SSD1306.cpp.o
+Compiling .pio\build\heltec_v3_json\lib52b\WiFi\WiFi.cpp.o
+Compiling .pio\build\heltec_v3_json\lib52b\WiFi\WiFiAP.cpp.o
+Compiling .pio\build\heltec_v3_json\lib52b\WiFi\WiFiClient.cpp.o
+Archiving .pio\build\heltec_v3_json\libeaf\libAdafruit BusIO.a
+Compiling .pio\build\heltec_v3_json\lib52b\WiFi\WiFiGeneric.cpp.o
+Compiling .pio\build\heltec_v3_json\lib52b\WiFi\WiFiMulti.cpp.o
+Compiling .pio\build\heltec_v3_json\lib52b\WiFi\WiFiSTA.cpp.o
+Archiving .pio\build\heltec_v3_json\lib12f\libAdafruit GFX Library.a
+Compiling .pio\build\heltec_v3_json\lib52b\WiFi\WiFiScan.cpp.o
+Archiving .pio\build\heltec_v3_json\libf8b\libAdafruit SSD1306.a
+Compiling .pio\build\heltec_v3_json\lib52b\WiFi\WiFiServer.cpp.o
+Compiling .pio\build\heltec_v3_json\lib52b\WiFi\WiFiUdp.cpp.o
+Compiling .pio\build\heltec_v3_json\libb11\ESPmDNS\ESPmDNS.cpp.o
+Compiling .pio\build\heltec_v3_json\libead\Preferences\Preferences.cpp.o
+Compiling .pio\build\heltec_v3_json\lib9aa\SimpleBLE\SimpleBLE.cpp.o
+Compiling .pio\build\heltec_v3_json\libae9\WiFiProv\WiFiProv.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\Esp.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\FirmwareMSC.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\FunctionalInterrupt.cpp.o
+Archiving .pio\build\heltec_v3_json\lib52b\libWiFi.a
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\HWCDC.cpp.o
+Archiving .pio\build\heltec_v3_json\libb11\libESPmDNS.a
+Archiving .pio\build\heltec_v3_json\libead\libPreferences.a
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\HardwareSerial.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\IPAddress.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\IPv6Address.cpp.o
+Archiving .pio\build\heltec_v3_json\lib9aa\libSimpleBLE.a
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\MD5Builder.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\Print.cpp.o
+Archiving .pio\build\heltec_v3_json\libae9\libWiFiProv.a
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\Stream.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\StreamString.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\Tone.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\USB.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\USBCDC.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\USBMSC.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\WMath.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\WString.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\base64.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\cbuf.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-adc.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-bt.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-cpu.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-dac.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-gpio.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-i2c-slave.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-i2c.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-ledc.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-matrix.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-misc.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-psram.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-rgb-led.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-rmt.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-sigmadelta.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-spi.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-time.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-timer.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-tinyusb.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-touch.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\esp32-hal-uart.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\firmware_msc_fat.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\libb64\cdecode.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\libb64\cencode.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\main.cpp.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\stdlib_noniso.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\wiring_pulse.c.o
+Compiling .pio\build\heltec_v3_json\FrameworkArduino\wiring_shift.c.o
+Archiving .pio\build\heltec_v3_json\libFrameworkArduino.a
+Linking .pio\build\heltec_v3_json\firmware.elf
+Retrieving maximum program size .pio\build\heltec_v3_json\firmware.elf
+Checking size .pio\build\heltec_v3_json\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]   6.1% (used 19892 bytes from 327680 bytes)
+Flash: [=         ]   9.4% (used 314241 bytes from 3342336 bytes)
+Building .pio\build\heltec_v3_json\firmware.bin with action:
+  "$PYTHONEXE" "$OBJCOPY" --chip esp32s3 elf2image --flash_mode ${__get_board_flash_mode(__env__)} --flash_freq ${__get_board_f_image(__env__)} --flash_size 8MB --elf-sha256-offset 0xb0 -o $TARGET $SOURCES
+Building .pio\build\heltec_v3_json\firmware.bin
+esptool.py v4.9.0
+Creating esp32s3 image...
+Merged 3 ELF sections
+Successfully created esp32s3 image.
+========================= [SUCCESS] Took 18.21 seconds =========================
+
+Processing heltec_v3_soil_lora (platform: espressif32@6.12.0; board: heltec_wifi_lora_32_V3; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/heltec_wifi_lora_32_V3.html
+PLATFORM: Espressif 32 (6.12.0) > Heltec WiFi LoRa 32 (V3)
+HARDWARE: ESP32S3 240MHz, 320KB RAM, 8MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-builtin, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 2.40900.250804 (4.9.0) 
+ - toolchain-riscv32-esp @ 8.4.0+2021r2-patch5 
+ - toolchain-xtensa-esp32s3 @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 41 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- SparkFun VEML7700 Arduino Library @ 2.0.1
+|-- SparkFun Toolkit @ 1.2.1
+|-- Adafruit SSD1306 @ 2.5.13
+|-- Adafruit GFX Library @ 1.13.0
+|-- Adafruit BusIO @ 1.17.4
+|-- RadioLib @ 7.8.1
+|-- Wire @ 2.0.0
+|-- ESPmDNS @ 2.0.0
+|-- Preferences @ 2.0.0
+|-- WiFi @ 2.0.0
+|-- WiFiProv @ 2.0.0
+|-- PlantSoilProtocol @ 1.0.0
+|-- SPI @ 2.0.0
+Building in release mode
+Compiling .pio\build\heltec_v3_soil_lora\src\diagnostics\Diagnostics.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\src\display\OledDisplay.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\src\main.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\src\power\SleepPower.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\src\radio\SoilRadio.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\src\sensors\VEML7700Sensor.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\src\storage\PlantHistory.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\src\ui\PlantView.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\src\web\PlantDashboard.cpp.o
+Building .pio\build\heltec_v3_soil_lora\bootloader.bin
+Generating partitions .pio\build\heltec_v3_soil_lora\partitions.bin
+esptool.py v4.9.0
+Creating esp32s3 image...
+Merged 1 ELF section
+Successfully created esp32s3 image.
+Compiling .pio\build\heltec_v3_soil_lora\lib1cb\Wire\Wire.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\liba71\SPI\SPI.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\libb60\SparkFun Toolkit\sfTkArdI2C.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\libb60\SparkFun Toolkit\sfTkArdSPI.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\libb60\SparkFun Toolkit\sfTkArduino.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\libb60\SparkFun Toolkit\sfTk\sfToolkit.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\libf17\SparkFun VEML7700 Arduino Library\sfTk\sfDevVEML7700.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib9d0\Adafruit BusIO\Adafruit_BusIO_Register.cpp.o
+Archiving .pio\build\heltec_v3_soil_lora\lib1cb\libWire.a
+Compiling .pio\build\heltec_v3_soil_lora\lib9d0\Adafruit BusIO\Adafruit_GenericDevice.cpp.o
+Archiving .pio\build\heltec_v3_soil_lora\liba71\libSPI.a
+Compiling .pio\build\heltec_v3_soil_lora\lib9d0\Adafruit BusIO\Adafruit_I2CDevice.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib9d0\Adafruit BusIO\Adafruit_SPIDevice.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib380\Adafruit GFX Library\Adafruit_GFX.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib380\Adafruit GFX Library\Adafruit_GrayOLED.cpp.o
+Archiving .pio\build\heltec_v3_soil_lora\libb60\libSparkFun Toolkit.a
+Compiling .pio\build\heltec_v3_soil_lora\lib380\Adafruit GFX Library\Adafruit_SPITFT.cpp.o
+Archiving .pio\build\heltec_v3_soil_lora\libf17\libSparkFun VEML7700 Arduino Library.a
+Compiling .pio\build\heltec_v3_soil_lora\lib380\Adafruit GFX Library\glcdfont.c.o
+Compiling .pio\build\heltec_v3_soil_lora\libddb\Adafruit SSD1306\Adafruit_SSD1306.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\Hal.cpp.o
+Archiving .pio\build\heltec_v3_soil_lora\lib9d0\libAdafruit BusIO.a
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\Module.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\hal\Arduino\ArduinoHal.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\hal\ESP-IDF\EspHal.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\hal\RPiPico\PicoHal.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\hal\Stm32duino\Stm32wlHal.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\CC1101\CC1101.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LLCC68\LLCC68.cpp.o
+Archiving .pio\build\heltec_v3_soil_lora\lib380\libAdafruit GFX Library.a
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR11x0\LR1110.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR11x0\LR1120.cpp.o
+Archiving .pio\build\heltec_v3_soil_lora\libddb\libAdafruit SSD1306.a
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR11x0\LR1121.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR11x0\LR11x0.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR11x0\LR11x0_commands.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR11x0\LR11x0_crypto.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR11x0\LR11x0_gnss.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR11x0\LR11x0_wifi.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR11x0\LR_common.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR2021\LR2021.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR2021\LR2021_cmds_chip_control.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR2021\LR2021_cmds_flrc.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR2021\LR2021_cmds_gfsk.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR2021\LR2021_cmds_lora.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR2021\LR2021_cmds_misc.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR2021\LR2021_cmds_ook.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR2021\LR2021_cmds_oqpsk.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR2021\LR2021_cmds_radio.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR2021\LR2021_cmds_ranging.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\LR2021\LR2021_config.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\RF69\RF69.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX123x\SX1231.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX123x\SX1233.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX126x\STM32WLx.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX126x\SX1261.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX126x\SX1262.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX126x\SX1268.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX126x\SX126x.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX126x\SX126x_LR_FHSS.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX126x\SX126x_commands.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX126x\SX126x_config.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX127x\SX1272.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX127x\SX1273.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX127x\SX1276.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX127x\SX1277.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX127x\SX1278.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX127x\SX1279.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX127x\SX127x.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX128x\SX1280.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX128x\SX1281.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX128x\SX1282.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\SX128x\SX128x.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\Si443x\Si4430.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\Si443x\Si4431.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\Si443x\Si4432.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\Si443x\Si443x.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\modules\nRF24\nRF24.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\ADSB\ADSB.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\AFSK\AFSK.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\APRS\APRS.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\AX25\AX25.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\BellModem\BellModem.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\ExternalRadio\ExternalRadio.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\FSK4\FSK4.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\Hellschreiber\Hellschreiber.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\LoRaWAN\LoRaWAN.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\LoRaWAN\LoRaWANBands.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\LoRaWAN\LoRaWANPacMan.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\LoRaWAN\LoRaWANPackageTS003.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\LoRaWAN\LoRaWANPackageTS009.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\Morse\Morse.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\Pager\Pager.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\PhysicalLayer\PhysicalLayer.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\Print\ITA2String.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\Print\Print.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\RTTY\RTTY.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\protocols\SSTV\SSTV.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\utils\BCH.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\utils\CRC.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\utils\ConvCode.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\utils\Cryptography.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib6a2\RadioLib\utils\Utils.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib52b\WiFi\WiFi.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib52b\WiFi\WiFiAP.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib52b\WiFi\WiFiClient.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib52b\WiFi\WiFiGeneric.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib52b\WiFi\WiFiMulti.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib52b\WiFi\WiFiSTA.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib52b\WiFi\WiFiScan.cpp.o
+Archiving .pio\build\heltec_v3_soil_lora\lib6a2\libRadioLib.a
+Compiling .pio\build\heltec_v3_soil_lora\lib52b\WiFi\WiFiServer.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib52b\WiFi\WiFiUdp.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\libb11\ESPmDNS\ESPmDNS.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\libead\Preferences\Preferences.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\lib9aa\SimpleBLE\SimpleBLE.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\libae9\WiFiProv\WiFiProv.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\Esp.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\FirmwareMSC.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\FunctionalInterrupt.cpp.o
+Archiving .pio\build\heltec_v3_soil_lora\lib52b\libWiFi.a
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\HWCDC.cpp.o
+Archiving .pio\build\heltec_v3_soil_lora\libb11\libESPmDNS.a
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\HardwareSerial.cpp.o
+Archiving .pio\build\heltec_v3_soil_lora\libead\libPreferences.a
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\IPAddress.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\IPv6Address.cpp.o
+Archiving .pio\build\heltec_v3_soil_lora\lib9aa\libSimpleBLE.a
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\MD5Builder.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\Print.cpp.o
+Archiving .pio\build\heltec_v3_soil_lora\libae9\libWiFiProv.a
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\Stream.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\StreamString.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\Tone.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\USB.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\USBCDC.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\USBMSC.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\WMath.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\WString.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\base64.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\cbuf.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-adc.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-bt.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-cpu.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-dac.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-gpio.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-i2c-slave.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-i2c.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-ledc.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-matrix.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-misc.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-psram.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-rgb-led.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-rmt.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-sigmadelta.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-spi.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-time.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-timer.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-tinyusb.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-touch.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\esp32-hal-uart.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\firmware_msc_fat.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\libb64\cdecode.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\libb64\cencode.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\main.cpp.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\stdlib_noniso.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\wiring_pulse.c.o
+Compiling .pio\build\heltec_v3_soil_lora\FrameworkArduino\wiring_shift.c.o
+Archiving .pio\build\heltec_v3_soil_lora\libFrameworkArduino.a
+Linking .pio\build\heltec_v3_soil_lora\firmware.elf
+Retrieving maximum program size .pio\build\heltec_v3_soil_lora\firmware.elf
+Checking size .pio\build\heltec_v3_soil_lora\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]   6.5% (used 21364 bytes from 327680 bytes)
+Flash: [=         ]  10.5% (used 351697 bytes from 3342336 bytes)
+Building .pio\build\heltec_v3_soil_lora\firmware.bin with action:
+  "$PYTHONEXE" "$OBJCOPY" --chip esp32s3 elf2image --flash_mode ${__get_board_flash_mode(__env__)} --flash_freq ${__get_board_f_image(__env__)} --flash_size 8MB --elf-sha256-offset 0xb0 -o $TARGET $SOURCES
+Building .pio\build\heltec_v3_soil_lora\firmware.bin
+esptool.py v4.9.0
+Creating esp32s3 image...
+Merged 3 ELF sections
+Successfully created esp32s3 image.
+========================= [SUCCESS] Took 38.49 seconds =========================
+
+Processing heltec_v3_plant_dashboard (platform: espressif32@6.12.0; board: heltec_wifi_lora_32_V3; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/heltec_wifi_lora_32_V3.html
+PLATFORM: Espressif 32 (6.12.0) > Heltec WiFi LoRa 32 (V3)
+HARDWARE: ESP32S3 240MHz, 320KB RAM, 8MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-builtin, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 2.40900.250804 (4.9.0) 
+ - toolchain-riscv32-esp @ 8.4.0+2021r2-patch5 
+ - toolchain-xtensa-esp32s3 @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 41 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- SparkFun VEML7700 Arduino Library @ 2.0.1
+|-- SparkFun Toolkit @ 1.2.1
+|-- Adafruit SSD1306 @ 2.5.13
+|-- Adafruit GFX Library @ 1.13.0
+|-- Adafruit BusIO @ 1.17.4
+|-- RadioLib @ 7.8.1
+|-- Wire @ 2.0.0
+|-- ESPmDNS @ 2.0.0
+|-- Preferences @ 2.0.0
+|-- WiFi @ 2.0.0
+|-- WiFiProv @ 2.0.0
+|-- PlantSoilProtocol @ 1.0.0
+|-- SPI @ 2.0.0
+Building in release mode
+Compiling .pio\build\heltec_v3_plant_dashboard\src\storage\PlantHistory.cpp.o
+Compiling .pio\build\heltec_v3_plant_dashboard\src\ui\PlantView.cpp.o
+Compiling .pio\build\heltec_v3_plant_dashboard\src\web\PlantDashboard.cpp.o
+Linking .pio\build\heltec_v3_plant_dashboard\firmware.elf
+Retrieving maximum program size .pio\build\heltec_v3_plant_dashboard\firmware.elf
+Checking size .pio\build\heltec_v3_plant_dashboard\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [==        ]  21.6% (used 70684 bytes from 327680 bytes)
+Flash: [====      ]  43.3% (used 1448013 bytes from 3342336 bytes)
+Building .pio\build\heltec_v3_plant_dashboard\firmware.bin with action:
+  "$PYTHONEXE" "$OBJCOPY" --chip esp32s3 elf2image --flash_mode ${__get_board_flash_mode(__env__)} --flash_freq ${__get_board_f_image(__env__)} --flash_size 8MB --elf-sha256-offset 0xb0 -o $TARGET $SOURCES
+Building .pio\build\heltec_v3_plant_dashboard\firmware.bin
+esptool.py v4.9.0
+Creating esp32s3 image...
+Merged 3 ELF sections
+Successfully created esp32s3 image.
+========================= [SUCCESS] Took 19.01 seconds =========================
+
+Environment                Status    Duration
+-------------------------  --------  ------------
+heltec_v3_text             SUCCESS   00:00:23.250
+heltec_v3_json             SUCCESS   00:00:18.211
+heltec_v3_soil_lora        SUCCESS   00:00:38.487
+heltec_v3_plant_dashboard  SUCCESS   00:00:19.005
+========================= 4 succeeded in 00:01:38.953 =========================
