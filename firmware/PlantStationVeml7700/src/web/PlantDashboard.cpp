@@ -51,7 +51,7 @@ String bleState="idle";
 ConfigSet config;
 PlantView current;
 uint64_t clockUtc=0, clockUptime=0;
-bool clockKnown=false, provisioning=false, mdns=false, online=false, dirtyNames=false;
+bool clockKnown=false, provisioning=false, mdns=false, online=false, dirtyNames=false, setupExplicit=false;
 bool namesFailed=false, clockFailed=false, pendingClock=false;
 uint32_t namesRevision=0,namesSavedRevision=0;
 uint64_t pendingUtc=0,pendingUptime=0;
@@ -88,6 +88,7 @@ void networkEvent(arduino_event_t* event) {
 }
 void publishNetwork(const char* message) {
     networkState.online=online;networkState.provisioning=provisioning;networkState.bleSetup=bleSetup.active();networkState.setupSuccess=setupState=="connected";
+    networkState.setupExplicit=setupExplicit;
     snprintf(networkState.message,sizeof(networkState.message),"%s",message);
     snprintf(networkState.url,sizeof(networkState.url),"%s",online?("http://"+WiFi.localIP().toString()+"/").c_str():"");
     snprintf(networkState.hostname,sizeof(networkState.hostname),"%s.local",hostName.c_str());
@@ -115,6 +116,7 @@ void resetSetupForm(){
     closeApAt=successAt=0;closeApRequested=false;
 }
 bool startSetup(bool explicitRequest=false){
+    if(explicitRequest)setupExplicit=true;
     if(provisioning){
         if(!bleSetup.active()&&setupPassword.length())bleSetup.start(setupSsid.c_str(),setupPassword.c_str());
         if(explicitRequest&&!testingWifi&&!candidatePending){resetSetupForm();publishNetwork("Assistant ouvert ; reseau enregistre conserve");}
@@ -137,7 +139,7 @@ bool startSetup(bool explicitRequest=false){
     if(!captiveDns.begin(WiFi.softAPIP(),53)){WiFi.mode(WIFI_STA);WiFi.setAutoReconnect(hasSavedWifi);if(hasSavedWifi)WiFi.begin();publishNetwork("Assistant indisponible ; nouvel essai");apRetryAt=millis();return false;}
     provisioning=true;resetSetupForm();scanReady=false;publishNetwork("Scanner le Wi-Fi du kit puis ouvrir l'assistant");return true;
 }
-void closeSetup(){if(!WiFi.mode(WIFI_STA)){publishNetwork("Fermeture du Wi-Fi du kit impossible ; nouvel essai");return;}captiveDns.stop();stopScan();provisioning=false;bleSetup.stop();closeApRequested=false;publishNetwork(online?"Connecte au Wi-Fi domestique":"Wi-Fi absent ; reconnexion automatique");}
+void closeSetup(){if(!WiFi.mode(WIFI_STA)){publishNetwork("Fermeture du Wi-Fi du kit impossible ; nouvel essai");return;}captiveDns.stop();stopScan();provisioning=false;setupExplicit=false;bleSetup.stop();closeApRequested=false;publishNetwork(online?"Connecte au Wi-Fi domestique":"Wi-Fi absent ; reconnexion automatique");}
 void serviceDns(){
     if(!provisioning)return;const int length=captiveDns.parsePacket();if(length<=0)return;
     if(length>512){captiveDns.flush();return;}

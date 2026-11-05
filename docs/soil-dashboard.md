@@ -13,6 +13,38 @@ Deux profils la fournissent :
 
 Le profil `heltec_v3_soil_lora` (sans tableau de bord) reste inchangé.
 
+## Écran OLED (3 écrans, 1 seul QR)
+
+PRG court fait défiler **trois** écrans : visage, détails, QR.
+
+| Écran | Contenu |
+| --- | --- |
+| Visage | robot selon l’humeur, états courts des quatre sondes (`OK`, `ETAL.`, `ATT.`, `ADC!`, `PERIM.`, `SECHE`), ligne basse `N/4 fraiches PRG:>` (ou le lux si le capteur est présent) |
+| Détails | quatre blocs `SOIL-0X 2.701V B--` / état + âge en minutes |
+| QR | **un seul** QR, celui de l’action courante |
+
+Contenu du QR unique, par priorité :
+
+1. **Appairage Android** — BLE actif **et** assistant demandé explicitement
+   (PRG 8 s) : JSON
+   `{"ver":"v1","name":"PLANT-XXXX","transport":"ble","security":1,"pop":"…"}`,
+   code d’appairage en deux lignes de huit caractères.
+2. **Wi-Fi du kit** (assistant ouvert, pas encore de réussite) :
+   `WIFI:T:WPA;S:PLANT-XXXX;P:"…";;` — scanner suffit pour rejoindre le réseau,
+   l’assistant s’ouvre ensuite par portail captif. Nom et clé restent affichés
+   en texte.
+3. **Accès local** (connecté au Wi-Fi domestique) : `HTTP://<ip>/` — ouvre le
+   tableau de bord à onglets depuis un téléphone.
+4. Sinon : `WI-FI ABSENT` / `Reconnexion en cours` / `PRG 8s : configurer`,
+   sans QR.
+
+Règle concrète : au premier démarrage sans Wi-Fi enregistré, le QR est celui du
+**Wi-Fi du kit** (utile avec n’importe quel téléphone) ; le QR **Android**
+n’apparaît que si l’assistant a été ouvert volontairement par PRG 8 s. Il n’y a
+donc jamais deux QR simultanés ni d’écran « assistant » séparé. Sans capteur de
+lumière (`PLANT_LUX=0`), la ligne basse du visage compte les sondes exploitables
+à la place du lux.
+
 ## Onglets
 
 1. **Vue d’ensemble** — résumé, quatre cartes (état, tension, âge, RSSI/SNR,

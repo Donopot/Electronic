@@ -74,6 +74,13 @@ if os.name == "nt":
 subprocess.run(integration_command, check=True)
 for scenario in ["normal", "no_oled"]:
     subprocess.run([str(integration), scenario], check=True)
+# Variante sans capteur de lumiere : profil heltec_v3_soil_dashboard.
+no_lux = build / ("integration-nolux.exe" if os.name == "nt" else "integration-nolux")
+no_lux_command = [str(no_lux) if item == str(integration) else item for item in integration_command]
+no_lux_command.append("-DPLANT_LUX=0")
+subprocess.run(no_lux_command, check=True)
+for scenario in ["normal", "no_oled"]:
+    subprocess.run([str(no_lux), scenario], check=True)
 
 worker_binary = build / ("worker.exe" if os.name == "nt" else "worker")
 worker_command = command[:command.index(str(project / "test/test_dashboard.cpp"))]

@@ -182,45 +182,58 @@ void OledDisplay::showDashboard(const PlantView& view,Screen screen,const Dashbo
             else snprintf(line,sizeof(line),"%s",oledState(p.state));
             display_.print(line);
         }
-    } else if(screen==Screen::Qr||screen==Screen::PortalUrl||screen==Screen::WifiQr) {
-        const bool portal=screen==Screen::PortalUrl;
-        if(network.bleSetup&&!network.setupSuccess&&screen==Screen::Qr){
-            char payload[160];snprintf(payload,sizeof(payload),"{\"ver\":\"v1\",\"name\":\"%s\",\"transport\":\"ble\",\"security\":1,\"pop\":\"%s\"}",network.setupSsid,network.setupPassword);
-            generateQr(display_,payload,9);
-            const int column=qrExtent+4;
-            display_.setCursor(column,0);display_.print("ANDROID");
-            display_.setCursor(column,11);display_.print("PLANT-");
-            display_.setCursor(column,20);display_.print(network.setupSsid+6);
-            display_.setCursor(column,29);display_.print("Code:");
-            char half[9]={};memcpy(half,network.setupPassword,8);display_.setCursor(column,38);display_.print(half);
-            memcpy(half,network.setupPassword+8,8);display_.setCursor(column,47);display_.print(half);
-            display_.setCursor(column,56);display_.print("PRG:WiFi");
-        }else if(network.provisioning&&!network.setupSuccess&&!portal){
-            char payload[96];snprintf(payload,sizeof(payload),"WIFI:T:WPA;S:%s;P:\"%s\";;",network.setupSsid,network.setupPassword);
-            generateQr(display_,payload,4);
-            display_.setCursor(47,3);display_.print("1. SCANNER");
-            display_.setCursor(47,16);display_.print(network.setupSsid);
-            display_.setCursor(47,25);display_.print("Cle Wi-Fi :");
-            char half[9]={};memcpy(half,network.setupPassword,8);display_.setCursor(47,36);display_.print(half);
-            memcpy(half,network.setupPassword+8,8);display_.setCursor(47,46);display_.print(half);
-            display_.setCursor(0,56);display_.print("2.Assistant PRG:lien");
-        }else if(network.online||(portal&&network.provisioning)){
-            char url[40];snprintf(url,sizeof(url),"%s",portal?network.setupUrl:network.url);
-            for(char* p=url;*p;++p)if(*p>='a'&&*p<='z')*p-=32;
-            generateQr(display_,url,2);
-            display_.setCursor(62,3);display_.print(portal?"ASSISTANT":"ACCES LOCAL");
-            display_.setCursor(63,17);display_.print(portal?"Wi-Fi kit":"Meme Wi-Fi");
-            const char* ip=(portal?network.setupUrl:network.url)+7;char ipText[24];snprintf(ipText,sizeof(ipText),"%s",ip);
-            char* slash=strchr(ipText,'/');if(slash)*slash=0;
-            char* split=strchr(ipText,'.');if(split)split=strchr(split+1,'.');
-            if(split){*split=0;display_.setCursor(63,32);display_.print(ipText);display_.setCursor(63,42);display_.print(split+1);}
-            display_.setCursor(63,56);display_.print(network.provisioning&&!portal?"PRG:lien":"PRG:visage");
-        }else{
+    } else if(screen==Screen::Qr) {
+        // Un seul QR, toujours celui de l'action courante : appairage Android,
+        // puis Wi-Fi du kit pendant la configuration, puis acces local.
+        char payload[192]={};int version=4;
+        const bool android=network.bleSetup&&network.setupExplicit&&!network.setupSuccess;
+        const bool configWifi=!android&&network.provisioning&&!network.setupSuccess;
+        if(android) {
+            snprintf(payload,sizeof(payload),"{\"ver\":\"v1\",\"name\":\"%s\",\"transport\":\"ble\",\"security\":1,\"pop\":\"%s\"}",network.setupSsid,network.setupPassword);
+            version=9;
+        } else if(configWifi) {
+            snprintf(payload,sizeof(payload),"WIFI:T:WPA;S:%s;P:\"%s\";;",network.setupSsid,network.setupPassword);
+            version=4;
+        } else if(network.online) {
+            snprintf(payload,sizeof(payload),"%s",network.url);
+            for(char* p=payload;*p;++p)if(*p>='a'&&*p<='z')*p-=32;
+            version=3;
+        }
+        if(*payload) generateQr(display_,payload,version);
+        if(!*payload) {
             display_.setCursor(0,0);display_.print("WI-FI ABSENT");
             display_.setCursor(0,20);display_.print("Reconnexion en cours");
             display_.setCursor(0,48);display_.print("PRG 8s : configurer");
+        } else {
+            const int column=qrRendered?qrExtent+4:0;
+            const int chars=qrRendered?(128-column)/6:21;
+            int row=0;
+            const auto put=[&](const char* text){
+                if(row>=6)return;
+                char clipped[25];size_t n=strlen(text);
+                if(n>size_t(chars))n=size_t(chars);
+                memcpy(clipped,text,n);clipped[n]=0;
+                display_.setCursor(column,row*9);display_.print(clipped);++row;
+            };
+            char half[9]={};
+            if(android) {
+                put("ANDROID");put(network.setupSsid);put("Code:");
+                memcpy(half,network.setupPassword,8);put(half);
+                memcpy(half,network.setupPassword+8,8);put(half);
+            } else if(configWifi) {
+                put("CONFIG WI-FI");put(network.setupSsid);put("Cle:");
+                memcpy(half,network.setupPassword,8);put(half);
+                memcpy(half,network.setupPassword+8,8);put(half);
+            } else {
+                put("ACCES LOCAL");
+                char ipText[24];snprintf(ipText,sizeof(ipText),"%s",network.url+7);
+                char* slash=strchr(ipText,'/');if(slash)*slash=0;
+                char* split=strchr(ipText,'.');if(split)split=strchr(split+1,'.');
+                if(split){*split=0;put(ipText);put(split+1);}else put(ipText);
+                put("PRG:visage");
+            }
         }
-        if(!qrRendered&&(network.provisioning||network.online)){display_.setCursor(0,20);display_.print("QR indisponible");}
+        if(!qrRendered&&*payload){display_.setCursor(0,20);display_.print("QR indisponible");}
     } else {
         display_.setCursor(0,0);display_.print("PLANT STATION");
         display_.drawRoundRect(3,20,43,30,7,SSD1306_WHITE);
@@ -238,8 +251,17 @@ void OledDisplay::showDashboard(const PlantView& view,Screen screen,const Dashbo
         }
         display_.setCursor(0,56);
         if(!view.radioReady) display_.print("RADIO! PRG:details");
-        else if(view.luxValid) {snprintf(line,sizeof(line),"Lx %.0f PRG:detail",view.lux);display_.print(line);}
-        else display_.print("Lux -- PRG:details");
+        else if(kLux&&view.luxValid) {snprintf(line,sizeof(line),"Lx %.0f PRG:detail",view.lux);display_.print(line);}
+        else if(kLux) display_.print("Lux -- PRG:details");
+        else {
+            // Profil sans capteur de lumiere : compter les sondes exploitables.
+            unsigned fresh=0;
+            for(unsigned i=0;i<4;++i) {
+                const auto current=view.plants[i].state;
+                if(current!=PlantState::Waiting&&current!=PlantState::Stale&&current!=PlantState::AdcFault)++fresh;
+            }
+            snprintf(line,sizeof(line),"%u/4 fraiches PRG:>",fresh);display_.print(line);
+        }
     }
     display_.display();
 }
