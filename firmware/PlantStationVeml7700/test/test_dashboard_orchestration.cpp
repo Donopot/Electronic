@@ -43,7 +43,13 @@ void bounds() {
 int main(int argc,char** argv) {
     const bool absent=argc>1&&!strcmp(argv[1],"no_oled");FakeWire::oledPresent()=!absent;
     setup();host::finishInitialization();for(unsigned i=0;i<113;++i)loop();
-    host::now=1000;loop();assert(latest.luxValid && latest.radioReady && latest.warningMask==15);
+    host::now=1000;loop();
+#if PLANT_LUX
+    assert(latest.luxValid && latest.radioReady && latest.warningMask==15);
+#else
+    // Profil sans capteur : le lux reste explicitement inconnu.
+    assert(!latest.luxValid && latest.radioReady && latest.warningMask==15);
+#endif
     for(uint8_t id=1;id<=4;++id) {
         plantsoil::Packet p;p.node=id;p.session=77;p.sequence=1;p.address=0x48;p.status=plantsoil::AdcStatus::Ok;p.raw=16000+id*1000;
         uint8_t bytes[plantsoil::kPacketSize];assert(plantsoil::encode(p,bytes,sizeof(bytes))==plantsoil::Result::Accepted);
@@ -51,6 +57,14 @@ int main(int argc,char** argv) {
     }
     assert(latest.mood==plant::Mood::Neutral && latest.warningMask==0 && latest.dryMask==0);
     for(unsigned i=0;i<4;++i){assert(latest.plants[i].id==i+1 && !latest.plants[i].batteryKnown);}
+#if !PLANT_LUX
+    if(!absent) {
+        // Sans VEML7700, la ligne basse compte les sondes exploitables.
+        plant::OledDisplay face;assert(face.begin());face.showDashboard(latest,plant::Screen::Face,network);bounds();
+        assert(host::oledFrames().back().find("4/4 fraiches")!=std::string::npos);
+        assert(host::oledFrames().back().find("Lux")==std::string::npos);
+    }
+#endif
     strcpy(names[2].name,"Mon basilic");host::now=2000;loop();assert(!strcmp(latest.plants[2].name,"Mon basilic"));
     shortPress(2100);
     if(!absent) {
@@ -96,12 +110,17 @@ int main(int argc,char** argv) {
         }
         host::forceQrSide()=0;network.bleSetup=false;strcpy(network.setupSsid,"PLANT-TEST12");
     }
+    const std::string singleQr=host::qrPayload();
     shortPress(host::now+100);
-    if(!absent){assert(host::qrPayload()=="HTTP://192.168.4.1/");bounds();}
+    if(!absent){bounds();assert(host::oledFrames().back().find("PLANT STATION")!=std::string::npos);assert(host::qrPayload()==singleQr);}
+    shortPress(host::now+1200);
+    if(!absent){bounds();assert(host::oledFrames().back().find("SOIL-01")!=std::string::npos);}
+    shortPress(host::now+2200);
+    if(!absent){bounds();assert(host::qrPayload()=="WIFI:T:WPA;S:PLANT-TEST12;P:\"0123456789ABCDEF\";;");}
     host::buttonPressed()=true;host::now+=100;loop();host::now+=40;loop();host::now+=3000;loop();
     host::buttonPressed()=false;host::now+=100;loop();host::now+=40;loop();
     assert(stopRequested && !Serial.flushed); // Main never waits synchronously on the worker.
     workerStopped=true;try{loop();assert(false);}catch(const SleepEntered&){}
     assert(Serial.flushed);
-    puts("PASS actual dashboard main/radio/OLED: shared model, unknown battery, adaptive URL/Wi-Fi QR + 4-module quiet zone + readable key, portal fallback, 3s sleep / 8s setup release, OLED absent (worker and QR encoder simulated)");
+    puts("PASS actual dashboard main/radio/OLED: shared model, unknown battery, single adaptive QR (Android / Wi-Fi kit / acces local) with 4-module quiet zone and readable key, 3-screen cycle, 3s sleep / 8s setup release, OLED absent (worker and QR encoder simulated)");
 }

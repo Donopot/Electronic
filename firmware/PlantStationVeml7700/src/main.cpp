@@ -50,7 +50,6 @@ void refreshSoil(uint32_t now, bool force = false, bool render = true) {
     const auto network=dashboard.network();
     if((network.provisioning&&!displayedSetupActive)||(network.setupSuccess&&!displayedSetupSuccess))screen=plant::Screen::Qr;
     displayedSetupActive=network.provisioning;displayedSetupSuccess=network.setupSuccess;
-    if(!network.provisioning&&screen==plant::Screen::PortalUrl)screen=plant::Screen::Qr;
 #endif
     if(!render)return;
     bool changed = force || soilRadio.ready() != displayedRadioReady;
@@ -145,9 +144,8 @@ void loop() {
     const auto buttonEvent = button.update(now, digitalRead(0) == LOW, PLANT_DASHBOARD);
 #if PLANT_DASHBOARD
     if (buttonEvent == plant::ButtonEvent::ShortPress) {
-        screen=screen==plant::Screen::Qr&&dashboard.network().provisioning&&dashboard.network().bleSetup?plant::Screen::WifiQr:
-               screen==plant::Screen::WifiQr||(screen==plant::Screen::Qr&&dashboard.network().provisioning)?plant::Screen::PortalUrl:
-            screen==plant::Screen::PortalUrl?plant::Screen::Face:plant::nextScreen(screen);
+        // Trois ecrans seulement : visage, details, QR unique.
+        screen=plant::nextScreen(screen);
         refreshSoil(now, true);
     }
     if(buttonEvent==plant::ButtonEvent::SetupHold) {

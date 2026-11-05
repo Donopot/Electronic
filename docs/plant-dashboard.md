@@ -43,8 +43,11 @@ ci-dessous. PRG 8 s rouvre les deux voies sans effacer noms ni historique.
    pas automatiquement pendant un formulaire inachevé. Si la connexion réussie
    est ensuite perdue, le formulaire redevient éditable et la fermeture est annulée.
 
-PRG court fait défiler visage, détails, QR, puis lien de secours lorsque
-l’assistant est ouvert. À trois secondes, relâcher demande la veille ; continuer
+PRG court fait défiler trois écrans seulement : visage, détails, QR. Le QR est
+unique et suit l’action courante — appairage Android (BLE) pendant la
+configuration, puis Wi-Fi du kit, puis accès local `http://<ip>/`. La clé Wi-Fi
+du kit et le code d’appairage restent affichés en texte à côté du symbole.
+À trois secondes, relâcher demande la veille ; continuer
 jusqu’à huit secondes puis relâcher annule cette demande et rouvre le formulaire
 même si l’assistant est encore accessible après une réussite. La réception et la
 publication radio continuent pendant les invites. Les profils historiques gardent leur comportement.
