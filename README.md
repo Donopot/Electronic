@@ -10,6 +10,17 @@ par sonde conservée en NVS, donc visible après un redémarrage. Le profil
 `heltec_v3_soil_dashboard` fonctionne **sans capteur de lumière** (aucun scan
 I2C, `lux` toujours `null`). Voir [docs/soil-dashboard.md](docs/soil-dashboard.md).
 
+**Accès sans configuration** : ce profil compile `PLANT_ALWAYS_AP=1`, le Heltec
+diffuse en permanence son propre Wi-Fi `PLANT-XXXXXX` (clé affichée sur l’écran
+OLED) et sert lui-même le tableau de bord sur `http://192.168.4.1/`. Le Wi-Fi
+domestique reste optionnel, sur `/setup`.
+
+⚠️ Le projet PlatformIO à ouvrir est le dossier **`firmware/PlantStationVeml7700`**.
+La racine du dépôt ne déclare que les environnements `enviroterminal_*` (carte
+ESP32-C3) : l’ouvrir donne l’impression que `heltec_v3_soil_dashboard` n’existe
+pas, et un upload depuis cette racine échoue avec
+`This chip is ESP32-S3, not ESP32-C3`.
+
 ## Organisation du projet avec BMAD
 
 La méthode BMAD 6.12.4 est installée pour Codex. Le [guide BMAD](BMAD.md)

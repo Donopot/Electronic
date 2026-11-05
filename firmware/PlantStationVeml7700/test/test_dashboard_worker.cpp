@@ -23,8 +23,10 @@ static const std::string& completeHttp(){
 }
 static std::string requestHttp(const std::string& method,const std::string& path,const std::string& body="",bool marker=true,const std::string& hostname="plant-ebf528.local",bool ap=false,const std::string& origin="") {
     const auto connection=queueHttp(method,path,body,marker,hostname,ap,origin);auto& socket=host::socketSend();
-    for(unsigned tick=0;connection->open&&tick<20000;++tick){
-        socket.result=tick%3?-1:23;socket.error=EAGAIN;
+    // 512 octets par envoi reussi : une page de 31 ko tient dans la fenetre de
+    // 4000 ticks, tout en gardant un EAGAIN sur trois pour les envois partiels.
+    for(unsigned tick=0;connection->open&&tick<40000;++tick){
+        socket.result=tick%3?-1:512;socket.error=EAGAIN;
         serviceHttp(host::now++);
     }
     assert(!connection->open);

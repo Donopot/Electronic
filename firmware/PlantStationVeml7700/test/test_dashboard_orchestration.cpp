@@ -77,7 +77,7 @@ int main(int argc,char** argv) {
     network.online=true;strcpy(network.url,"http://192.168.100.100/");host::now=4000;loop();
     if(!absent) {
         assert(host::qrPayload()=="HTTP://192.168.100.100/");bounds();
-        const auto found=std::find_if(host::oledRectangles().begin(),host::oledRectangles().end(),[](const host::OledRect& r){return r.x==0&&r.y==3&&r.width==58&&r.height==58&&r.color==SSD1306_WHITE;});
+        const auto found=std::find_if(host::oledRectangles().begin(),host::oledRectangles().end(),[](const host::OledRect& r){return r.x==35&&r.y==3&&r.width==58&&r.height==58&&r.color==SSD1306_WHITE;});
         assert(found!=host::oledRectangles().end());
         plant::OledDisplay maxLux;assert(maxLux.begin());auto view=latest;view.luxValid=true;view.lux=140000;
         maxLux.showDashboard(view,plant::Screen::Face,network);bounds();
@@ -95,9 +95,9 @@ int main(int argc,char** argv) {
     host::now+=5000;loop();assert(!stopRequested);
     host::buttonPressed()=false;host::now+=100;loop();host::now+=40;loop();assert(setupRequested&&!Serial.flushed);
     if(!absent){
-        assert(host::qrPayload()=="WIFI:T:WPA;S:PLANT-TEST12;P:\"0123456789ABCDEF\";;");bounds();
-        assert(host::oledFrames().back().find("01234567")!=std::string::npos&&host::oledFrames().back().find("89ABCDEF")!=std::string::npos);
-        const auto white=std::find_if(host::oledRectangles().begin(),host::oledRectangles().end(),[](const host::OledRect& r){return r.x==0&&r.y==13&&r.width==37&&r.height==37&&r.color==SSD1306_WHITE;});assert(white!=host::oledRectangles().end());
+        assert(host::qrPayload()=="WIFI:T:WPA;S:PLANT-TEST12;P:0123456789ABCDEF;;");bounds();
+        assert(host::oledFrames().back().empty()); // ecran QR : aucun texte, uniquement le symbole
+        const auto white=std::find_if(host::oledRectangles().begin(),host::oledRectangles().end(),[](const host::OledRect& r){return r.x==33&&r.y==1&&r.width==62&&r.height==62&&r.color==SSD1306_WHITE;});assert(white!=host::oledRectangles().end());
         host::forceQrSide()=33;plant::OledDisplay qr;assert(qr.begin());qr.showDashboard(latest,plant::Screen::Qr,network);bounds();host::forceQrSide()=0;
     }
     if(!absent){
@@ -105,13 +105,13 @@ int main(int argc,char** argv) {
         // BLE actif mais sans demande explicite : le QR reste celui du Wi-Fi du kit.
         network.bleSetup=true;network.setupExplicit=false;
         qr.showDashboard(latest,plant::Screen::Qr,network);bounds();
-        assert(host::qrPayload()=="WIFI:T:WPA;S:PLANT-TEST12;P:\"0123456789ABCDEF\";;");
+        assert(host::qrPayload()=="WIFI:T:WPA;S:PLANT-TEST12;P:0123456789ABCDEF;;");
         network.setupExplicit=true;strcpy(network.setupSsid,"PLANT-EBF528");
         for(int side:{41,45,49,53}){
             host::forceQrSide()=side;qr.showDashboard(latest,plant::Screen::Qr,network);bounds();
             assert(host::qrPayload()=="{\"ver\":\"v1\",\"name\":\"PLANT-EBF528\",\"transport\":\"ble\",\"security\":1,\"pop\":\"0123456789ABCDEF\"}");
             const auto& rects=host::oledRectangles();const int extent=side+8;
-            assert(std::any_of(rects.begin(),rects.end(),[&](const host::OledRect& r){return r.x==0&&r.y==(64-extent)/2&&r.width==extent&&r.height==extent&&r.color==SSD1306_WHITE;}));
+            assert(std::any_of(rects.begin(),rects.end(),[&](const host::OledRect& r){return r.x==(128-extent)/2&&r.y==(64-extent)/2&&r.width==extent&&r.height==extent&&r.color==SSD1306_WHITE;}));
         }
         host::forceQrSide()=0;network.bleSetup=false;network.setupExplicit=false;strcpy(network.setupSsid,"PLANT-TEST12");
     }
@@ -121,11 +121,11 @@ int main(int argc,char** argv) {
     shortPress(host::now+1200);
     if(!absent){bounds();assert(host::oledFrames().back().find("SOIL-01")!=std::string::npos);}
     shortPress(host::now+2200);
-    if(!absent){bounds();assert(host::qrPayload()=="WIFI:T:WPA;S:PLANT-TEST12;P:\"0123456789ABCDEF\";;");}
+    if(!absent){bounds();assert(host::qrPayload()=="WIFI:T:WPA;S:PLANT-TEST12;P:0123456789ABCDEF;;");}
     host::buttonPressed()=true;host::now+=100;loop();host::now+=40;loop();host::now+=3000;loop();
     host::buttonPressed()=false;host::now+=100;loop();host::now+=40;loop();
     assert(stopRequested && !Serial.flushed); // Main never waits synchronously on the worker.
     workerStopped=true;try{loop();assert(false);}catch(const SleepEntered&){}
     assert(Serial.flushed);
-    puts("PASS actual dashboard main/radio/OLED: shared model, unknown battery, single adaptive QR (Android / Wi-Fi kit / acces local) with 4-module quiet zone and readable key, 3-screen cycle, 3s sleep / 8s setup release, OLED absent (worker and QR encoder simulated)");
+    puts("PASS actual dashboard main/radio/OLED: shared model, unknown battery, single full-screen adaptive QR (Android / Wi-Fi kit / acces local) with no text, centred, maximal scale, 3-screen cycle, 3s sleep / 8s setup release, OLED absent (worker and QR encoder simulated)");
 }

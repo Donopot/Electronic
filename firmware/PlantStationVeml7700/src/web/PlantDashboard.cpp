@@ -70,6 +70,9 @@ bool needDisconnectEvent=false,scanRunning=false,scanReady=false,closeApRequeste
 WiFiUDP captiveDns;
 constexpr uint32_t kWifiAttemptMs=25000,kSetupSuccessOpenMs=300000;
 constexpr char kSetupHost[]="192.168.4.1",kSetupUrl[]="http://192.168.4.1/";
+// AP permanent : le portail captif et la racine du kit ouvrent le tableau de
+// bord, le formulaire Wi-Fi reste accessible sur /setup.
+constexpr bool kAlwaysAp = PLANT_ALWAYS_AP != 0;
 
 String number(uint64_t n) { char out[24]; snprintf(out,sizeof(out),"%llu",static_cast<unsigned long long>(n)); return String(out); }
 String quote(const char* p) {
@@ -265,7 +268,7 @@ void serviceNetwork(uint32_t now){
     if((provisioning||bleSetup.active())&&setupState=="connected"&&online&&
        ((closeApRequested&&uint32_t(now-closeApAt)>=2000)||uint32_t(now-successAt)>=kSetupSuccessOpenMs)){
         bleSetup.stop(); // A working BLE setup has its deadline even if AP/DNS failed.
-        if(provisioning)closeSetup();else publishNetwork("Connecte au Wi-Fi domestique");
+        if(provisioning&&!kAlwaysAp)closeSetup();else publishNetwork("Connecte au Wi-Fi domestique");
     }
     serviceDns();publishBle();
 }
@@ -352,7 +355,7 @@ String normalizedHost(String host){host.toLowerCase();if(host.endsWith(":80"))ho
 bool lanHost(const String& host){const String name=normalizedHost(host);return name==WiFi.localIP().toString()||name==hostName+".local";}
 bool sameOrigin(const String& origin,const String& host){return origin.indexOf("http://")==0&&normalizedHost(origin.substring(7))==normalizedHost(host);}
 bool setupHost(const String& host){return host==kSetupHost||host==String(kSetupHost)+":80";}
-void redirectSetup(){reply(302,"text/plain; charset=utf-8","");header="HTTP/1.1 302 Found\r\nLocation: "+String(kSetupUrl)+"\r\nContent-Length: 0\r\nConnection: close\r\nCache-Control: no-store\r\n\r\n";}
+void redirectSetup(){reply(302,"text/plain; charset=utf-8","");header="HTTP/1.1 302 Found\r\nLocation: "+String(kAlwaysAp?"/":kSetupUrl)+"\r\nContent-Length: 0\r\nConnection: close\r\nCache-Control: no-store\r\n\r\n";}
 void sendPage(const char* page){reply(200,"text/html; charset=utf-8","");pageResponse=page;header.replace("Content-Length: 0","Content-Length: "+String(strlen(page)));}
 String setupStatus(){
     const uint32_t age=millis()-successAt;
@@ -410,10 +413,15 @@ void route() {
     const int query=target.indexOf('?');const String path=query<0?target:target.substring(0,query);
     String host;if(!readHeader("host",host)) {error(400,"host");return;}
     if(setupRoute(method,path,host,query))return;
-    if(method=="GET"&&apSide()&&(path=="/generate_204"||path=="/gen_204"||path=="/hotspot-detect.html"||path=="/library/test/success.html"||path=="/ncsi.txt"||path=="/connecttest.txt"||path=="/redirect"||path=="/fwlink"||!setupHost(host))){redirectSetup();return;}
+    if(method=="GET"&&apSide()&&(path=="/generate_204"||path=="/gen_204"||path=="/hotspot-detect.html"||path=="/library/test/success.html"||path=="/ncsi.txt"||path=="/connecttest.txt"||path=="/redirect"||path=="/fwlink")){redirectSetup();return;}
     if(!apSide()&&!lanHost(host)){error(403,"host");return;}
     if(method=="GET"&&(path=="/"||path=="/setup")){
-        if(apSide()){if(!setupHost(host)){redirectSetup();return;}sendPage(PLANT_SETUP_PAGE);return;}
+        if(apSide()){
+            if(!setupHost(host)){redirectSetup();return;}
+            // AP permanent : la racine sert le tableau de bord, /setup reste le formulaire.
+            if(!kAlwaysAp||path=="/setup"){sendPage(PLANT_SETUP_PAGE);return;}
+            sendPage(PLANT_DASHBOARD_PAGE);return;
+        }
         if(path=="/setup"){error(403,"setup_ap_only");return;}
         sendPage(PLANT_DASHBOARD_PAGE);return;
     }
@@ -577,7 +585,7 @@ void worker(void*) {
     setupSsid="PLANT-"+mac.substring(6);
     char ssid[20];snprintf(ssid,sizeof(ssid),"%s",setupSsid.c_str());for(char* p=ssid;*p;++p)if(*p>='a'&&*p<='z')*p-=32;setupSsid=ssid;
     WiFi.setHostname(hostName.c_str());WiFi.setAutoReconnect(true);WiFi.onEvent(networkEvent);server.begin();connectAt=millis();
-    if(hasSavedWifi){WiFi.begin();publishNetwork("Connexion au Wi-Fi enregistre");}else startSetup();
+    if(hasSavedWifi&&!kAlwaysAp){WiFi.begin();publishNetwork("Connexion au Wi-Fi enregistre");}else startSetup();
     char command[32]={};unsigned commandLength=0;
     while(!stopping.load()) {
         const uint32_t now=millis();
