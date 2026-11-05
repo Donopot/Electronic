@@ -26,6 +26,11 @@
 // saisir ; le formulaire /setup reste protege par un appui PRG de 8 s.
 #define PLANT_OPEN_AP 0
 #endif
+#ifndef PLANT_AP_PASSWORD
+// Mot de passe du Wi-Fi du kit quand il est protege : simple a taper sur un
+// telephone, 8 a 63 caracteres (exigence WPA2).
+#define PLANT_AP_PASSWORD "plantes123"
+#endif
 #ifndef PLANT_SCAN
 #define PLANT_SCAN 1
 #endif
@@ -61,6 +66,10 @@ constexpr bool kLux = PLANT_LUX;
 // Point d'acces permanent : le tableau de bord est servi sur le Wi-Fi du kit.
 constexpr bool kAlwaysAp = PLANT_ALWAYS_AP;
 constexpr bool kOpenAp = PLANT_OPEN_AP;
+// Mot de passe affiche sur l'OLED et utilise par le point d'acces du kit.
+constexpr char kApPassword[] = PLANT_AP_PASSWORD;
+constexpr unsigned kApPasswordLength = sizeof(PLANT_AP_PASSWORD) - 1;
+static_assert(kApPasswordLength >= 8 && kApPasswordLength <= 63, "PLANT_AP_PASSWORD doit faire 8 a 63 caracteres");
 static_assert(PLANT_OPEN_AP == 0 || PLANT_OPEN_AP == 1, "PLANT_OPEN_AP doit valoir 0 ou 1");
 static_assert(PLANT_ALWAYS_AP == 0 || PLANT_ALWAYS_AP == 1, "PLANT_ALWAYS_AP doit valoir 0 ou 1");
 static_assert(PLANT_LUX == 0 || PLANT_LUX == 1, "PLANT_LUX doit valoir 0 ou 1");

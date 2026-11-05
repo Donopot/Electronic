@@ -72,6 +72,9 @@ bool hasSavedWifi=false,ramStorageReady=false,candidatePending=false,testingWifi
 bool needDisconnectEvent=false,scanRunning=false,scanReady=false,closeApRequested=false;
 WiFiUDP captiveDns;
 constexpr uint32_t kWifiAttemptMs=25000,kSetupSuccessOpenMs=300000;
+// Apres une connexion reussie, le Wi-Fi du kit se referme seul : le telephone
+// revient sur le Wi-Fi de la maison et la page redirige vers le tableau de bord.
+constexpr uint32_t kAutoCloseApMs=8000;
 // AP a la demande (PRG 8 s) : referme apres 15 minutes sans connexion.
 constexpr uint32_t kPrgApWindowMs=15UL*60UL*1000UL;
 constexpr char kSetupHost[]="192.168.4.1",kSetupUrl[]="http://192.168.4.1/";
@@ -102,6 +105,8 @@ void publishNetwork(const char* message) {
     snprintf(networkState.hostname,sizeof(networkState.hostname),"%s.local",hostName.c_str());
     snprintf(networkState.setupSsid,sizeof(networkState.setupSsid),"%s",setupSsid.c_str());
     snprintf(networkState.setupPassword,sizeof(networkState.setupPassword),"%s",setupPassword.c_str());
+    // Mot de passe que l'utilisateur tape sur son telephone pour rejoindre le kit.
+    snprintf(networkState.apPassword,sizeof(networkState.apPassword),"%s",kOpenAp?"":kApPassword);
     xQueueOverwrite(networks,&networkState);
 }
 bool setRamStorage(){ramStorageReady=esp_wifi_set_storage(WIFI_STORAGE_RAM)==ESP_OK;return ramStorageReady;}
@@ -136,7 +141,7 @@ bool startSetup(bool explicitRequest=false){
     // AP ouvert : aucune cle a saisir pour ouvrir le tableau de bord. Le
     // formulaire /setup reste protege par l'appui PRG 8 s.
     if(kOpenAp){memset(ap.ap.password,0,sizeof(ap.ap.password));ap.ap.authmode=WIFI_AUTH_OPEN;}
-    else {memcpy(ap.ap.password,setupPassword.c_str(),setupPassword.length());ap.ap.authmode=WIFI_AUTH_WPA2_PSK;}
+    else {memcpy(ap.ap.password,kApPassword,kApPasswordLength);ap.ap.authmode=WIFI_AUTH_WPA2_PSK;}
     ap.ap.channel=1;ap.ap.max_connection=2;ap.ap.beacon_interval=100;
     WiFi.setAutoReconnect(false);
     // Configure WPA2 while the radio is stopped; never briefly start a default open AP.
@@ -262,7 +267,7 @@ void serviceNetwork(uint32_t now){
     if(testingWifi&&event&&(!needDisconnectEvent||stationDisconnected.load())&&WiFi.status()==WL_CONNECTED&&WiFi.SSID()==expectedSsid){
         if(commitCandidate()){
             testingWifi=false;if(bleAttempt)bleState="connected";clearSetupSecret(&candidateWifi,sizeof(candidateWifi));WiFi.setAutoReconnect(true);
-            setupState="connected";setupMessage="Wi-Fi enregistre. Rejoignez ce reseau pour ouvrir le tableau de bord.";successAt=now;
+            setupState="connected";setupMessage="Wi-Fi enregistre. Le kit ferme son reseau et ouvre le tableau de bord.";successAt=now;
         }else rollbackCandidate("Connexion obtenue mais sauvegarde impossible. Reessayez avant de redemarrer.");
     }
     if(testingWifi&&uint32_t(now-attemptAt)>=kWifiAttemptMs)rollbackCandidate("Connexion impossible. Verifiez le nom et le mot de passe puis reessayez.");
@@ -281,7 +286,8 @@ void serviceNetwork(uint32_t now){
         if(hasSavedWifi){WiFi.setAutoReconnect(true);WiFi.reconnect();}
     }
     if((provisioning||bleSetup.active())&&setupState=="connected"&&online&&
-       ((closeApRequested&&uint32_t(now-closeApAt)>=2000)||uint32_t(now-successAt)>=kSetupSuccessOpenMs)){
+       ((closeApRequested&&uint32_t(now-closeApAt)>=2000)||uint32_t(now-successAt)>=kAutoCloseApMs||
+        uint32_t(now-successAt)>=kSetupSuccessOpenMs)){
         bleSetup.stop(); // A working BLE setup has its deadline even if AP/DNS failed.
         if(provisioning&&!kAlwaysAp)closeSetup();else publishNetwork("Connecte au Wi-Fi domestique");
     }
@@ -378,7 +384,8 @@ String setupStatus(){
     out+=",\"ssid\":"+quote(setupSsid.c_str())+",\"ap_active\":"+String(provisioning?"true":"false");
     out+=",\"has_saved_network\":"+String(hasSavedWifi?"true":"false");
     out+=",\"lan_url\":"+quote(setupState=="connected"&&online?networkState.url:"");
-    out+=",\"close_in_s\":"+String(setupState=="connected"&&age<kSetupSuccessOpenMs?(kSetupSuccessOpenMs-age)/1000:0)+"}";
+    out+=",\"ap_password\":"+quote(provisioning&&!kOpenAp?kApPassword:"");
+    out+=",\"close_in_s\":"+String(setupState=="connected"&&age<kAutoCloseApMs?(kAutoCloseApMs-age)/1000:0)+"}";
     return out;
 }
 bool setupRoute(const String& method,const String& path,const String& host,int query){
@@ -599,7 +606,7 @@ void worker(void*) {
     history.begin();Serial.printf("[PLANT_HISTORY] state=%s\n",PlantHistory::stateName(history.state()));
     WiFi.persistent(true);WiFi.mode(WIFI_STA);loadSavedWifi();setRamStorage();
     String mac=WiFi.macAddress();mac.replace(":","");mac.toLowerCase();hostName="plant-"+mac.substring(6);
-    setupSsid="Plantes-"+mac.substring(8);
+    setupSsid="PLANTES-"+mac.substring(10);
     char ssid[20];snprintf(ssid,sizeof(ssid),"%s",setupSsid.c_str());for(char* p=ssid;*p;++p)if(*p>='a'&&*p<='z')*p-=32;setupSsid=ssid;
     WiFi.setHostname(hostName.c_str());WiFi.setAutoReconnect(true);WiFi.onEvent(networkEvent);server.begin();connectAt=millis();
     if(hasSavedWifi&&!kAlwaysAp){WiFi.begin();publishNetwork("Connexion au Wi-Fi enregistre");}else startSetup();
