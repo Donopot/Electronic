@@ -21,12 +21,16 @@ struct PlantReading {
     bool seen = false, voltageValid = false;
     // PS v1 has no battery telemetry. Its UI/API state is explicitly unknown.
     bool batteryKnown = false;
+    // RSSI/SNR are measured locally by the hub receiver, never sent by the node.
+    bool signalValid = false;
+    int16_t rssiDbm = 0, snrDb = 0;
     uint32_t ageMs = 0;
     int32_t microvolts = 0;
     plantsoil::Packet packet;
 };
 struct PlantView {
     PlantReading plants[plantsoil::kNodeCount];
+    plantsoil::Counters counters;
     Mood mood = Mood::Worried;
     uint8_t dryMask = 0, warningMask = 0;
     bool radioReady = false, luxValid = false;

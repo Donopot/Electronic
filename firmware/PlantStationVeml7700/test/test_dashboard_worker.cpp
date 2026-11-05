@@ -304,7 +304,7 @@ static void networkTests() {
 static void storageAndHttp(PlantDashboard& dashboard) {
     flash.partition=esp_partition_find_first(1,2,"spiffs");assert(history.begin());
     PlantView view;view.uptimeMs=100000;view.radioReady=true;view.luxValid=true;view.lux=50;
-    for(unsigned i=0;i<4;++i){auto& p=view.plants[i];p.seen=true;p.id=i+1;p.ageMs=100+i;p.packet.node=i+1;p.packet.session=123+i;p.packet.sequence=42+i;p.packet.raw=i==1?0:16000+i;p.packet.status=i==1?plantsoil::AdcStatus::ReadError:plantsoil::AdcStatus::Ok;}
+    for(unsigned i=0;i<4;++i){auto& p=view.plants[i];p.seen=true;p.id=i+1;p.ageMs=100+i;p.packet.node=i+1;p.packet.session=123+i;p.packet.sequence=42+i;p.packet.raw=i==1?0:16000+i;p.packet.address=0x48;p.packet.status=i==1?plantsoil::AdcStatus::ReadError:plantsoil::AdcStatus::Ok;}
     dashboard.publish(view);dashboard.publish(view);xQueuePeek(views,&current,0);serviceStorage(host::now);
     for(unsigned id=1;id<=4;++id){HistoryRecord values[4];uint64_t next;bool more;const auto count=history.page(id,0,0,kHistoryMs,values,4,next,more);assert(count==1&&!more);const auto& r=values[0];assert(r.boot==bootId&&r.node==id&&r.session==122+id&&r.sequence==41+id&&r.uptimeMs==100000-(99+id));assert(r.raw==(id==2?0:int(15999+id))&&r.status==(id==2?2:0));}
     ++view.plants[3].packet.sequence;view.plants[3].packet.raw=20000;dashboard.publish(view);dashboard.publish(view);serviceStorage(host::now);
@@ -315,6 +315,20 @@ static void storageAndHttp(PlantDashboard& dashboard) {
     response=requestHttp("GET","/api/history?node=2&days=30&after=0");
     assert(response.find("\"utc_ms\":null")!=std::string::npos&&response.find("\"microvolts\":null,\"adc_status\":\"adc_error\"")!=std::string::npos);
     response=requestHttp("GET","/");assert(response.find(PLANT_DASHBOARD_PAGE)!=std::string::npos);
+    assert(response.find("data-tab=\"radio\"")!=std::string::npos&&response.find("data-tab=\"system\"")!=std::string::npos);
+    {
+        // API v2 : details par noeud, radio/systeme, curseur multi-noeuds et
+        // persistance NVS des dernieres mesures (relue apres effacement RAM).
+        const auto json=statusJson();
+        assert(json.indexOf("\"api_version\":2")>=0&&json.indexOf("\"lux_available\":")>=0);
+        assert(json.indexOf("\"last_known\":{\"present\":true")>=0&&json.indexOf("\"raw\":16000")>=0&&json.indexOf("\"ads_address\":72")>=0);
+        assert(json.indexOf("\"rssi_dbm\":null")>=0&&json.indexOf("\"radio\":null")>=0&&json.indexOf("\"system\":{\"chip\":\"ESP32-S3\"")>=0);
+        const auto mixed=requestHttp("GET","/api/history?node=0&days=30&after=0");
+        assert(mixed.find("200 OK")!=std::string::npos&&occurrences(mixed,"\"node\":1")>=1&&occurrences(mixed,"\"node\":4")>=1);
+        host::now+=61000;serviceStorage(host::now);
+        lastKnown=StoredLast{};loadLastKnown();
+        assert(lastKnown.nodes[0].node==1&&lastKnown.nodes[0].sequence==42&&lastKnown.nodes[3].node==4&&lastKnown.nodes[3].raw==20000&&lastKnown.nodes[3].sequence==46);
+    }
     assert(requestHttp("GET","/api/history?node=5&days=30").find("400 Bad Request")!=std::string::npos);
     assert(requestHttp("POST","/api/plants","id=1&name=Basilic",false).find("403 Forbidden")!=std::string::npos);
     assert(requestHttp("POST","/api/plants","id=1&id=2&name=x").find("400 Bad Request")!=std::string::npos);

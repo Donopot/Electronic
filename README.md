@@ -1,5 +1,15 @@
 # EnviroTerminal V1 — BMP180, LoRa SPI et site local
 
+## Tableau de bord du concentrateur de sondes
+
+Le Heltec V3 héberge un tableau de bord local à onglets (Vue d’ensemble,
+Sondes, Historique, Radio, Système, Réglages) : quatre sondes SOIL-01 à
+SOIL-04, courbes 24 h / 7 j / 30 j depuis le journal flash, RSSI/SNR mesurés
+par le concentrateur, compteurs de trames et motifs de rejet. Dernière mesure
+par sonde conservée en NVS, donc visible après un redémarrage. Le profil
+`heltec_v3_soil_dashboard` fonctionne **sans capteur de lumière** (aucun scan
+I2C, `lux` toujours `null`). Voir [docs/soil-dashboard.md](docs/soil-dashboard.md).
+
 ## Organisation du projet avec BMAD
 
 La méthode BMAD 6.12.4 est installée pour Codex. Le [guide BMAD](BMAD.md)

@@ -20,6 +20,7 @@ struct Net {
     bool autoReconnect=true,started=true,apActive=false,failAp=false,failStorage=false,failCommit=false,failRamStorage=false,failRamAfterCommit=false;
     int status=0,reconnects=0,begins=0,disconnects=0,storage=WIFI_STORAGE_FLASH,mode=WIFI_MODE_STA,flashWrites=0,ramWrites=0,stops=0,starts=0;
     int scanResult=WIFI_SCAN_RUNNING,scanStarts=0,scanStops=0,configReads=0;
+    int stationRssi=-57;unsigned char stationChannel=6;
     std::string ip="192.168.1.10",connectedSsid,beginSsid,beginPassword,apIp="192.168.4.1";
     wifi_config_t ram{},flash{},ap{};std::vector<ScanNetwork> scans;
     void(*event)(arduino_event_t*)=nullptr;
@@ -77,6 +78,8 @@ public:
     String SSID(){return host::net().connectedSsid;}
     String SSID(int i){return host::net().scans.at(i).ssid;}
     int RSSI(int i){return host::net().scans.at(i).rssi;}int encryptionType(int i){return host::net().scans.at(i).auth;}
+    int RSSI(){return host::net().status?host::net().stationRssi:0;}
+    unsigned char channel(){return host::net().stationChannel;}
     int scanNetworks(bool async,bool,bool,unsigned){assert(async);++host::net().scanStarts;return WIFI_SCAN_RUNNING;}
     int scanComplete(){return host::net().scanResult;}void scanDelete(){}
 };

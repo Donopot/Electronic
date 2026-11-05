@@ -2,7 +2,9 @@
 #include <Wire.h>
 #include <esp_log.h>
 #include "config.h"
+#if PLANT_LUX
 #include "sensors/StrictWireTransport.h"
+#endif
 #include "diagnostics/Diagnostics.h"
 #include "display/OledDisplay.h"
 #include "power/PrgButton.h"
@@ -15,9 +17,11 @@
 #endif
 
 namespace {
+#if PLANT_LUX
 uint32_t readClock() { return millis(); }
 plant::StrictWireTransport<TwoWire> transport(Wire);
 plant::VEML7700Sensor sensor(transport, readClock);
+#endif
 plant::Uptime uptime;
 plant::OledDisplay oled;
 plant::PrgButton button;
@@ -39,7 +43,7 @@ void refreshSoil(uint32_t now, bool force = false, bool render = true) {
 #if PLANT_DASHBOARD
     dashboard.configuration(plantConfig);
     auto view = plant::makePlantView(readings, plantConfig, soilRadio.ready(), now, uptime.update(now));
-    view.luxValid = lastLux.status == plant::Status::Ok && isfinite(lastLux.lux) && lastLux.lux >= 0 && lastLux.lux <= plant::kMaxLux;
+    view.luxValid = plant::kLux && lastLux.status == plant::Status::Ok && isfinite(lastLux.lux) && lastLux.lux >= 0 && lastLux.lux <= plant::kMaxLux;
     view.lux = view.luxValid ? lastLux.lux : 0;
     dashboard.publish(view);
     if(!render)return; // Keep button prompts visible while radio data still reaches the worker.
@@ -78,14 +82,17 @@ void refreshSoil(uint32_t now, bool force = false, bool render = true) {
 #endif
 bool sleepRequested = false;
 bool sleepReleased = false;
+#if PLANT_LUX
 uint32_t lastSample = 0;
 plant::I2cScanner<plant::StrictWireTransport<TwoWire>> scanner(plant::kScan);
 bool started = false;
+#endif
 void emit(const char* event, const plant::Measurement& measurement, const char* message = "", int address = -1) {
     char line[640];
     if (plant::Diagnostics::format(line, sizeof(line), plant::kJson, event,
                                   uptime.update(millis()), measurement, message, address)) Serial.println(line);
 }
+#if PLANT_LUX
 void startSensor(uint32_t now) {
     plant::Measurement result;
     result.status = sensor.begin(now);
@@ -95,6 +102,7 @@ void startSensor(uint32_t now) {
     started = true;
     lastSample = now;
 }
+#endif
 }
 void setup() {
     esp_log_level_set("*", ESP_LOG_NONE);
@@ -113,6 +121,7 @@ void setup() {
         screen.status = ready ? plant::Status::Ok : plant::Status::BusError;
         emit("oled", screen, ready ? "OLED initialise sur I2C1 GPIO17/18" : "OLED indisponible; acquisition conservee", 0x3C);
     }
+#if PLANT_LUX
     const plant::Status bus = transport.restart();
     if (bus != plant::Status::Ok) {
         state.status = bus;
@@ -120,6 +129,7 @@ void setup() {
         startSensor(millis());
     }
     if (!plant::kScan && !started) startSensor(millis());
+#endif
 #if PLANT_SOIL_LORA
     soilRadio.begin();
 #endif
@@ -168,8 +178,13 @@ void loop() {
         if (!dashboard.stopped()) { yield(); return; }
 #endif
         plant::Measurement state;
+#if PLANT_LUX
         state.status = transport.shutdown();
         emit("capteur_veille", state, state.status == plant::Status::Ok ? "VEML7700 en sommeil confirme" : "Sommeil capteur non confirme ; poursuite de la veille", plant::kAddress);
+#else
+        state.status = plant::Status::Ok;
+        emit("capteur_veille", state, "Aucun capteur de lumiere monte sur ce concentrateur", plant::kAddress);
+#endif
         oled.sleep();
         Wire.end();
 #if PLANT_SOIL_LORA
@@ -196,6 +211,7 @@ void loop() {
     soilRadio.service(now);
     refreshSoil(now);
 #endif
+#if PLANT_LUX
     if (!started && !scanner.done()) {
         const auto step = scanner.step(transport);
         plant::Measurement state;
@@ -224,5 +240,6 @@ void loop() {
 #endif
         }
     }
+#endif
     yield();
 }

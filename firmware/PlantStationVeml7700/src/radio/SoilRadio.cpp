@@ -1,6 +1,7 @@
 #include "SoilRadio.h"
 #if PLANT_SOIL_LORA
 #include <Arduino.h>
+#include <math.h>
 #include <stdio.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
@@ -34,7 +35,9 @@ void SoilRadio::initialize() {
 }
 void SoilRadio::initializeTask(void* context) {
     auto& self = *static_cast<SoilRadio*>(context);
-    int16_t code = self.radio_.begin(868.1f, 125.0f, 7, 5, RADIOLIB_SX126X_SYNC_WORD_PRIVATE, 0, 8, 1.8f, false);
+    int16_t code = self.radio_.begin(kSoilFrequencyMhz, kSoilBandwidthKhz, kSoilSpreadingFactor,
+                                    kSoilCodingRate, RADIOLIB_SX126X_SYNC_WORD_PRIVATE, 0,
+                                    kSoilPowerDbm, 1.8f, false);
     if (code == RADIOLIB_ERR_NONE) code = self.radio_.setDio2AsRfSwitch(true);
     if (code == RADIOLIB_ERR_NONE) code = self.radio_.setCRC(2);
     if (code == RADIOLIB_ERR_NONE) {
@@ -85,7 +88,15 @@ void SoilRadio::service(uint32_t now) {
         const auto result = readings_.accept(bytes, length, now);
         char line[240];
         if (result == plantsoil::Result::Accepted) {
+            // RSSI/SNR sont mesures par le SX1262 a la reception : PS v1 ne les
+            // transporte pas et ils ne sont jamais ecrits dans le journal.
+            const auto rssi = static_cast<int16_t>(lroundf(radio_.getRSSI()));
+            const auto snr = static_cast<int16_t>(lroundf(radio_.getSNR()));
+            readings_.noteSignal(bytes[3], rssi, snr, now);
             if (plantsoil::formatPacket(line, sizeof(line), "RX", readings_.node(bytes[3]).packet())) Serial.println(line);
+            snprintf(line, sizeof(line), "[SOIL_SIGNAL] node=SOIL-%02u rssi_dbm=%d snr_db=%d authenticated=no",
+                     static_cast<unsigned>(bytes[3]), static_cast<int>(rssi), static_cast<int>(snr));
+            Serial.println(line);
         } else {
             if (result == plantsoil::Result::Duplicate || result == plantsoil::Result::OldSequence)
                 snprintf(line, sizeof(line), "[SOIL_REJECT] node=SOIL-%02u reason=%s authenticated=no",
