@@ -53,6 +53,8 @@ PlantView current;
 uint64_t clockUtc=0, clockUptime=0;
 bool clockKnown=false, provisioning=false, mdns=false, online=false, dirtyNames=false, setupExplicit=false;
 uint32_t setupExplicitAt=0;
+// AP volontairement referme : seul un PRG 8 s ou un redemarrage le rouvre.
+bool apSuppressed=false;
 bool namesFailed=false, clockFailed=false, pendingClock=false;
 uint32_t namesRevision=0,namesSavedRevision=0;
 uint64_t pendingUtc=0,pendingUptime=0;
@@ -70,8 +72,8 @@ bool hasSavedWifi=false,ramStorageReady=false,candidatePending=false,testingWifi
 bool needDisconnectEvent=false,scanRunning=false,scanReady=false,closeApRequested=false;
 WiFiUDP captiveDns;
 constexpr uint32_t kWifiAttemptMs=25000,kSetupSuccessOpenMs=300000;
-// AP ouvert : le formulaire Wi-Fi n'est accessible que 15 minutes apres PRG 8 s.
-constexpr uint32_t kOpenSetupWindowMs=15UL*60UL*1000UL;
+// AP a la demande (PRG 8 s) : referme apres 15 minutes sans connexion.
+constexpr uint32_t kPrgApWindowMs=15UL*60UL*1000UL;
 constexpr char kSetupHost[]="192.168.4.1",kSetupUrl[]="http://192.168.4.1/";
 // AP permanent : le portail captif et la racine du kit ouvrent le tableau de
 // bord, le formulaire Wi-Fi reste accessible sur /setup.
@@ -122,7 +124,7 @@ void resetSetupForm(){
     closeApAt=successAt=0;closeApRequested=false;
 }
 bool startSetup(bool explicitRequest=false){
-    if(explicitRequest){setupExplicit=true;setupExplicitAt=millis();}
+    if(explicitRequest){setupExplicit=true;setupExplicitAt=millis();apSuppressed=false;}
     if(provisioning){
         if(!bleSetup.active()&&setupPassword.length())bleSetup.start(setupSsid.c_str(),setupPassword.c_str());
         if(explicitRequest&&!testingWifi&&!candidatePending){resetSetupForm();publishNetwork("Assistant ouvert ; reseau enregistre conserve");}
@@ -146,7 +148,7 @@ bool startSetup(bool explicitRequest=false){
     }
     WiFi.setAutoReconnect(hasSavedWifi);if(hasSavedWifi)WiFi.begin();
     if(!captiveDns.begin(WiFi.softAPIP(),53)){WiFi.mode(WIFI_STA);WiFi.setAutoReconnect(hasSavedWifi);if(hasSavedWifi)WiFi.begin();publishNetwork("Assistant indisponible ; nouvel essai");apRetryAt=millis();return false;}
-    provisioning=true;resetSetupForm();scanReady=false;publishNetwork("Scanner le Wi-Fi du kit puis ouvrir l'assistant");return true;
+    provisioning=true;resetSetupForm();scanReady=false;publishNetwork("Wi-Fi du kit ouvert ; choisir le reseau domestique");return true;
 }
 void closeSetup(){if(!WiFi.mode(WIFI_STA)){publishNetwork("Fermeture du Wi-Fi du kit impossible ; nouvel essai");return;}captiveDns.stop();stopScan();provisioning=false;setupExplicit=false;bleSetup.stop();closeApRequested=false;publishNetwork(online?"Connecte au Wi-Fi domestique":"Wi-Fi absent ; reconnexion automatique");}
 void serviceDns(){
@@ -246,7 +248,13 @@ void serviceBle(){
 }
 void serviceNetwork(uint32_t now){
     if(setupRequested.exchange(false))startSetup(true);
-    if(kOpenAp&&setupExplicit&&uint32_t(now-setupExplicitAt)>=kOpenSetupWindowMs){setupExplicit=false;publishNetwork("Formulaire Wi-Fi referme ; PRG 8 s pour le rouvrir");}
+    // Fenetre d'AP ouverte par PRG 8 s : refermee apres 15 min si aucune
+    // connexion domestique n'aboutit. L'AP du premier demarrage, lui, reste
+    // ouvert tant que rien n'est configure (jamais laisser l'utilisateur bloqué).
+    if(provisioning&&setupExplicit&&!online&&!testingWifi&&!candidatePending&&
+       uint32_t(now-setupExplicitAt)>=kPrgApWindowMs){
+        apSuppressed=true;closeSetup();publishNetwork("Wi-Fi du kit referme ; PRG 8 s pour le rouvrir");
+    }
     serviceBle();
     if(cancelWifi){cancelWifi=false;if(candidatePending||testingWifi)rollbackCandidate("Essai annule. L'ancien reseau reste enregistre.");}
     if(candidatePending)beginCandidate(now);
@@ -269,7 +277,7 @@ void serviceNetwork(uint32_t now){
     }
     if(!online&&!testingWifi&&!candidatePending&&uint32_t(now-connectAt)>=30000){
         connectAt=now;
-        if(!provisioning&&uint32_t(now-apRetryAt)>=30000)startSetup();
+        if(!provisioning&&!apSuppressed&&uint32_t(now-apRetryAt)>=30000)startSetup();
         if(hasSavedWifi){WiFi.setAutoReconnect(true);WiFi.reconnect();}
     }
     if((provisioning||bleSetup.active())&&setupState=="connected"&&online&&
@@ -376,7 +384,6 @@ String setupStatus(){
 bool setupRoute(const String& method,const String& path,const String& host,int query){
     if(path.indexOf("/api/setup/")!=0)return false;
     if(!apSide()||!setupHost(host)){error(403,"setup_ap_only");return true;}
-    if(kOpenAp&&!setupExplicit){error(403,"setup_prg_required");return true;}
     if(query>=0){error(400,"setup_parameters");return true;}
     if(method=="GET"&&path=="/api/setup/status"){reply(200,"application/json; charset=utf-8",setupStatus());return true;}
     if(method=="GET"&&path=="/api/setup/networks"){
@@ -426,8 +433,6 @@ void route() {
     if(method=="GET"&&(path=="/"||path=="/setup")){
         if(apSide()){
             if(!setupHost(host)){redirectSetup();return;}
-            // AP ouvert : formulaire seulement dans les 15 min suivant PRG 8 s.
-            if(path=="/setup"&&kOpenAp&&!setupExplicit){error(403,"setup_prg_required");return;}
             // AP permanent : la racine sert le tableau de bord, /setup reste le formulaire.
             if(!kAlwaysAp||path=="/setup"){sendPage(PLANT_SETUP_PAGE);return;}
             sendPage(PLANT_DASHBOARD_PAGE);return;
@@ -435,6 +440,8 @@ void route() {
         if(path=="/setup"){error(403,"setup_ap_only");return;}
         sendPage(PLANT_DASHBOARD_PAGE);return;
     }
+    // Pendant la fenetre d'AP : consulter le tableau de bord sans rien configurer.
+    if(method=="GET"&&apSide()&&path=="/dashboard"){sendPage(PLANT_DASHBOARD_PAGE);return;}
     if(method=="GET" && path=="/api/status" && query<0) {reply(200,"application/json; charset=utf-8",statusJson());return;}
     if(method=="GET" && path=="/api/history") {
         FormFields fields;uint64_t node,days,after=0;
@@ -592,7 +599,7 @@ void worker(void*) {
     history.begin();Serial.printf("[PLANT_HISTORY] state=%s\n",PlantHistory::stateName(history.state()));
     WiFi.persistent(true);WiFi.mode(WIFI_STA);loadSavedWifi();setRamStorage();
     String mac=WiFi.macAddress();mac.replace(":","");mac.toLowerCase();hostName="plant-"+mac.substring(6);
-    setupSsid="PLANT-"+mac.substring(6);
+    setupSsid="Plantes-"+mac.substring(8);
     char ssid[20];snprintf(ssid,sizeof(ssid),"%s",setupSsid.c_str());for(char* p=ssid;*p;++p)if(*p>='a'&&*p<='z')*p-=32;setupSsid=ssid;
     WiFi.setHostname(hostName.c_str());WiFi.setAutoReconnect(true);WiFi.onEvent(networkEvent);server.begin();connectAt=millis();
     if(hasSavedWifi&&!kAlwaysAp){WiFi.begin();publishNetwork("Connexion au Wi-Fi enregistre");}else startSetup();

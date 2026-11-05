@@ -47,9 +47,8 @@ int main() {
             assert(provisioning&&host::net().apActive);
             assert(host::net().ap.ap.authmode==(kOpenAp?WIFI_AUTH_OPEN:WIFI_AUTH_WPA2_PSK));
 #if PLANT_OPEN_AP
-            // AP ouvert : le formulaire Wi-Fi exige un appui PRG 8 s.
-            assert(requestHttpSync("GET","/setup").find("403 Forbidden")!=std::string::npos);
-            assert(requestHttpSync("GET","/api/setup/status").find("403 Forbidden")!=std::string::npos);
+            // AP ouvert : aucune cle, le formulaire reste joignable pendant la fenetre.
+            assert(requestHttpSync("GET","/setup").find(PLANT_SETUP_PAGE)!=std::string::npos);
             assert(startSetup(true)&&setupExplicit);
 #endif
             pending=queueHttp("GET","/");stage=1;

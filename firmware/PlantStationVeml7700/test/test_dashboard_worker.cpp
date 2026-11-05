@@ -301,6 +301,14 @@ static void networkTests() {
     setupHttp("POST","/api/setup/close");assert(provisioning);host::now+=2000;serviceNetwork(host::now);assert(!provisioning&&!host::net().apActive);
     assert(startSetup());host::gotIp();serviceNetwork(++host::now);setupState="connected";successAt=host::now;online=true;host::now+=kSetupSuccessOpenMs;serviceNetwork(host::now);assert(!provisioning);
     setupRequested.store(true);serviceNetwork(++host::now);assert(provisioning);closeSetup();
+    // Fenetre PRG : un AP ouvert par un appui de 8 s se referme seul apres 15 min
+    // sans connexion, et ne se rouvre pas tout seul (PRG ou redemarrage requis).
+    online=false;
+    assert(startSetup(true)&&provisioning&&setupExplicit&&!apSuppressed);
+    host::now+=kPrgApWindowMs+1;serviceNetwork(host::now);
+    assert(!provisioning&&!host::net().apActive&&apSuppressed);
+    assert(startSetup(true)&&provisioning&&!apSuppressed);
+    closeSetup();
     puts("PASS production setup: protected AP, outage/reopen recovery, late cancel, durable commit despite RAM-selection failure and next-candidate guard, LAN Host/origin restrictions, invalid UTF8 scan filtering, timeout/rollback, SSID32/PSK64, DHCP/log, no secrets, bounded close");
 }
 static void storageAndHttp(PlantDashboard& dashboard) {

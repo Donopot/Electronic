@@ -28,9 +28,9 @@ Contenu du QR unique, par priorité :
 1. **Appairage Android** — BLE actif **et** assistant demandé explicitement
    (PRG 8 s) : JSON
    `{"ver":"v1","name":"PLANT-XXXX","transport":"ble","security":1,"pop":"…"}`.
-2. **Wi-Fi du kit** (AP permanent, **réseau ouvert**) : `WIFI:T:nopass;S:PLANT-XXXX;;`
+2. **Wi-Fi du kit** (fenêtre de configuration, **réseau ouvert**) : `WIFI:T:nopass;S:PLANTES-XXXX;;`
    — le scan rejoint le réseau sans mot de passe, et le portail captif ouvre
-   ensuite le tableau de bord.
+   ensuite l’assistant (ou `/dashboard`).
 3. **Accès local** (connecté au Wi-Fi domestique) : `HTTP://<ip>/` — ouvre le
    tableau de bord à onglets depuis un téléphone.
 4. Sinon : `WI-FI ABSENT` / `Reconnexion en cours` / `PRG 8s : configurer`,
@@ -50,32 +50,38 @@ donc jamais deux QR simultanés ni d’écran « assistant » séparé. Sans cap
 lumière (`PLANT_LUX=0`), la ligne basse du visage compte les sondes exploitables
 à la place du lux.
 
-## Accès sans configuration (AP permanent)
+## Connexion du kit (mode hybride)
 
-Le profil `heltec_v3_soil_dashboard` compile `PLANT_ALWAYS_AP=1` : le Heltec
-diffuse son propre Wi-Fi **en permanence** et sert lui-même le tableau de bord.
+Le profil `heltec_v3_soil_dashboard` compile `PLANT_OPEN_AP=1` : le Wi-Fi du kit
+n’a **pas de mot de passe**, et il n’est ouvert qu’**à la demande**.
 
-1. Mettre le Heltec sous tension : le réseau `PLANT-XXXXXX` apparaît, **sans mot
-   de passe** (`PLANT_OPEN_AP=1`). Aucune clé à saisir.
-2. Rejoindre ce réseau depuis un téléphone ou un PC. Le portail captif ouvre
-   **directement le tableau de bord** ; sinon `http://192.168.4.1/`.
-3. C’est tout. Aucun compte, aucune application, aucun réglage, aucun Wi-Fi
-   domestique à fournir.
+1. **Première mise sous tension** (aucun réseau enregistré) : le réseau
+   `PLANTES-XXXX` apparaît, sans cadenas. Un appui dessus suffit — aucune clé à
+   saisir, aucun QR obligatoire. Le portail captif ouvre l’assistant sur
+   `http://192.168.4.1/`, qui propose aussi « Voir le tableau de bord tout de
+   suite » (`/dashboard`), sans rien configurer.
+2. **Choisir le Wi-Fi de la maison** (2,4 GHz) dans l’assistant. Le Heltec teste
+   la connexion, l’enregistre, puis **referme son propre Wi-Fi** : le téléphone
+   revient tout seul sur le réseau domestique, Internet conservé.
+3. **Ensuite, plus rien à faire** : le Heltec rejoint son Wi-Fi au démarrage, et
+   le tableau de bord répond sur `http://<ip>/` ou `http://plant-xxxxxx.local/`
+   depuis n’importe quel appareil de la maison. Ajouter la page à l’écran
+   d’accueil du téléphone la transforme en icône.
+4. **Changer de box ou déménager** : un appui **PRG 8 s** rouvre le Wi-Fi du kit
+   pendant **15 minutes**, puis il se referme seul (et ne se rouvre pas tout
+   seul : PRG ou redémarrage requis).
 
-L’AP n’est plus refermé après une connexion réussie : il ne disparaît qu’à
-l’arrêt du concentrateur. Conséquences assumées :
+Le QR de l’OLED suit cet état : `WIFI:T:nopass;S:PLANTES-XXXX;;` quand le kit
+diffuse son réseau, `HTTP://<ip>/` quand il est sur le Wi-Fi de la maison.
 
-- pendant l’usage du Wi-Fi du kit, le téléphone n’a pas accès à Internet (c’est
-  un point d’accès local, sans passerelle) ;
-- le Wi-Fi domestique reste **optionnel** : s’il est enregistré, le Heltec le
-  rejoint en parallèle (AP + station) et le tableau de bord répond aussi sur
-  `http://<ip-lan>/` et `http://plant-xxxxxx.local/` ;
-- le formulaire Wi-Fi n’est plus imposé : il reste sur `/setup`, et n’est
-  accessible que **15 minutes après un appui PRG de 8 secondes** (présence
-  physique) — c’est la contrepartie du réseau ouvert ;
-- qui est à portée peut lire le tableau de bord (tensions, historique). Aucune
-  donnée sensible, mais ce n’est pas un réseau privé : pour revenir à un AP
-  protégé, mettre `PLANT_OPEN_AP=0` et recompiler.
+Conséquences assumées :
+
+- le Wi-Fi du kit est ouvert : qui est à portée pendant la fenêtre peut lire le
+  tableau de bord (tensions, historique) et modifier la configuration. Aucune
+  donnée sensible, mais ce n’est pas un réseau privé. Pour un AP chiffré :
+  `PLANT_OPEN_AP=0` et recompiler ;
+- l’AP n’est **pas** permanent : c’est ce qui évite que le téléphone saute sur le
+  kit et perde Internet à chaque passage.
 
 Le Bluetooth (BLE) ne sert qu’à l’appairage de l’application Android : afficher
 le tableau de bord en Bluetooth exigerait un service GATT dédié **et** une
