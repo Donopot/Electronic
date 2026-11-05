@@ -186,7 +186,7 @@ void OledDisplay::showDashboard(const PlantView& view,Screen screen,const Dashbo
         // Un seul QR, toujours celui de l'action courante : appairage Android,
         // puis Wi-Fi du kit pendant la configuration, puis acces local.
         char payload[192]={};int version=4;
-        const bool android=network.bleSetup&&!network.setupSuccess;
+        const bool android=network.bleSetup&&network.setupExplicit&&!network.setupSuccess;
         const bool configWifi=!android&&network.provisioning&&!network.setupSuccess;
         if(android) {
             snprintf(payload,sizeof(payload),"{\"ver\":\"v1\",\"name\":\"%s\",\"transport\":\"ble\",\"security\":1,\"pop\":\"%s\"}",network.setupSsid,network.setupPassword);
