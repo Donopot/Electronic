@@ -52,6 +52,7 @@ ConfigSet config;
 PlantView current;
 uint64_t clockUtc=0, clockUptime=0;
 bool clockKnown=false, provisioning=false, mdns=false, online=false, dirtyNames=false, setupExplicit=false;
+uint32_t setupExplicitAt=0;
 bool namesFailed=false, clockFailed=false, pendingClock=false;
 uint32_t namesRevision=0,namesSavedRevision=0;
 uint64_t pendingUtc=0,pendingUptime=0;
@@ -69,6 +70,8 @@ bool hasSavedWifi=false,ramStorageReady=false,candidatePending=false,testingWifi
 bool needDisconnectEvent=false,scanRunning=false,scanReady=false,closeApRequested=false;
 WiFiUDP captiveDns;
 constexpr uint32_t kWifiAttemptMs=25000,kSetupSuccessOpenMs=300000;
+// AP ouvert : le formulaire Wi-Fi n'est accessible que 15 minutes apres PRG 8 s.
+constexpr uint32_t kOpenSetupWindowMs=15UL*60UL*1000UL;
 constexpr char kSetupHost[]="192.168.4.1",kSetupUrl[]="http://192.168.4.1/";
 // AP permanent : le portail captif et la racine du kit ouvrent le tableau de
 // bord, le formulaire Wi-Fi reste accessible sur /setup.
@@ -119,7 +122,7 @@ void resetSetupForm(){
     closeApAt=successAt=0;closeApRequested=false;
 }
 bool startSetup(bool explicitRequest=false){
-    if(explicitRequest)setupExplicit=true;
+    if(explicitRequest){setupExplicit=true;setupExplicitAt=millis();}
     if(provisioning){
         if(!bleSetup.active()&&setupPassword.length())bleSetup.start(setupSsid.c_str(),setupPassword.c_str());
         if(explicitRequest&&!testingWifi&&!candidatePending){resetSetupForm();publishNetwork("Assistant ouvert ; reseau enregistre conserve");}
@@ -128,7 +131,10 @@ bool startSetup(bool explicitRequest=false){
     if(!setupPassword.length()&&!loadSetupPassword()){publishNetwork("Configuration indisponible : stockage");apRetryAt=millis();return false;}
     bleSetup.start(setupSsid.c_str(),setupPassword.c_str());
     wifi_config_t ap{};memcpy(ap.ap.ssid,setupSsid.c_str(),setupSsid.length());ap.ap.ssid_len=setupSsid.length();
-    memcpy(ap.ap.password,setupPassword.c_str(),setupPassword.length());ap.ap.authmode=WIFI_AUTH_WPA2_PSK;
+    // AP ouvert : aucune cle a saisir pour ouvrir le tableau de bord. Le
+    // formulaire /setup reste protege par l'appui PRG 8 s.
+    if(kOpenAp){memset(ap.ap.password,0,sizeof(ap.ap.password));ap.ap.authmode=WIFI_AUTH_OPEN;}
+    else {memcpy(ap.ap.password,setupPassword.c_str(),setupPassword.length());ap.ap.authmode=WIFI_AUTH_WPA2_PSK;}
     ap.ap.channel=1;ap.ap.max_connection=2;ap.ap.beacon_interval=100;
     WiFi.setAutoReconnect(false);
     // Configure WPA2 while the radio is stopped; never briefly start a default open AP.
@@ -240,6 +246,7 @@ void serviceBle(){
 }
 void serviceNetwork(uint32_t now){
     if(setupRequested.exchange(false))startSetup(true);
+    if(kOpenAp&&setupExplicit&&uint32_t(now-setupExplicitAt)>=kOpenSetupWindowMs){setupExplicit=false;publishNetwork("Formulaire Wi-Fi referme ; PRG 8 s pour le rouvrir");}
     serviceBle();
     if(cancelWifi){cancelWifi=false;if(candidatePending||testingWifi)rollbackCandidate("Essai annule. L'ancien reseau reste enregistre.");}
     if(candidatePending)beginCandidate(now);
@@ -369,6 +376,7 @@ String setupStatus(){
 bool setupRoute(const String& method,const String& path,const String& host,int query){
     if(path.indexOf("/api/setup/")!=0)return false;
     if(!apSide()||!setupHost(host)){error(403,"setup_ap_only");return true;}
+    if(kOpenAp&&!setupExplicit){error(403,"setup_prg_required");return true;}
     if(query>=0){error(400,"setup_parameters");return true;}
     if(method=="GET"&&path=="/api/setup/status"){reply(200,"application/json; charset=utf-8",setupStatus());return true;}
     if(method=="GET"&&path=="/api/setup/networks"){
@@ -418,6 +426,8 @@ void route() {
     if(method=="GET"&&(path=="/"||path=="/setup")){
         if(apSide()){
             if(!setupHost(host)){redirectSetup();return;}
+            // AP ouvert : formulaire seulement dans les 15 min suivant PRG 8 s.
+            if(path=="/setup"&&kOpenAp&&!setupExplicit){error(403,"setup_prg_required");return;}
             // AP permanent : la racine sert le tableau de bord, /setup reste le formulaire.
             if(!kAlwaysAp||path=="/setup"){sendPage(PLANT_SETUP_PAGE);return;}
             sendPage(PLANT_DASHBOARD_PAGE);return;

@@ -21,6 +21,11 @@
 // sans aucune configuration prealable.
 #define PLANT_ALWAYS_AP 0
 #endif
+#ifndef PLANT_OPEN_AP
+// 1 : Wi-Fi du kit sans mot de passe. Rejoindre le reseau suffit, aucune cle a
+// saisir ; le formulaire /setup reste protege par un appui PRG de 8 s.
+#define PLANT_OPEN_AP 0
+#endif
 #ifndef PLANT_SCAN
 #define PLANT_SCAN 1
 #endif
@@ -55,6 +60,8 @@ constexpr bool kScan = PLANT_SCAN;
 constexpr bool kLux = PLANT_LUX;
 // Point d'acces permanent : le tableau de bord est servi sur le Wi-Fi du kit.
 constexpr bool kAlwaysAp = PLANT_ALWAYS_AP;
+constexpr bool kOpenAp = PLANT_OPEN_AP;
+static_assert(PLANT_OPEN_AP == 0 || PLANT_OPEN_AP == 1, "PLANT_OPEN_AP doit valoir 0 ou 1");
 static_assert(PLANT_ALWAYS_AP == 0 || PLANT_ALWAYS_AP == 1, "PLANT_ALWAYS_AP doit valoir 0 ou 1");
 static_assert(PLANT_LUX == 0 || PLANT_LUX == 1, "PLANT_LUX doit valoir 0 ou 1");
 static_assert(PLANT_JSON == 0 || PLANT_JSON == 1, "PLANT_JSON doit valoir 0 ou 1");
