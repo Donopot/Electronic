@@ -101,14 +101,19 @@ int main(int argc,char** argv) {
         host::forceQrSide()=33;plant::OledDisplay qr;assert(qr.begin());qr.showDashboard(latest,plant::Screen::Qr,network);bounds();host::forceQrSide()=0;
     }
     if(!absent){
-        plant::OledDisplay qr;assert(qr.begin());network.bleSetup=true;strcpy(network.setupSsid,"PLANT-EBF528");
+        plant::OledDisplay qr;assert(qr.begin());
+        // BLE actif mais sans demande explicite : le QR reste celui du Wi-Fi du kit.
+        network.bleSetup=true;network.setupExplicit=false;
+        qr.showDashboard(latest,plant::Screen::Qr,network);bounds();
+        assert(host::qrPayload()=="WIFI:T:WPA;S:PLANT-TEST12;P:\"0123456789ABCDEF\";;");
+        network.setupExplicit=true;strcpy(network.setupSsid,"PLANT-EBF528");
         for(int side:{41,45,49,53}){
             host::forceQrSide()=side;qr.showDashboard(latest,plant::Screen::Qr,network);bounds();
             assert(host::qrPayload()=="{\"ver\":\"v1\",\"name\":\"PLANT-EBF528\",\"transport\":\"ble\",\"security\":1,\"pop\":\"0123456789ABCDEF\"}");
             const auto& rects=host::oledRectangles();const int extent=side+8;
             assert(std::any_of(rects.begin(),rects.end(),[&](const host::OledRect& r){return r.x==0&&r.y==(64-extent)/2&&r.width==extent&&r.height==extent&&r.color==SSD1306_WHITE;}));
         }
-        host::forceQrSide()=0;network.bleSetup=false;strcpy(network.setupSsid,"PLANT-TEST12");
+        host::forceQrSide()=0;network.bleSetup=false;network.setupExplicit=false;strcpy(network.setupSsid,"PLANT-TEST12");
     }
     const std::string singleQr=host::qrPayload();
     shortPress(host::now+100);
