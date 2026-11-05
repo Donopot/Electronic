@@ -192,31 +192,46 @@ void OledDisplay::showDashboard(const PlantView& view,Screen screen,const Dashbo
             display_.print(line);
         }
     } else if(screen==Screen::Qr) {
-        // Un seul QR, toujours celui de l'action courante : appairage Android,
-        // puis Wi-Fi du kit pendant la configuration, puis acces local.
-        char payload[192]={};int version=4;
+        // Un seul QR contextuel : appairage Android, puis acces local. Pendant la
+        // configuration, l'ecran affiche le nom et le mot de passe du kit en gros :
+        // un QR de 0,34 mm par module sur une dalle 0,96" n'est pas scannable.
         const bool android=network.bleSetup&&network.setupExplicit&&!network.setupSuccess;
-        const bool configWifi=!android&&network.provisioning;
-        if(android) {
-            snprintf(payload,sizeof(payload),"{\"ver\":\"v1\",\"name\":\"%s\",\"transport\":\"ble\",\"security\":1,\"pop\":\"%s\"}",network.setupSsid,network.setupPassword);
-            version=9;
-        } else if(configWifi) {
-            // AP ouvert : pas de cle, le simple fait de rejoindre suffit.
-            if(kOpenAp) snprintf(payload,sizeof(payload),"WIFI:T:nopass;S:%s;;",network.setupSsid);
-            else snprintf(payload,sizeof(payload),"WIFI:T:WPA;S:%s;P:%s;;",network.setupSsid,network.setupPassword);
-            version=4;
-        } else if(network.online) {
-            snprintf(payload,sizeof(payload),"%s",network.url);
-            for(char* p=payload;*p;++p)if(*p>='a'&&*p<='z')*p-=32;
-            version=3;
+        const bool configWifi=!android&&network.provisioning&&!network.online;
+        if(configWifi) {
+            char title[32]={},label[32]={};
+            snprintf(title,sizeof(title),"WI-FI DU KIT");
+            snprintf(label,sizeof(label),"MOT DE PASSE");
+            display_.setTextSize(1);
+            display_.setCursor((128-int(strlen(title))*6)/2,0);display_.print(title);
+            display_.setTextSize(2);
+            const int ssidWidth=int(strlen(network.setupSsid))*12;
+            display_.setCursor(ssidWidth<128?(128-ssidWidth)/2:0,10);display_.print(network.setupSsid);
+            display_.setTextSize(1);
+            display_.setCursor((128-int(strlen(label))*6)/2,30);display_.print(label);
+            display_.setTextSize(2);
+            const char* secret=kOpenAp?"aucune":network.apPassword;
+            const int secretWidth=int(strlen(secret))*12;
+            display_.setCursor(secretWidth<128?(128-secretWidth)/2:0,42);display_.print(secret);
+            display_.setTextSize(1);
+            qrExtent=0;qrRendered=false;
+        } else {
+            char payload[192]={};int version=4;
+            if(android) {
+                snprintf(payload,sizeof(payload),"{\"ver\":\"v1\",\"name\":\"%s\",\"transport\":\"ble\",\"security\":1,\"pop\":\"%s\"}",network.setupSsid,network.setupPassword);
+                version=9;
+            } else if(network.online) {
+                snprintf(payload,sizeof(payload),"%s",network.url);
+                for(char* p=payload;*p;++p)if(*p>='a'&&*p<='z')*p-=32;
+                version=3;
+            }
+            if(*payload) generateQr(display_,payload,version);
+            if(!*payload) {
+                display_.setCursor(0,0);display_.print("WI-FI ABSENT");
+                display_.setCursor(0,20);display_.print("Reconnexion en cours");
+                display_.setCursor(0,48);display_.print("PRG 8s : configurer");
+            }
+            if(!qrRendered&&*payload){display_.setCursor(0,20);display_.print("QR indisponible");}
         }
-        if(*payload) generateQr(display_,payload,version);
-        if(!*payload) {
-            display_.setCursor(0,0);display_.print("WI-FI ABSENT");
-            display_.setCursor(0,20);display_.print("Reconnexion en cours");
-            display_.setCursor(0,48);display_.print("PRG 8s : configurer");
-        }
-        if(!qrRendered&&*payload){display_.setCursor(0,20);display_.print("QR indisponible");}
     } else {
         display_.setCursor(0,0);display_.print("PLANT STATION");
         display_.drawRoundRect(3,20,43,30,7,SSD1306_WHITE);

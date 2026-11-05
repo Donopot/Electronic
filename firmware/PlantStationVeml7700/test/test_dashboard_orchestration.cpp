@@ -27,7 +27,7 @@ void PlantDashboard::publish(const PlantView& view){latest=view;++published;}
 void PlantDashboard::configuration(PlantConfig* out)const{memcpy(out,names,sizeof(names));}
 DashboardNetwork PlantDashboard::network()const{return ::network;}
 void PlantDashboard::requestStop(){stopRequested=true;}
-void PlantDashboard::requestSetup(){setupRequested=true;::network.provisioning=true;strcpy(::network.setupSsid,"PLANT-TEST12");strcpy(::network.setupPassword,"0123456789ABCDEF");}
+void PlantDashboard::requestSetup(){setupRequested=true;::network.provisioning=true;strcpy(::network.setupSsid,"PLANTES-12");strcpy(::network.setupPassword,"0123456789ABCDEF");strcpy(::network.apPassword,"plantes123");}
 bool PlantDashboard::stopped()const{return workerStopped;}
 }
 void setup();void loop();
@@ -93,19 +93,25 @@ int main(int argc,char** argv) {
     held.sequence=3;assert(plantsoil::encode(held,heldBytes,sizeof(heldBytes))==plantsoil::Result::Accepted);host::inject(heldBytes,sizeof(heldBytes));host::now+=100;loop();
     assert(latest.plants[0].packet.sequence==3&&host::oledFrames().size()==frames);
     host::now+=5000;loop();assert(!stopRequested);
+    // Le Wi-Fi du kit s'ouvre : la station n'est plus connectee.
+    network.online=false;strcpy(network.url,"");
     host::buttonPressed()=false;host::now+=100;loop();host::now+=40;loop();assert(setupRequested&&!Serial.flushed);
     if(!absent){
-        assert(host::qrPayload()=="WIFI:T:WPA;S:PLANT-TEST12;P:0123456789ABCDEF;;");bounds();
-        assert(host::oledFrames().back().empty()); // ecran QR : aucun texte, uniquement le symbole
-        const auto white=std::find_if(host::oledRectangles().begin(),host::oledRectangles().end(),[](const host::OledRect& r){return r.x==33&&r.y==1&&r.width==62&&r.height==62&&r.color==SSD1306_WHITE;});assert(white!=host::oledRectangles().end());
+        // Configuration du Wi-Fi du kit : nom et mot de passe en gros, sans QR.
+        const auto& frame=host::oledFrames().back();
+        assert(frame.find("WI-FI DU KIT")!=std::string::npos);
+        assert(frame.find("PLANTES-12")!=std::string::npos);
+        assert(frame.find("MOT DE PASSE")!=std::string::npos);
+        assert(frame.find("plantes123")!=std::string::npos);
+        bounds();
         host::forceQrSide()=33;plant::OledDisplay qr;assert(qr.begin());qr.showDashboard(latest,plant::Screen::Qr,network);bounds();host::forceQrSide()=0;
     }
     if(!absent){
         plant::OledDisplay qr;assert(qr.begin());
-        // BLE actif mais sans demande explicite : le QR reste celui du Wi-Fi du kit.
+        // BLE actif mais sans demande explicite : l'ecran reste celui du kit.
         network.bleSetup=true;network.setupExplicit=false;
         qr.showDashboard(latest,plant::Screen::Qr,network);bounds();
-        assert(host::qrPayload()=="WIFI:T:WPA;S:PLANT-TEST12;P:0123456789ABCDEF;;");
+        assert(host::oledFrames().back().find("PLANTES-12")!=std::string::npos);
         network.setupExplicit=true;strcpy(network.setupSsid,"PLANT-EBF528");
         for(int side:{41,45,49,53}){
             host::forceQrSide()=side;qr.showDashboard(latest,plant::Screen::Qr,network);bounds();
@@ -113,7 +119,7 @@ int main(int argc,char** argv) {
             const auto& rects=host::oledRectangles();const int extent=side+8;
             assert(std::any_of(rects.begin(),rects.end(),[&](const host::OledRect& r){return r.x==(128-extent)/2&&r.y==(64-extent)/2&&r.width==extent&&r.height==extent&&r.color==SSD1306_WHITE;}));
         }
-        host::forceQrSide()=0;network.bleSetup=false;network.setupExplicit=false;strcpy(network.setupSsid,"PLANT-TEST12");
+        host::forceQrSide()=0;network.bleSetup=false;network.setupExplicit=false;strcpy(network.setupSsid,"PLANTES-12");
     }
     const std::string singleQr=host::qrPayload();
     shortPress(host::now+100);
@@ -121,7 +127,7 @@ int main(int argc,char** argv) {
     shortPress(host::now+1200);
     if(!absent){bounds();assert(host::oledFrames().back().find("SOIL-01")!=std::string::npos);}
     shortPress(host::now+2200);
-    if(!absent){bounds();assert(host::qrPayload()=="WIFI:T:WPA;S:PLANT-TEST12;P:0123456789ABCDEF;;");}
+    if(!absent){bounds();assert(host::oledFrames().back().find("WI-FI DU KIT")!=std::string::npos);}
     host::buttonPressed()=true;host::now+=100;loop();host::now+=40;loop();host::now+=3000;loop();
     host::buttonPressed()=false;host::now+=100;loop();host::now+=40;loop();
     assert(stopRequested && !Serial.flushed); // Main never waits synchronously on the worker.

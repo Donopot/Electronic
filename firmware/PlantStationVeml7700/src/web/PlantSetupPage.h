@@ -7,18 +7,19 @@ static const char PLANT_SETUP_PAGE[] PROGMEM = R"SETUPHTML(<!doctype html>
 </style>
 <main><div class="brand">↟ Plant Station · Bienvenue chez vous</div><h1>Un Wi-Fi pour vos plantes.</h1><p class="muted">Cet assistant reste dans votre kit. Aucun compte ni application à installer.</p>
 <p><a href="/dashboard">Voir le tableau de bord tout de suite (sans rien configurer)</a></p>
-<div class="steps"><ol><li>Restez connecté au Wi-Fi du kit, même si le téléphone indique « pas d’Internet ».</li><li>Choisissez le Wi-Fi <strong>2,4 GHz</strong> de votre maison et saisissez son mot de passe.</li><li>Après confirmation, rejoignez ce Wi-Fi pour ouvrir votre tableau de bord.</li></ol></div>
+<div class="steps"><ol><li>Restez connecté au Wi-Fi du kit, même si le téléphone indique « pas d’Internet ».</li><li>Choisissez le Wi-Fi <strong>2,4 GHz</strong> de votre maison et saisissez son mot de passe.</li><li>Après confirmation, le kit ferme son réseau et vous redirige vers le tableau de bord.</li></ol></div>
+<p class="small" id="ap-hint">Wi-Fi du kit : <b id="ap-ssid">PLANTES</b> — mot de passe : <b id="ap-password">plantes123</b></p>
 <p id="status" class="notice" role="status">Connexion à l’assistant…</p>
 <section id="configuration"><h2>Le Wi-Fi de la maison</h2><p class="small">Un ancien réseau reste enregistré tant que le nouveau n’a pas obtenu de connexion.</p>
 <label for="networks">Réseaux à proximité</label><select id="networks"><option value="">Choisir un réseau ou saisir son nom ci-dessous</option></select><p id="scan-status" class="small" role="status">Recherche des réseaux…</p><button type="button" class="secondary" id="scan">Actualiser les réseaux</button>
 <form id="wifi-form"><label for="ssid">Nom du Wi-Fi</label><input id="ssid" name="ssid" required maxlength="32" autocomplete="off" autocapitalize="none" spellcheck="false"><p class="small">Saisissez le nom exact du réseau. La saisie manuelle convient aussi aux réseaux masqués.</p>
 <label for="password">Mot de passe du Wi-Fi de la maison</label><input id="password" name="password" type="password" maxlength="64" autocomplete="new-password" autocapitalize="none" spellcheck="false"><label class="show"><input type="checkbox" id="show-password">Afficher pendant la saisie</label><p class="small">Saisissez le mot de passe de votre box. Laissez vide uniquement pour un réseau sans mot de passe.</p>
 <div class="actions"><button id="connect">Connecter le kit</button><button type="button" class="secondary" id="cancel" hidden>Annuler l’essai</button></div></form><p id="form-error" class="error" role="alert"></p></section>
-<section id="success" class="success" hidden><h2>Votre kit est connecté.</h2><p>Rejoignez maintenant le <strong>Wi-Fi de la maison</strong> dans les réglages du téléphone, puis ouvrez :</p><p><a id="dashboard" class="address"></a></p><p class="small">Le Heltec présente aussi le QR du tableau de bord. Le Wi-Fi temporaire du kit ferme automatiquement cinq minutes après la réussite.</p><button id="close">Fermer le Wi-Fi du kit</button></section>
+<section id="success" class="success" hidden><h2>C’est fait.</h2><p>Le kit rejoint <strong id="joined-ssid">votre Wi-Fi</strong> et ferme son propre réseau.</p><p id="redirect-state" class="notice" role="status">Redirection vers le tableau de bord…</p><p><a id="dashboard" class="address"></a></p><p class="small">Si la page ne s’ouvre pas toute seule : rejoignez le Wi-Fi de la maison dans les réglages du téléphone, puis ouvrez l’adresse ci-dessus. Le kit l’affiche aussi sur son écran.</p><button id="close">Fermer le Wi-Fi du kit maintenant</button></section>
 <section><h2>Pour une nouvelle maison</h2><p>Maintenez PRG sur le Heltec pendant <strong>8 secondes puis relâchez</strong>. Scannez son QR pour rejoindre de nouveau le Wi-Fi du kit.</p><p class="small">À 3 secondes : relâcher met le kit en veille ; continuer jusqu’à 8 secondes ouvre la configuration. Les noms, mesures enregistrées et sondes sont conservés.</p><p class="small">Si le portail ne s’ouvre pas : restez sur le Wi-Fi du kit, puis ouvrez <a href="http://192.168.4.1/">http://192.168.4.1/</a>. Un appui court PRG affiche aussi le QR de ce lien.</p></section></main>
 <script>
 'use strict';
-const $=id=>document.getElementById(id);let busy=false,polling=false,scanning=false,submitting=false,lastState=null;
+const $=id=>document.getElementById(id);let busy=false,polling=false,scanning=false,submitting=false,lastState=null,redirecting=false;
 async function api(path,options={}){
  const controller=new AbortController();let timer,timedOut=false;
  const deadline=new Promise((_,reject)=>{timer=setTimeout(()=>{timedOut=true;controller.abort();reject(new Error('Délai de réponse dépassé'));},6000);});
@@ -29,11 +30,32 @@ function post(path,fields={}){return api(path,{method:'POST',headers:{'Content-T
 function lock(value){busy=value;for(const id of ['connect','ssid','password','networks','scan'])$(id).disabled=value;$('cancel').hidden=!value;}
 function render(data){
  lastState=data.state;$('status').textContent=data.message;$('status').classList.toggle('error',data.state==='failed');
+ if(data.ssid)$('ap-ssid').textContent=data.ssid;
+ if(data.ap_password)$('ap-password').textContent=data.ap_password;
  const success=data.state==='connected';$('configuration').hidden=success;$('success').hidden=!success;
  lock(data.state==='testing'||submitting);
- if(success){const valid=/^http:\/\/\d{1,3}(?:\.\d{1,3}){3}\/$/.test(data.lan_url);$('dashboard').textContent=valid?data.lan_url:'Adresse en attente sur le Heltec';if(valid)$('dashboard').href=data.lan_url;else $('dashboard').removeAttribute('href');}
+ if(success){const valid=/^http:\/\/\d{1,3}(?:\.\d{1,3}){3}\/$/.test(data.lan_url);$('dashboard').textContent=valid?data.lan_url:'Adresse en attente sur le Heltec';if(valid)$('dashboard').href=data.lan_url;else $('dashboard').removeAttribute('href');if(valid)startRedirect(data.lan_url);}
 }
-async function poll(){if(polling)return;polling=true;try{render(await api('/api/setup/status'));}catch(e){$('status').textContent=lastState==='connected'?'Le Wi-Fi du kit peut être fermé. Rejoignez le Wi-Fi de la maison pour ouvrir le tableau de bord.':e.message;}finally{polling=false;}}
+async function waitLan(url){
+ // Le telephone revient sur le Wi-Fi de la maison des que le kit ferme le sien.
+ for(let i=0;i<20;i++){
+  try{const c=new AbortController();const t=setTimeout(()=>c.abort(),2500);
+   await fetch(url+'api/status',{mode:'no-cors',cache:'no-store',signal:c.signal});clearTimeout(t);return true;}
+  catch(e){}
+  await new Promise(r=>setTimeout(r,1500));
+ }
+ return false;
+}
+async function startRedirect(url){
+ if(redirecting)return;redirecting=true;
+ const s=$('redirect-state');
+ s.textContent='Le kit ferme son réseau (8 s)…';
+ await new Promise(r=>setTimeout(r,6000));
+ s.textContent='Recherche du tableau de bord sur votre Wi-Fi…';
+ if(await waitLan(url)){s.textContent='Trouvé : ouverture du tableau de bord…';location.replace(url);return;}
+ s.textContent='Tableau de bord pas encore joignable : rejoignez le Wi-Fi de la maison, puis ouvrez l’adresse ci-dessous.';
+}
+async function poll(){if(polling)return;polling=true;try{render(await api('/api/setup/status'));}catch(e){if(!redirecting)$('status').textContent=lastState==='connected'?'Le Wi-Fi du kit est fermé. Rejoignez le Wi-Fi de la maison pour ouvrir le tableau de bord.':e.message;}finally{polling=false;}}
 async function scan(){
  if(scanning||busy)return;scanning=true;$('scan').disabled=true;$('scan-status').textContent='Recherche des réseaux…';
  try{const until=Date.now()+12000;let data;do{data=await api('/api/setup/networks');if(!data.scanning)break;if(Date.now()>=until)throw new Error('Recherche trop longue. Vous pouvez saisir le nom du Wi-Fi.');await new Promise(resolve=>setTimeout(resolve,1000));}while(true);
