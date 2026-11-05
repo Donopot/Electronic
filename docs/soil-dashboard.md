@@ -28,10 +28,9 @@ Contenu du QR unique, par priorité :
 1. **Appairage Android** — BLE actif **et** assistant demandé explicitement
    (PRG 8 s) : JSON
    `{"ver":"v1","name":"PLANT-XXXX","transport":"ble","security":1,"pop":"…"}`.
-2. **Wi-Fi du kit** (AP permanent) :
-   `WIFI:T:WPA;S:PLANT-XXXX;P:…;;` (clé sans guillemets, plus largement
-   reconnue) — scanner suffit pour rejoindre le réseau ; le portail captif
-   ouvre ensuite le tableau de bord.
+2. **Wi-Fi du kit** (AP permanent, **réseau ouvert**) : `WIFI:T:nopass;S:PLANT-XXXX;;`
+   — le scan rejoint le réseau sans mot de passe, et le portail captif ouvre
+   ensuite le tableau de bord.
 3. **Accès local** (connecté au Wi-Fi domestique) : `HTTP://<ip>/` — ouvre le
    tableau de bord à onglets depuis un téléphone.
 4. Sinon : `WI-FI ABSENT` / `Reconnexion en cours` / `PRG 8s : configurer`,
@@ -56,8 +55,8 @@ lumière (`PLANT_LUX=0`), la ligne basse du visage compte les sondes exploitable
 Le profil `heltec_v3_soil_dashboard` compile `PLANT_ALWAYS_AP=1` : le Heltec
 diffuse son propre Wi-Fi **en permanence** et sert lui-même le tableau de bord.
 
-1. Mettre le Heltec sous tension : le réseau `PLANT-XXXXXX` apparaît (WPA2, nom
-   et clé affichés sur l’écran OLED, écran QR).
+1. Mettre le Heltec sous tension : le réseau `PLANT-XXXXXX` apparaît, **sans mot
+   de passe** (`PLANT_OPEN_AP=1`). Aucune clé à saisir.
 2. Rejoindre ce réseau depuis un téléphone ou un PC. Le portail captif ouvre
    **directement le tableau de bord** ; sinon `http://192.168.4.1/`.
 3. C’est tout. Aucun compte, aucune application, aucun réglage, aucun Wi-Fi
@@ -71,8 +70,12 @@ l’arrêt du concentrateur. Conséquences assumées :
 - le Wi-Fi domestique reste **optionnel** : s’il est enregistré, le Heltec le
   rejoint en parallèle (AP + station) et le tableau de bord répond aussi sur
   `http://<ip-lan>/` et `http://plant-xxxxxx.local/` ;
-- le formulaire Wi-Fi n’est plus imposé : il reste sur `/setup`, accessible par
-  le lien de l’onglet **Réglages** ou par un appui PRG de 8 secondes.
+- le formulaire Wi-Fi n’est plus imposé : il reste sur `/setup`, et n’est
+  accessible que **15 minutes après un appui PRG de 8 secondes** (présence
+  physique) — c’est la contrepartie du réseau ouvert ;
+- qui est à portée peut lire le tableau de bord (tensions, historique). Aucune
+  donnée sensible, mais ce n’est pas un réseau privé : pour revenir à un AP
+  protégé, mettre `PLANT_OPEN_AP=0` et recompiler.
 
 Le Bluetooth (BLE) ne sert qu’à l’appairage de l’application Android : afficher
 le tableau de bord en Bluetooth exigerait un service GATT dédié **et** une

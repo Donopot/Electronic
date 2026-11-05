@@ -56,7 +56,11 @@ inline int esp_wifi_set_config(int which,const wifi_config_t* config){
 }
 inline int esp_wifi_stop(){auto& n=host::net();++n.stops;n.started=n.apActive=false;n.status=0;host::event(ARDUINO_EVENT_WIFI_STA_DISCONNECTED);return 0;}
 inline int esp_wifi_set_mode(int mode){host::net().mode=mode;if(mode==WIFI_MODE_STA)host::net().apActive=false;return 0;}
-inline int esp_wifi_start(){auto& n=host::net();++n.starts;if(n.mode==WIFI_MODE_APSTA){assert(n.ap.ap.authmode==WIFI_AUTH_WPA2_PSK&&n.ap.ap.ssid_len>0&&strlen(reinterpret_cast<const char*>(n.ap.ap.password))>=8);n.apActive=true;}n.started=true;return 0;}
+inline int esp_wifi_start(){auto& n=host::net();++n.starts;if(n.mode==WIFI_MODE_APSTA){
+    // AP ouvert : ssid renseigne et aucun mot de passe ; AP ferme : WPA2 + cle.
+    if(n.ap.ap.authmode==WIFI_AUTH_OPEN) assert(n.ap.ap.ssid_len>0&&strlen(reinterpret_cast<const char*>(n.ap.ap.password))==0);
+    else assert(n.ap.ap.authmode==WIFI_AUTH_WPA2_PSK&&n.ap.ap.ssid_len>0&&strlen(reinterpret_cast<const char*>(n.ap.ap.password))>=8);
+    n.apActive=true;}n.started=true;return 0;}
 inline int esp_wifi_scan_stop(){++host::net().scanStops;return 0;}
 inline uint32_t esp_random(){static uint32_t n=100;return ++n;}
 class WiFiClass {

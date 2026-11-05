@@ -23,6 +23,12 @@ static const std::string& completeHttp(){
     const auto length=std::stoul(bytes.substr(lengthAt+16));
     assert(bytes.size()-split-4==length);return bytes;
 }
+static std::string requestHttpSync(const std::string& method,const std::string& path,const std::string& body="",const std::string& hostname="192.168.4.1",bool ap=true) {
+    const auto connection=queueHttp(method,path,body,hostname,ap);auto& socket=host::socketSend();
+    for(unsigned tick=0;connection->open&&tick<40000;++tick){socket.result=tick%3?-1:512;socket.error=EAGAIN;serviceHttp(host::now++);}
+    assert(!connection->open);
+    return completeHttp();
+}
 static void seedNetwork(const char* ssid,const char* password) {
     wifi_config_t config{};memcpy(config.sta.ssid,ssid,strlen(ssid));memcpy(config.sta.password,password,strlen(password));
     host::net().ram=host::net().flash=config;loadSavedWifi();assert(setRamStorage());
@@ -39,6 +45,13 @@ int main() {
         if(stage==0){
             // Demarrage : l'AP est ouvert sans aucune configuration.
             assert(provisioning&&host::net().apActive);
+            assert(host::net().ap.ap.authmode==(kOpenAp?WIFI_AUTH_OPEN:WIFI_AUTH_WPA2_PSK));
+#if PLANT_OPEN_AP
+            // AP ouvert : le formulaire Wi-Fi exige un appui PRG 8 s.
+            assert(requestHttpSync("GET","/setup").find("403 Forbidden")!=std::string::npos);
+            assert(requestHttpSync("GET","/api/setup/status").find("403 Forbidden")!=std::string::npos);
+            assert(startSetup(true)&&setupExplicit);
+#endif
             pending=queueHttp("GET","/");stage=1;
         } else if(stage==1&&pending&&!pending->open){
             // Racine du kit = tableau de bord complet.

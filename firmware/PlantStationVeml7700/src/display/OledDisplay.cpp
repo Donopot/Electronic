@@ -201,8 +201,9 @@ void OledDisplay::showDashboard(const PlantView& view,Screen screen,const Dashbo
             snprintf(payload,sizeof(payload),"{\"ver\":\"v1\",\"name\":\"%s\",\"transport\":\"ble\",\"security\":1,\"pop\":\"%s\"}",network.setupSsid,network.setupPassword);
             version=9;
         } else if(configWifi) {
-            // Sans guillemets autour de la cle : certains analyseurs Wi-Fi les refusent.
-            snprintf(payload,sizeof(payload),"WIFI:T:WPA;S:%s;P:%s;;",network.setupSsid,network.setupPassword);
+            // AP ouvert : pas de cle, le simple fait de rejoindre suffit.
+            if(kOpenAp) snprintf(payload,sizeof(payload),"WIFI:T:nopass;S:%s;;",network.setupSsid);
+            else snprintf(payload,sizeof(payload),"WIFI:T:WPA;S:%s;P:%s;;",network.setupSsid,network.setupPassword);
             version=4;
         } else if(network.online) {
             snprintf(payload,sizeof(payload),"%s",network.url);
